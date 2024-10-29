@@ -6,7 +6,7 @@
         <div class="row justify-content-center m-0 p-0">
             <div class="datosGral   m-0 p-0">
                 <div class="buscador col-12 p-0 m-0 d-flex align-items-start flex-column">
-                    <div class="input-group  m-0 p-0 input-group-sm">
+                    <div class="input-group  m-0 p-0 input-group-sm shadow">
                         <span class="input-group-text" id="basic-addon1">Buscar</span>
                         <input type="text" id="buscadorCentro" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
                     </div>
@@ -14,8 +14,8 @@
                 <div class="tablecentro col-12 p-0 m-0 d-flex mt-1 flex-column">
                     <H4>LISTA DE CENTROS</H4>
                 </div>
-                <div class="table-responsive">
-                <table class="table table-striped table-sm">
+                <div class="table-responsive ">
+                <table class="table table-striped table-sm shadow">
                     <thead  class="shadow ">
                         <tr>
                             <th>Id</th>
@@ -32,15 +32,15 @@
                     <tbody id="tabla-centros">
                         <% listCentro.forEach((item) => { %>
                             <tr>
-                                <td><%= item.idCentro %></td>
-                                <td><%= item.nombreCentro %></td>
-                                <td><%= item.encargadoCentro %></td>
-                                <td><%= item.ciudad %></td>
-                                <td><%= item.codigopostal %></td>
-                                <td><%= item.direccionCentro %></td>
-                                <td><%= item.telefonoCentro %></td>
-                                <td><%= item.emailCentro %></td>
-                                <td><%= item.ntrabajadorCentro %></td>
+                                <td class="align-right"><%= item.idCentro %></td>
+                                <td class="align-left" data-id="<%= item.idCentro %>"><%= item.nombreCentro %></td>
+                                <td class="align-left" data-id="<%= item.idCentro %>"><%= item.encargadoCentro %></td>
+                                <td class="align-left" data-id="<%= item.idCentro %>"><%= item.ciudad %></td>
+                                <td class="align-right" data-id="<%= item.idCentro %>"><%= item.codigopostal %></td>
+                                <td class="align-left" data-id="<%= item.idCentro %>"><%= item.direccionCentro %></td>
+                                <td class="align-right" data-id="<%= item.idCentro %>"><%= item.telefonoCentro %></td>
+                                <td class="align-left" data-id="<%= item.idCentro %>"><%= item.emailCentro %></td>
+                                <td class="align-right" data-id="<%= item.idCentro %>"><%= item.ntrabajadorCentro %></td>
                             </tr>
                         <% }); %>
                     </tbody>

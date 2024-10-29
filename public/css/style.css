@@ -23,8 +23,8 @@ body {
   text-shadow: 3px 3px rgb(153, 152, 152);
 }
 #basic-addon1{
-  background: #525253;
-  color: white;
+  background: #d7d7d8;
+  color: rgb(14, 13, 13);
 }
 p{
   color: black;
@@ -44,26 +44,32 @@ p{
   background: #F8F9FA;
   box-shadow: 1px 1px rgb(175, 175, 175);
 }
-
+.align-right {
+  text-align: right;
+}
+.align-left {
+  text-align: left;
+}
 h5{
   margin: auto 0;
-  text-shadow: 2px 2px rgb(209, 209, 209);
+  text-shadow: 10px 5px rgb(235, 234, 234);
 }
 h4{
   margin: auto 0;
-  text-shadow: 2px 2px rgb(209, 209, 209);
+  text-shadow: 10px 5px rgb(235, 234, 234);
 }
 .navbar-brand{
   text-shadow: 4px 3px rgb(17, 17, 17,0.4);
 }
 
 h3{
-  text-shadow:5px 2px rgb(116, 114, 114,0.3);
+  text-shadow:10px 5px rgb(235, 234, 234);;
 }
+
 .folders{
   margin: 0.5rem;
   width: 160px;
-  height: 120px;
+  height: 130px;
   border-radius: 5px;
   background: rgb(253, 253, 253);
   box-shadow: 1px 2px rgb(175, 175, 175);
@@ -72,7 +78,7 @@ h3{
   justify-content: center;
 }
 .folders:hover{
-  background: #9da9f3;
+  background: #b9b9b9;
   cursor:pointer;
 }
 #ifolder{
@@ -95,6 +101,7 @@ h3{
 .boot{
   color: white;
   background: #4058FB;
+  box-shadow: 2px 1px rgb(175, 175, 175);
 }
 #btnModificarEmpresa{
   background: #4058FB;
@@ -107,4 +114,9 @@ h3{
 .modal-header{
   background:  #4058FB;
  
+}
+#spanerror{
+  color: rgb(196, 6, 6);
+  font-size: 0.7rem;
+  font-style: italic;
 }

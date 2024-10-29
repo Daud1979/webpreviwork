@@ -7,7 +7,7 @@
         <div class="col-12 datosempresa">
             <h3>DATOS GENERAL EMPRESA </h3>
             <div class="row justify-content-center ">
-                <div class="datosGral  col-md-5 col-sm-10 ms-1 me-1 p-0">
+                <div class="datosGral  col-md-6 col-sm-12 col-12 m-0 p-0">
                     <div class="input-group m-0 p-0 input-group-sm">
                         <span class="input-group-text" id="basic-addon1">Razon Social</span>
                         <input type="text" value="<%=userData.razonSocial%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
@@ -38,7 +38,7 @@
                   </div>
                 </div>   
 
-                <div class="datosGral  col-md-5 col-sm-10 ms-1 me-1 p-0">
+                <div class="datosGral  col-md-6 col-sm-12 col-12 m-0 p-0">
                     <div class="input-group m-0 p-0 input-group-sm">
                         <span class="input-group-text" id="basic-addon1">Ciudad</span>
                         <input type="text" value="<%=userData.ciudad%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
@@ -69,21 +69,22 @@
                     
                   </div>
                 </div>
-                <div class="datosGral  col-md-10 col-sm-10 col-12 m-0 p-0 ">
+                
+                <div class="datosGral  col-md-12 col-sm-12 col-12 m-0 p-0 ">
                   <div class="input-group m-0 p-0 input-group-sm ">
                       <span class="input-group-text" id="basic-addon1">Actividad de la Empresa</span>
-                      <input type="text" value="<%=userData.actividad%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username"  aria-describedby="basic-addon1">
+                      <input type="text" disabled value="<%=userData.actividad%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username"  aria-describedby="basic-addon1">
                   </div>
                   <div class="col-12 mt-1 text-end">
                   <a type="button" class="btn boot btn-sm" data-bs-toggle="modal" data-bs-target="#modalmodificarEmpresa">Modificar</a>
                 </div> 
-              </div>       
+                </div>       
             </div>
         </div> <!--fin datos empresa-->
-        <div class="container">
-          <div class="row p-0 m-0"> <!-- Row Folder Estructura -->
-              <div class="col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
-                  <div class="titlefolder col-12 p-1 d-flex gap-2 align-items-center mt-1">           
+        <div class="container p-0">
+          <div class="row p-0 m-0  "> <!-- Row Folder Estructura -->
+              <div class=" col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
+                  <div class="titlefolder col-12 p-1 d-flex gap-2 align-items-center m-0 mt-1">           
                       <i id="ititle" style="color: green;" class="material-icons">settings</i>
                       <h5>Estructura General</h5>              
                   </div>
