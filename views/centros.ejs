@@ -1,0 +1,55 @@
+<%- include('./partials/head') %>
+<div class="container mt-4 pt-5 text-center">
+    <div class="row justify-content-center filacontenedor ">
+        <h3 class="mt-1 mb-0 pb-0">CENTROS DE LA EMPRESA</h3>
+        <i id="icentro" class="material-icons">home_work</i>
+        <div class="row justify-content-center m-0 p-0">
+            <div class="datosGral   m-0 p-0">
+                <div class="buscador col-12 p-0 m-0 d-flex align-items-start flex-column">
+                    <div class="input-group  m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Buscar</span>
+                        <input type="text" id="buscadorCentro" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="tablecentro col-12 p-0 m-0 d-flex mt-1 flex-column">
+                    <H4>LISTA DE CENTROS</H4>
+                </div>
+                <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead  class="shadow ">
+                        <tr>
+                            <th>Id</th>
+                            <th>Centro</th>
+                            <th>Encargado</th>
+                            <th>Ciudad</th>
+                            <th>C.P.</th>
+                            <th>Direccion</th>
+                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Personal</th>                            
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-centros">
+                        <% listCentro.forEach((item) => { %>
+                            <tr>
+                                <td><%= item.idCentro %></td>
+                                <td><%= item.nombreCentro %></td>
+                                <td><%= item.encargadoCentro %></td>
+                                <td><%= item.ciudad %></td>
+                                <td><%= item.codigopostal %></td>
+                                <td><%= item.direccionCentro %></td>
+                                <td><%= item.telefonoCentro %></td>
+                                <td><%= item.emailCentro %></td>
+                                <td><%= item.ntrabajadorCentro %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/centros.js"></script>
+
+<%- include('./partials/foot') %>

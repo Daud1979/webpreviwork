@@ -1,0 +1,253 @@
+<%- include('./partials/head') %>
+
+  
+  <!-- Contenido principal -->
+  <div class="container mt-4 pt-5 text-center">
+    <div class="row justify-content-center filacontenedor">
+        <div class="col-12 datosempresa">
+            <h3>DATOS GENERAL EMPRESA </h3>
+            <div class="row justify-content-center ">
+                <div class="datosGral  col-md-5 col-sm-10 ms-1 me-1 p-0">
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Razon Social</span>
+                        <input type="text" value="<%=userData.razonSocial%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Grupo Empresarial</span>
+                        <input type="text" value="<%=userData.grupoEmpresarial%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">C.I.F.</span>
+                        <input type="text" value="<%=userData.CIF%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                      <span class="input-group-text" id="basic-addon1">Direccion</span>
+                      <input type="text" value="<%=userData.direccionEmpresa%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group m-0 p-0 input-group-sm">
+                      <span class="input-group-text" id="basic-addon1">Email</span>
+                      <input type="text" value="<%=userData.email%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                  </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Telefono</span>
+                        <input type="text" value="<%=userData.telefono%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                      <span class="input-group-text" id="basic-addon1">Provincia</span>
+                      <input type="text" value="<%=userData.provincia%>" class="form-control inputwhite" style="background: white;"  placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                  </div>
+                </div>   
+
+                <div class="datosGral  col-md-5 col-sm-10 ms-1 me-1 p-0">
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Ciudad</span>
+                        <input type="text" value="<%=userData.ciudad%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Codigo Postal</span>
+                        <input type="text" value="<%=userData.codigopostal%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Nº Trabajadores</span>
+                        <input type="text" value="<%=userData.ntrabajadorEmpresa%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Nº Centros</span>
+                        <input type="text" value="<%=userData.nCentro%>" class="form-control inputwhite" disabled style="background: white;" placeholder="Username" aria-label="Username"  aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group m-0 p-0 input-group-sm">
+                      <span class="input-group-text" id="basic-addon1">CNAE</span>
+                      <input type="text" value="<%=userData.CNAE%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group m-0 p-0 input-group-sm">
+                      <span class="input-group-text" id="basic-addon1">Descripcion CNAE</span>
+                      <input type="text" value="<%=userData.descripcionCNAE%>" disabled class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username" disabled aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1" >Encargado</span>
+                    <input   value="<%=userData.encargadoEmpresa%>" disabled type="text" value="hola" class="form-control inputwhite" style="background: white;" >
+                    
+                  </div>
+                </div>
+                <div class="datosGral  col-md-10 col-sm-10 col-12 m-0 p-0 ">
+                  <div class="input-group m-0 p-0 input-group-sm ">
+                      <span class="input-group-text" id="basic-addon1">Actividad de la Empresa</span>
+                      <input type="text" value="<%=userData.actividad%>" class="form-control inputwhite" style="background: white;" placeholder="Username" aria-label="Username"  aria-describedby="basic-addon1">
+                  </div>
+                  <div class="col-12 mt-1 text-end">
+                  <a type="button" class="btn boot btn-sm" data-bs-toggle="modal" data-bs-target="#modalmodificarEmpresa">Modificar</a>
+                </div> 
+              </div>       
+            </div>
+        </div> <!--fin datos empresa-->
+        <div class="container">
+          <div class="row p-0 m-0"> <!-- Row Folder Estructura -->
+              <div class="col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
+                  <div class="titlefolder col-12 p-1 d-flex gap-2 align-items-center mt-1">           
+                      <i id="ititle" style="color: green;" class="material-icons">settings</i>
+                      <h5>Estructura General</h5>              
+                  </div>
+                  <div class="folder d-flex flex-wrap gap-2"> <!-- Flex Wrap para responsividad -->
+                      <a href="/home/centrosempresa" id="btnCenterAll" class="folderCentros folders d-flex flex-column align-items-center">              
+                          <i id="icentro" class="material-icons">home_work</i>
+                          <p>Centros</p>                
+                      </a>              
+                      <div id="btnWorkAll" class="folderTrabajadores folders d-flex flex-column align-items-center">                
+                          <i id="itrabajador" class="material-icons">engineering</i>
+                          <p>Trabajadores</p>               
+                      </div>                     
+                  </div>     
+              </div> <!-- Folder Contenedor -->
+          </div> <!--Fin Row Folder -->
+          
+          <div class="row p-0 m-0"> <!-- Row Folder Gestion -->
+            <div class="col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
+                <div id="gestion" class="titlefolder col-12 p-1 d-flex gap-2 align-items-center mt-1">           
+                    <i id="ititle" style="color: rgb(244, 248, 26);" class="material-icons">folder_copy</i>
+                    <h5>Gestion</h5>              
+                </div>
+                <div  class="folder d-flex flex-wrap gap-2"> <!-- Flex Wrap para responsividad -->
+                  <div id="gestion_1" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Plan de Prevención</p>                
+                  </div>
+                  <div id="gestion_2" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Evaluación de Riesgos</p>                
+                  </div>
+                  <div id="gestion_3" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Planificación Actividad Preventiva</p>                
+                  </div>
+                  <div id="gestion_4" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Programacón Anual</p>                
+                  </div>
+                  <div id="gestion_5" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Memoria Anual</p>                
+                  </div>
+                  <div id="gestion_6" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Notificaciones</p>                
+                  </div>
+                  <div id="gestion_7" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Contratos</p>                
+                  </div>
+                  <div id="btnPresupuestoAll" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Presupuestos</p>                
+                  </div>
+                </div>     
+            </div> <!-- Folder Contenedor -->
+          </div> <!--Fin Row Folder -->
+        
+          <div class="row p-0 m-0"> <!-- Row Folder documentos -->
+          <div class="col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
+              <div class="titlefolder col-12 p-1 d-flex gap-2 align-items-center mt-1">           
+                  <i id="ititle" style="color: whitesmoke;" class="material-icons">view_timeline</i>
+                  <h5>Informes Especificos</h5>              
+              </div>
+              <div class="folder d-flex flex-wrap gap-2"> <!-- Flex Wrap para responsividad -->
+                <div id="btninforme_8" class="folderCentros folders d-flex flex-column align-items-center">              
+                  <i id="ifolder" class="material-icons">folder</i>
+                  <p>Construcción</p>                
+                </div>
+                <div id="btninforme_9" class="folderCentros folders d-flex flex-column align-items-center">              
+                  <i id="ifolder" class="material-icons">folder</i>
+                  <p>Informes de Seguridad</p>                
+                </div>
+                <div id="btninforme_10" class="folderCentros folders d-flex flex-column align-items-center">              
+                  <i id="ifolder" class="material-icons">folder</i>
+                  <p>Informes de PsicoSociología</p>                
+                </div>
+                <div id="btninforme_11" class="folderCentros folders d-flex flex-column align-items-center">              
+                  <i id="ifolder" class="material-icons">folder</i>
+                  <p>Informes Ergonomía</p>                
+                </div>
+                <div id="btninforme_12" class="folderCentros folders d-flex flex-column align-items-center">              
+                  <i id="ifolder" class="material-icons">folder</i>
+                  <p>Informes de Higiene</p>                
+                </div>              
+              </div>     
+          </div> <!-- Folder Contenedor -->
+          </div> <!--Fin Row Folder -->
+
+          <div class="row p-0 m-0"> <!-- Row Folder Formacion -->
+            <div class="col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
+                <div class="titlefolder col-12 p-1 d-flex gap-2 align-items-center mt-1">           
+                    <i id="ititle" style="color: white;" class="material-icons">description</i>
+                    <h5>Formación</h5>              
+                </div>
+                <div class="folder d-flex flex-wrap gap-2"> <!-- Flex Wrap para responsividad -->
+                  <div id="btnformacion" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Formación</p>                
+                  </div>                     
+                </div>            
+            </div> <!-- Folder Contenedor -->
+          </div> <!--Fin Row Folder -->
+
+          <div class="row p-0 m-0"> <!-- Row Folder Medicina -->
+            <div class="col-12 p-0 m-0 d-flex align-items-start flex-column"> <!-- Folder Contenedor -->
+                <div class="titlefolder col-12 p-1 d-flex gap-2 align-items-center mt-1">           
+                    <i id="ititle" style="color: red;" class="material-icons">health_and_safety</i>                  
+                    <h5>Medicina del Trabajo</h5>              
+                </div>
+                <div class="folder d-flex flex-wrap gap-2"> <!-- Flex Wrap para responsividad -->
+                  <div id="btnmedicina" class="folderCentros folders d-flex flex-column align-items-center">              
+                    <i id="ifolder" class="material-icons">folder</i>
+                    <p>Medicina del Trabajo</p>                
+                  </div>                     
+                </div>            
+            </div> <!-- Folder Contenedor -->
+          </div> <!--Fin Row Folder -->
+      </div>
+  </div><!--contenedor principal-->
+<!--modal modificar datos-->
+<!-- Modal -->
+<div class="modal fade" id="modalmodificarEmpresa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-4" id="exampleModalLabel">Modificar Datos</h1>        
+      </div>
+      <div class="modal-body">
+        <div class="datosGral   ms-0 me-0 p-0 ">
+          <div class="input-group m-0 p-0 input-group-sm">
+              <span class="input-group-text" id="basic-addon1">Email</span>
+              <input type="text" id="emailempresa" value="<%=userData.email%>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+          </div>
+        </div>        
+        <div class="datosGral   ms-0 me-0 p-0 ">
+          <div class="input-group m-0 p-0 input-group-sm">
+              <span class="input-group-text" id="basic-addon1">Telefono</span>
+              <input type="number" id="telefonoempresa" value="<%=userData.telefono%>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+          </div>
+        </div>      
+        <div class="datosGral   ms-0 me-0 p-0 ">
+          <div class="input-group m-0 p-0 input-group-sm">
+              <span class="input-group-text" id="basic-addon1">Direccion</span>
+              <input type="text" id="direccionempresa" value="<%=userData.direccionEmpresa%>" class="form-control inputwhite" style="background: white;" aria-label="Username"  aria-describedby="basic-addon1">
+          </div>
+        </div>    
+        <div class="datosGral  ms-0 me-0 p-0 ">
+          <div class="input-group m-0 p-0 input-group-sm">
+              <span class="input-group-text" id="basic-addon1">Encargado</span>
+              <input type="text" id="encargadoempresa" value="<%=userData.encargadoEmpresa%>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnModificarEmpresa" class="shadow btn text-white btn-sm">Modificar</button>
+        <button type="button" id="closeModificarEmpresa" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>        
+        
+      </div>
+      <label id="messagemodificar"></label>
+    </div>
+  </div>
+</div>
+<!--fin modal-->
+<script src="/js/home.js"></script>
+  <%- include('./partials/foot') %>
