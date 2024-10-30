@@ -6,22 +6,20 @@
         <div class="row justify-content-center m-0 p-0">
             <div class="datosGral   m-0 p-0">
                 <!---->
-                <div class="buscador col-12 p-0 m-0 d-flex flex-column">
-                    <!-- Grupo de elementos que cambian de diseño según el tamaño de la pantalla -->
-                    <div class="input-group input-group-sm   mb-2">                        
-                        <div class="col-12 col-md-4 col-sm-4">                            
-                            <select class="form-select" id="cmbcentros" aria-label="Selector de filtro">
-                                <option value="" selected>Seleccione un Centro</option>
-                                <% listCentro.forEach(opcion => { %>
-                                    <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
-                                <% }); %>
-                            </select>    
-                        </div>            
-                        <div class="col-12 col-md-7 col-sm-7">
-                            <input type="text" id="buscadorpersonal" class="form-control inputwhite col-sm-7 col-md-7 col-12" style="background: white;" placeholder="Buscar..." aria-label="Buscar" aria-describedby="basic-addon1">
-                        </div>
+                <div class="input-group  mb-2">                        
+                    <div class="col-12 col-md-4 col-sm-4 input-group-sm">                            
+                        <select class="form-select " id="cmbcentrospersonal" aria-label="Selector de filtro">
+                            <option value="" selected>Seleccione un Centro</option>
+                            <% listCentro.forEach(opcion => { %>
+                                <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
+                            <% }); %>
+                        </select>    
+                    </div>            
+                    <div class="col-12 col-md-7 col-sm-7 input-group-sm">
+                        <input type="text" id="buscadorpersonal" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
                     </div>
                 </div>
+                
                 
                 <!---->
                 <div class="tablecentro col-12 p-0 m-0 d-flex mt-1 flex-column">
@@ -50,7 +48,7 @@
                                 <td class="align-left" data-id="<%= item.idTrabajador %>"><%= item.apellidos %></td>
                                 <td class="align-left" data-id="<%= item.idTrabajador %>"><%= item.email %></td>
                                 <td class="align-right" data-id="<%= item.idTrabajador %>"><%= item.telefono %></td>
-                                <td class="align-center" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>                                
+                                <td class="align-center estado" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>                                
                                 <td class="align-center">
                                     <button class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>">Cambiar</button>
                                 </td>                              

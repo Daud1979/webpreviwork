@@ -41,3 +41,19 @@ exports.modifyPersonal=async(req,res)=>{
   const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
   res.json({message:mensaje});
 }
+
+
+exports.cargarPersonalCentro=async(req,res)=>{
+  const datos = req.body;
+  const idEmpresa = req.session.userId;
+  Data = await User.listTodosTrabajadorCentro(datos.valor,idEmpresa)
+  res.json(Data);
+}
+
+exports.modificarEstadoPersonal=async(req,res)=>{
+  const datos = req.body;
+  const idEmpresa = req.session.userId;
+ 
+  updateData = await User.modifyEstadoPersonal(datos.idTrabajador,idEmpresa)
+  res.json({message:updateData});
+}

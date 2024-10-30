@@ -9,4 +9,6 @@ router.post('/modificarCentros',homeController.modifyCentros)
 router.get('/centrosempresa',homeController.centros);
 router.get('/personalempresa',homeController.personal);
 router.post('/modificarPersonal',homeController.modifyPersonal)
+router.post('/cargarPersonalCentro',homeController.cargarPersonalCentro)
+router.post('/modificarEstadoPersonal',homeController.modificarEstadoPersonal);
 module.exports = router;

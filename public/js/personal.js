@@ -92,7 +92,82 @@ $(document).on("keydown", ".edit-input", function(event) {
 $(document).on("click", ".select-id-btn", function() {
     // Obtener el valor de data-id desde el atributo del botón
     let idTrabajador = $(this).data("id");
-    console.log("ID del Trabajador seleccionado:", idTrabajador);
+    const data={idTrabajador}
+    fetch('/home/modificarEstadoPersonal', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            let fila = $(this).closest("tr");   
+            fila.find("td.estado").text(data.message);
+        })
+        .catch((error) => {
+        console.error('Error:', error);
+        });
     
-    // Aquí puedes agregar la lógica para manejar el id, como enviarlo a un formulario, hacer una llamada AJAX, etc.
+
+
+    
+
+});
+
+
+$(document).ready(function() {
+    $('#cmbcentrospersonal').on('change', function() {
+        // Obtener el valor seleccionado
+        let valorSeleccionado = $(this).val();
+        const data = { valor: valorSeleccionado };
+
+        // Limpiar el tbody de la tabla
+        $('#tabla-trabajador').empty();
+
+        // Hacer la solicitud fetch para cargar nuevos datos
+        fetch('/home/cargarPersonalCentro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            // Verificar que la respuesta sea exitosa
+            if (!response.ok) {
+                throw new Error('Error en la respuesta de la red');
+            }
+            return response.json();  // Convertir la respuesta a JSON
+        })
+        .then(data => {
+            console.log(data);  // Imprimir los datos para depuración
+            
+            // Comprobar que los datos sean un array
+            if (Array.isArray(data)) {
+                // Iterar sobre el nuevo conjunto de datos y agregar filas a la tabla
+                data.forEach(item => {
+                    $('#tabla-trabajador').append(`
+                        <tr>
+                            <td class="align-left" data-id="${item.idTrabajador}">${item.Centro}</td>
+                            <td class="align-right" data-id="${item.idTrabajador}">${item.NIF}</td>
+                            <td class="align-left" data-id="${item.idTrabajador}">${item.nombres}</td>
+                            <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
+                            <td class="align-left" data-id="${item.idTrabajador}">${item.email}</td>
+                            <td class="align-right" data-id="${item.idTrabajador}">${item.telefono}</td>
+                            <td class="align-center" data-id="${item.idTrabajador}">${item.Estado}</td>
+                            <td class="align-center">
+                                <button class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">Cambiar</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            } else {
+                console.error('La respuesta no es un array');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
 });

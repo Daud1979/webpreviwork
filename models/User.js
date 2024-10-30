@@ -130,6 +130,34 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+static async listTodosTrabajadorCentro(idCentro,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {
+        if (idCentro>0)
+        {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idCentro', sql.Int, idCentro)
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Habilitado' else 'DesHabilitado' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa and idCentro=@idCentro`);          
+        return (result.recordset)
+        }
+        else
+        {
+            const result =await pool.request()
+            .input('idEmpresa', sql.Int, idEmpresa)
+           
+            .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Habilitado' else 'DesHabilitado' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa `);          
+            return (result.recordset)
+        }
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
 static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
     const pool=await await connectDB();
     try 
@@ -205,6 +233,7 @@ static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async modifyPersonal(id,nuevoValor,indexColumna,idEmpresa){
     const pool=await await connectDB();
     try 
@@ -262,6 +291,49 @@ static async modifyPersonal(id,nuevoValor,indexColumna,idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
+static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
+    let estado = '';
+    try {
+        const pool = await connectDB(); // Conectar a la base de datos una vez
+        const result = await pool.request()
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .input('idTrabajador', sql.Int, idTrabajador)
+            .query(`SELECT estado FROM TrabajadorEmpresa WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+        
+        // Asegurarte de que se devuelva al menos un registro
+        if (result.recordset.length > 0) {
+            estado = result.recordset[0].estado; // Obtener el valor del estado
+        } else {
+            throw new Error('No se encontró el trabajador o empresa.');
+        }
+    } catch (error) {
+        console.error('Error en la consulta de estado:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+
+    try {
+        // Actualizar el estado basado en el valor actual
+        const pool = await connectDB(); // Reconectar para la actualización
+        if (estado === 'H') {
+            await pool.request()
+                .input('idEmpresa', sql.Int, idEmpresa)
+                .input('idTrabajador', sql.Int, idTrabajador)
+                .query(`UPDATE TrabajadorEmpresa SET estado='D' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+            return 'Deshabilitado';
+        } else {
+            await pool.request()
+                .input('idEmpresa', sql.Int, idEmpresa)
+                .input('idTrabajador', sql.Int, idTrabajador)
+                .query(`UPDATE TrabajadorEmpresa SET estado='H' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+            return 'Habilitado';
+        }
+    } catch (error) {
+        console.error('Error en la actualización de estado:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
 }//fin de la clase
 
 module.exports = User;
