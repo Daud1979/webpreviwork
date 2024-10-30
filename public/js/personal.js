@@ -3,11 +3,10 @@ function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
-
-document.getElementById("buscadorCentro").addEventListener("input", function() {
+document.getElementById("buscadorpersonal").addEventListener("input", function() {
     const searchValue = this.value.toLowerCase();
    
-    const rows = document.querySelectorAll("#tabla-centros tr");
+    const rows = document.querySelectorAll("#tabla-trabajador tr");
 
     rows.forEach(row => {
         const cells = row.querySelectorAll("td");
@@ -20,13 +19,14 @@ document.getElementById("buscadorCentro").addEventListener("input", function() {
         }
     });
 });
+
 let indexColumna=0;
 // Detecta el clic en una celda para habilitar la edición
-$(document).on("click", "#tabla-centros td[data-id]", function() {
+$(document).on("click", "#tabla-trabajador td[data-id]", function() {
     // Verifica si la celda es de la columna `idCentro` o `ntrabajadorCentro`
     indexColumna = $(this).index();
     
-    if (indexColumna === 0 || indexColumna === 8) {
+    if (indexColumna === 0 || indexColumna === 6) {
         // No permitir edición en la columna de `idCentro` (index 0) ni en `ntrabajadorCentro` (index 8)
         return;
     }
@@ -60,7 +60,7 @@ $(document).on("focusout", ".edit-input", function() {
     $(this).siblings(".error-message").remove();
     $(this).parent().text(nuevoValor);
     const data ={indexColumna,id,nuevoValor}
-    fetch('/home/modificarCentros', {
+    fetch('/home/modificarPersonal', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -85,8 +85,14 @@ $(document).on("input", ".edit-input", function() {
 $(document).on("keydown", ".edit-input", function(event) {
     if (event.key === "Escape") {
         let originalValue = $(this).parent().data("original-value"); // Obtiene el valor original
-        $(this).parent().text(originalValue); // Restaura el valor original en la celda
-
-        console.log("Valor restaurado:", originalValue);
+        $(this).parent().text(originalValue); // Restaura el valor original en la celda       
     }
+});
+
+$(document).on("click", ".select-id-btn", function() {
+    // Obtener el valor de data-id desde el atributo del botón
+    let idTrabajador = $(this).data("id");
+    console.log("ID del Trabajador seleccionado:", idTrabajador);
+    
+    // Aquí puedes agregar la lógica para manejar el id, como enviarlo a un formulario, hacer una llamada AJAX, etc.
 });

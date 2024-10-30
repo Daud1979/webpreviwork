@@ -5,5 +5,8 @@ const router = express.Router();
 
 router.get('/', requireAuth, homeController.index);
 router.post('/modificardatosEmpresa',homeController.modifyEmpresa);
+router.post('/modificarCentros',homeController.modifyCentros)
 router.get('/centrosempresa',homeController.centros);
+router.get('/personalempresa',homeController.personal);
+router.post('/modificarPersonal',homeController.modifyPersonal)
 module.exports = router;

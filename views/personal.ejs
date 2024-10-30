@@ -1,0 +1,69 @@
+<%- include('./partials/head') %>
+<div class="container mt-4 pt-5 text-center">
+    <div class="row justify-content-center filacontenedor ">
+        <h3 class="mt-1 mb-0 pb-0">PERSONAL DE LA EMPRESA</h3>
+        <i id="itrabajador" class="material-icons">engineering</i>
+        <div class="row justify-content-center m-0 p-0">
+            <div class="datosGral   m-0 p-0">
+                <!---->
+                <div class="buscador col-12 p-0 m-0 d-flex flex-column">
+                    <!-- Grupo de elementos que cambian de diseño según el tamaño de la pantalla -->
+                    <div class="input-group input-group-sm   mb-2">                        
+                        <div class="col-12 col-md-4 col-sm-4">                            
+                            <select class="form-select" id="cmbcentros" aria-label="Selector de filtro">
+                                <option value="" selected>Seleccione un Centro</option>
+                                <% listCentro.forEach(opcion => { %>
+                                    <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
+                                <% }); %>
+                            </select>    
+                        </div>            
+                        <div class="col-12 col-md-7 col-sm-7">
+                            <input type="text" id="buscadorpersonal" class="form-control inputwhite col-sm-7 col-md-7 col-12" style="background: white;" placeholder="Buscar..." aria-label="Buscar" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                
+                <!---->
+                <div class="tablecentro col-12 p-0 m-0 d-flex mt-1 flex-column">
+                    <H4>LISTA DE PERSONAL</H4>
+                </div>
+                <div class="table-responsive ">
+                <table class="table table-striped table-sm shadow">
+                    <thead  class="shadow ">
+                        <tr>
+                            <th>Centro</th>
+                            <th>N.I.F.</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Email</th>
+                            <th>Telefono</th>
+                            <th>Estado</th>
+                            <th>Opcion</th>                            
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-trabajador">
+                        <% listPersonal.forEach((item) => { %>
+                            <tr>                             
+                                <td class="align-left" data-id="<%= item.idTrabajador %>"><%= item.Centro %></td>
+                                <td class="align-rigth" data-id="<%= item.idTrabajador %>"><%= item.NIF %></td>
+                                <td class="align-left" data-id="<%= item.idTrabajador %>"><%= item.nombres %></td>
+                                <td class="align-left" data-id="<%= item.idTrabajador %>"><%= item.apellidos %></td>
+                                <td class="align-left" data-id="<%= item.idTrabajador %>"><%= item.email %></td>
+                                <td class="align-right" data-id="<%= item.idTrabajador %>"><%= item.telefono %></td>
+                                <td class="align-center" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>                                
+                                <td class="align-center">
+                                    <button class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>">Cambiar</button>
+                                </td>                              
+                          
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/personal.js"></script>
+
+<%- include('./partials/foot') %>

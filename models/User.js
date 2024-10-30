@@ -115,6 +115,153 @@ static async listCentroEmpresa(idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+static async listTodosTrabajadorEmpresa(idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Habilitado' else 'DesHabilitado' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {        
+        if (indexColumna==1)
+        {
+            const result =await pool.request()
+            .input('nombreCentro', sql.VarChar,nuevoValor)
+            .input('idCentro', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE CentrosEmpresa set nombreCentro=@nombreCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==2)
+        {
+            const result =await pool.request()
+            .input('encargadoCentro', sql.VarChar,nuevoValor)
+            .input('idCentro', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE CentrosEmpresa set encargadoCentro=@encargadoCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==3)
+        {
+            const result =await pool.request()
+            .input('ciudad', sql.VarChar,nuevoValor)
+            .input('idCentro', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE CentrosEmpresa set ciudad=@ciudad WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==4)
+        {
+            const result =await pool.request()
+            .input('codigopostal', sql.VarChar,nuevoValor)
+            .input('idCentro', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE CentrosEmpresa set codigopostal=@codigopostal WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==5)
+        {
+            const result =await pool.request()
+            .input('direccionCentro', sql.VarChar,nuevoValor)
+            .input('idCentro', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE CentrosEmpresa set direccionCentro=@direccionCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        } 
+        else if (indexColumna==6)
+            {
+                const result =await pool.request()
+                .input('telefonoCentro', sql.VarChar,nuevoValor)
+                .input('idCentro', sql.Int, id)
+                .input('idEmpresa', sql.Int, idEmpresa)
+                .query(`UPDATE CentrosEmpresa set telefonoCentro=@telefonoCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+                return (result.rowsAffected[0])
+            } 
+            else if (indexColumna==7)
+                {
+                    const result =await pool.request()
+                    .input('emailCentro', sql.VarChar,nuevoValor)
+                    .input('idCentro', sql.Int, id)
+                    .input('idEmpresa', sql.Int, idEmpresa)
+                    .query(`UPDATE CentrosEmpresa set emailCentro=@emailCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+                    return (result.rowsAffected[0])
+                } 
+        
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+static async modifyPersonal(id,nuevoValor,indexColumna,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {        
+        if (indexColumna==1)
+        {
+            const result =await pool.request()
+            .input('NIF', sql.VarChar,nuevoValor)
+            .input('idTrabajador', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE  TrabajadorEmpresa set NIF=@NIF WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==2)
+        {
+            const result =await pool.request()
+            .input('nombres', sql.VarChar,nuevoValor)
+            .input('idTrabajador', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE  TrabajadorEmpresa set nombres=@nombres WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==3)
+        {
+            const result =await pool.request()
+            .input('apellidos', sql.VarChar,nuevoValor)
+            .input('idTrabajador', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE  TrabajadorEmpresa set apellidos=@apellidos WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==4)
+        {
+            const result =await pool.request()
+            .input('email', sql.VarChar,nuevoValor)
+            .input('idTrabajador', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE  TrabajadorEmpresa set email=@email WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }
+        else if (indexColumna==5)
+        {
+            const result =await pool.request()
+            .input('telefono', sql.VarChar,nuevoValor)
+            .input('idTrabajador', sql.Int, id)
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`UPDATE  TrabajadorEmpresa set telefono=@telefono WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            return (result.rowsAffected[0])
+        }     
+        
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
 }//fin de la clase
 
 module.exports = User;
