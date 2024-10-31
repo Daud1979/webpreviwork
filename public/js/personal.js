@@ -3,6 +3,74 @@ function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
+btnregistrarpersonal = document.querySelector('#btnregistrarpersonal');
+function validarObjeto(obj) {
+    return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
+}
+
+btnregistrarpersonal.addEventListener('click',()=>{
+    const idcentro=document.querySelector('#cmbcentrospersonalregistro');
+    const nif=document.querySelector('#nifpersonal');
+    const nombre=document.querySelector('#nombrepersonal');
+    const apellidos=document.querySelector('#apellidospersonal');
+    const email=document.querySelector('#emailpersonal');
+    const telefono=document.querySelector('#telefonopersonal');
+    const message = document.querySelector('#messageregister');
+    const data ={
+        idCentro:idcentro.value,
+        NIF:nif.value,
+        nombres:nombre.value,
+        apellidos:apellidos.value,
+        email:email.value,
+        telefono:telefono.value
+    }
+    if (isValidEmail(email.value) && validarObjeto(data))
+    {
+        message.innerHTML="";
+        message.classList.remove('messageregisteralert');
+       
+        fetch('/home/registrarpersonal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+               if(data[0].Resultado==1)
+               {
+                
+                message.classList.add('messageregisteradd');
+                    message.innerHTML="SE REGISTRO CORRECTAMENTE";
+                   
+                    nif.value="";
+                    nombre.value="";
+                    apellidos.value="";
+                    email.value="";
+                    telefono.value="";
+               }
+               else
+               {
+                    message.innerHTML="LA PERSONA YA SE ENCUENTRA REGISTRADO";
+                    message.classList.add('messageregisteralert');
+               }
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            }); 
+    }
+    else{
+        message.innerHTML="SE REQUIERE DATOS O CORREO NO VALIDO";
+        message.classList.add('messageregisteralert');
+    }
+});
+
+
+
+
+
+
 document.getElementById("buscadorpersonal").addEventListener("input", function() {
     const searchValue = this.value.toLowerCase();
    
@@ -89,32 +157,39 @@ $(document).on("keydown", ".edit-input", function(event) {
     }
 });
 
-$(document).on("click", ".select-id-btn", function() {
-    // Obtener el valor de data-id desde el atributo del botón
-    let idTrabajador = $(this).data("id");
-    const data={idTrabajador}
-    fetch('/home/modificarEstadoPersonal', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            let fila = $(this).closest("tr");   
-            fila.find("td.estado").text(data.message);
-        })
-        .catch((error) => {
-        console.error('Error:', error);
-        });
-    
 
+// Agrega un evento de clic a cada botón
+// Selecciona todos los botones con la clase "select-id-btn"
+const botones = document.querySelectorAll('.select-id-btn');
 
-    
-
+// Agrega un evento de clic a cada botón
+botones.forEach((boton) => {
+    boton.addEventListener('click', function() {       
+        const idBoton = this.id;   
+        const idTrabajador = this.getAttribute('data-id');
+        if (idBoton=='btnEstadoPersona')
+        {
+            console.log(idTrabajador);
+            const data={idTrabajador}
+            fetch('/home/modificarEstadoPersonal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let fila = $(this).closest("tr");   
+                    fila.find("td.estado").text(data.message);
+                })
+                .catch((error) => {
+                console.error('Error:', error);
+                });
+        }
+      
+    });
 });
-
 
 $(document).ready(function() {
     $('#cmbcentrospersonal').on('change', function() {
@@ -155,13 +230,44 @@ $(document).ready(function() {
                             <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
                             <td class="align-left" data-id="${item.idTrabajador}">${item.email}</td>
                             <td class="align-right" data-id="${item.idTrabajador}">${item.telefono}</td>
-                            <td class="align-center" data-id="${item.idTrabajador}">${item.Estado}</td>
-                            <td class="align-center">
-                                <button class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">Cambiar</button>
+                            <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>
+                           <td class="align-center m-0 p-0 " id="tdbotones">
+                                <button id="btnEstadoPersona" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
+                                    <i id="iapto" class="material-icons">restart_alt</i>
+                                    <span class="tooltip-text">Alta/Baja</span>
+                                </button>
+
+                                <button id="btnFormacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
+                                    <i id="iformacion" class="material-icons">school</i>
+                                    <span class="tooltip-text">Formación</span>
+                                </button>
+
+                                <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
+                                    <i id="iinformacion" class="material-icons">analytics</i>
+                                    <span class="tooltip-text">Información</span>
+                                </button>
+
+                                <button id="btnAptoRM" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
+                                    <i id="iaptorm" class="material-icons">medical_information</i>
+                                    <span class="tooltip-text">Apto R.M.</span>
+                                </button>
+
+                                <button id="btnRenuncia" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
+                                    <i id="icrrm" class="material-icons">monitor_heart</i>
+                                    <span class="tooltip-text">Consentimiento Renuncia R.M.</span>
+                                </button>
+
+                                <button id="btnAutorizacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
+                                    <i id="iautorizaciones" class="material-icons">verified_user</i>
+                                    <span class="tooltip-text">Autorizaciones</span>
+                                </button>
                             </td>
                         </tr>
                     `);
                 });
+
+                // Agregar evento a los botones generados
+                agregarEventosABotones();  // Llama a la función que añade eventos
             } else {
                 console.error('La respuesta no es un array');
             }
@@ -170,4 +276,42 @@ $(document).ready(function() {
             console.error('Error:', error);
         });
     });
+
+    // Función para agregar eventos a los botones
+    function agregarEventosABotones() {
+        // Selecciona todos los botones con la clase "select-id-btn"
+        const botones = document.querySelectorAll('.select-id-btn');
+
+        // Agrega un evento de clic a cada botón
+        botones.forEach((boton) => {
+            boton.addEventListener('click', function() {
+                const idBoton = this.id;  // Guarda el id del botón clicado
+                const idTrabajador = this.getAttribute('data-id');  // Obtiene el data-id
+
+                if (idBoton === 'btnEstadoPersona') {
+                    console.log(idTrabajador);  // Muestra el data-id en consola
+                    const data = { idTrabajador };  // Crea el objeto para el fetch
+
+                    fetch('/home/modificarEstadoPersonal', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())  // Espera la respuesta en JSON
+                    .then(data => {
+                        // Encuentra la fila correspondiente al botón clicado
+                        const fila = $(this).closest("tr");  
+                        fila.find("td.estado").text(data.message);  // Actualiza el estado en la tabla
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        });
+    }
 });
+
+

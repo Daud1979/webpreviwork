@@ -57,3 +57,12 @@ exports.modificarEstadoPersonal=async(req,res)=>{
   updateData = await User.modifyEstadoPersonal(datos.idTrabajador,idEmpresa)
   res.json({message:updateData});
 }
+
+exports.registerpersonal = async(req,res)=>{
+  const datos =req.body;
+  const idEmpresa = req.session.userId;
+  const fechaAlta =new Date();
+  const estado='H'; ;
+  registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,fechaAlta,estado,idEmpresa)
+  res.json(registrar);
+}

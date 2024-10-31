@@ -121,7 +121,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
     {
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Habilitado' else 'DesHabilitado' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa`);          
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -139,7 +139,7 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Habilitado' else 'DesHabilitado' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa and idCentro=@idCentro`);          
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa and idCentro=@idCentro`);          
         return (result.recordset)
         }
         else
@@ -147,7 +147,7 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
             const result =await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
            
-            .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Habilitado' else 'DesHabilitado' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa `);          
+            .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa `);          
             return (result.recordset)
         }
     } 
@@ -320,13 +320,13 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
                 .input('idEmpresa', sql.Int, idEmpresa)
                 .input('idTrabajador', sql.Int, idTrabajador)
                 .query(`UPDATE TrabajadorEmpresa SET estado='D' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
-            return 'Deshabilitado';
+            return 'Baja';
         } else {
             await pool.request()
                 .input('idEmpresa', sql.Int, idEmpresa)
                 .input('idTrabajador', sql.Int, idTrabajador)
                 .query(`UPDATE TrabajadorEmpresa SET estado='H' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
-            return 'Habilitado';
+            return 'Alta';
         }
     } catch (error) {
         console.error('Error en la actualización de estado:', error);
@@ -334,6 +334,34 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
     }
 }
 
+
+
+static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,fechaAlta,estado,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {   
+
+         const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idCentro', sql.Int, idCentro)
+        .input('estado', sql.VarChar, estado)
+        .input('fechaAlta', sql.DateTime, fechaAlta)
+        .input('telefono', sql.VarChar, telefono)
+        .input('email', sql.VarChar, email)
+        .input('nombres', sql.VarChar, nombres)
+        .input('apellidos', sql.VarChar, apellidos)
+        .input('NIF', sql.VarChar, NIF)
+        .execute('REGISTRAR_TRABAJADOR');
+       return result.recordset
+       
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
 }//fin de la clase
+
 
 module.exports = User;
