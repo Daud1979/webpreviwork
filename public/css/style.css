@@ -140,8 +140,25 @@ h3{
 #btnModificarEmpresa{
   background: #4058FB;
 }
+#btnregistrarpersonalmodal{
+  background:#4058FB;
+  color:#fdfdfd;
+}
 #btnregistrarpersonal{
-  background: #4058FB;
+  background:#4058FB;
+  color:#fdfdfd;
+}
+#btnregistrarcentro{
+  background:#4058FB;;
+  color:#fdfdfd;
+}
+#btnregistrarcentro:hover{
+  background:#8e8e8f;
+  color:#0a0a0a;
+}
+#btnregistrarpersonal:hover{
+  background:#8e8e8f;
+  color:#0a0a0a;
 }
 .btnidpersonalfila{
   color:#4058FB;
@@ -178,9 +195,14 @@ h3{
 }
 th{
   font-size: 0.9rem;
+  padding: .5rem;
 }
 td{
   font-size: 0.9rem;
+  padding:.7rem;
+  margin: .5rem;
+  border-color: black;
+  
 }
 #iinformacion{
   text-shadow: none; 
@@ -272,13 +294,14 @@ td span {
   padding: 0 !important; /* Elimina el padding */
 }
 
-#tdbotones{
+#tdbotones{  
 
-  border-radius:10px;
-  display: flex;
-  justify-content: end;
-  
+  width: 180px;
+  padding: 0;
+  margin: 0;
 }
 #tdbotones i{
   text-shadow: 3px 5px #adacac;
+  padding: 0;
+  margin: 0;
 }

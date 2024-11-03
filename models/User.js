@@ -7,7 +7,7 @@ static async findByUsername(idEmpresa) {
     try{
         const result = await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`SELECT * FROM ClienteEmpresa WHERE idEmpresa=@idEmpresa`);
+            .query(`SELECT razonSocial,grupoEmpresarial,CIF,CNAE,descripcionCNAE,direccionEmpresa,encargadoEmpresa,email,telefono,ciudad,codigopostal,nCentro=(select COUNT(*) from CentrosEmpresa where idEmpresa=@idEmpresa),ntrabajadorEmpresa=(select CONVERT(varchar, count(*)) from TrabajadorEmpresa where idEmpresa=@idEmpresa)+' de un total de: '+convert(varchar,ntrabajadorEmpresa),provincia,actividad FROM ClienteEmpresa WHERE idEmpresa=@idEmpresa`);
         return (result.recordset[0])
     } 
     catch (error) 
@@ -106,7 +106,7 @@ static async listCentroEmpresa(idEmpresa){
     {
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
-        .query(`select * from CentrosEmpresa where idEmpresa=@idEmpresa`);          
+        .query(`select idCentro,nombreCentro,encargadoCentro,ciudad,codigopostal,direccionCentro,telefonoCentro,emailCentro,ntrabajadorCentro,registrados=(select COUNT(*) from TrabajadorEmpresa where idCentro=c.idCentro and idEmpresa=@idEmpresa) from CentrosEmpresa c where idEmpresa=@idEmpresa`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -354,6 +354,30 @@ static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,fec
         .execute('REGISTRAR_TRABAJADOR');
        return result.recordset
        
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,telefono,email,personal,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {   
+        const result =await pool.request()        
+        .input('nombreCentro', sql.VarChar,centro)
+        .input('encargadoCentro', sql.VarChar, encargado)
+        .input('ciudad', sql.VarChar, ciudad)
+        .input('direccionCentro', sql.VarChar, direccion)
+        .input('codigoposta', sql.VarChar, codigopostal)
+        .input('telefonoCentro', sql.VarChar, telefono)
+        .input('emailCentro', sql.VarChar, email)
+        .input('ntrabajadorCentro', sql.VarChar,personal)
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .execute('REGISTRAR_CENTRO');
+        return result.recordset
     } 
     catch (error) 
     {

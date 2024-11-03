@@ -66,3 +66,10 @@ exports.registerpersonal = async(req,res)=>{
   registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,fechaAlta,estado,idEmpresa)
   res.json(registrar);
 }
+
+exports.registercenter = async(req,res)=>{
+  const {    centro, encargado, ciudad, direccion, telefono, email, personal,codigopostal } =req.body;
+  const idEmpresa = req.session.userId;
+  registrar = await User.registrarcentro(centro,encargado,ciudad,direccion,codigopostal,telefono,email,personal,idEmpresa)
+  res.json(registrar);
+}

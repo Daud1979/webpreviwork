@@ -90,3 +90,75 @@ $(document).on("keydown", ".edit-input", function(event) {
         console.log("Valor restaurado:", originalValue);
     }
 });
+
+btncentromodal = document.querySelector('#btnregistrarcentro');
+btncentromodal.addEventListener('click',()=>{
+   
+    const centro=document.querySelector('#txtcentro');
+    const encargado=document.querySelector('#txtencargado');
+    const ciudad=document.querySelector('#txtciudad');
+    const direccion=document.querySelector('#txtdireccion');
+    const telefono=document.querySelector('#txttelefono');
+    const codigopostal=document.querySelector('#txtcodigopostal');
+    const email=document.querySelector('#txtemail');
+    const personal=document.querySelector('#txtpersonal');
+    const message = document.querySelector('#messageregister');
+    const data ={
+        centro:centro.value,
+        encargado:encargado.value,
+        ciudad:ciudad.value,
+        direccion:direccion.value,
+        telefono:telefono.value,
+        email:email.value,
+        personal:personal.value,
+        codigopostal:codigopostal.value
+    }
+    console.log(data);
+    if (isValidEmail(email.value) && validarObjeto(data))
+    {
+        message.innerHTML="";
+        message.classList.remove('messageregisteralert');
+       
+        fetch('/home/registrarcentro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+               if(data[0].Resultado==1)
+               {
+                
+                message.classList.add('messageregisteradd');
+                    message.innerHTML="SE REGISTRO CORRECTAMENTE";
+                   
+                    centro.value='';
+                    encargado.value='';
+                    ciudad.value='';
+                    direccion.value='';
+                    telefono.value='';
+                    email.value='';
+                    personal.value='';
+                    location.reload();
+               }
+               else
+               {
+                    message.innerHTML="EL CENTRO YA SE ENCUENTRA REGISTRADO";
+                    message.classList.add('messageregisteralert');
+               }
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            }); 
+    }
+    else{
+        message.innerHTML="SE REQUIERE DATOS O CORREO NO VALIDO";
+        message.classList.add('messageregisteralert');
+    }
+});
+
+function validarObjeto(obj) {
+    return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
+}

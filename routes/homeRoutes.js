@@ -12,4 +12,5 @@ router.post('/modificarPersonal',homeController.modifyPersonal)
 router.post('/cargarPersonalCentro',homeController.cargarPersonalCentro)
 router.post('/modificarEstadoPersonal',homeController.modificarEstadoPersonal);
 router.post('/registrarpersonal',homeController.registerpersonal);
+router.post('/registrarcentro',homeController.registercenter);
 module.exports = router;
