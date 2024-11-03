@@ -385,6 +385,89 @@ static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,tele
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
+static async mostrarpdf(tipo,idEmpresa){
+    let idCategoria=0;
+    const pool=await await connectDB();
+    if (tipo=='gestion_1')//plan prevencion
+    {
+        idCategoria=1;
+    }
+    else if(tipo=='gestion_2')//evaluacion de riesgos
+    {
+        idCategoria=2;
+    }
+    else if(tipo=='gestion_3')//planificacion actividad
+    {
+        idCategoria=3;
+    }
+    else if(tipo=='gestion_4')//programacion anual
+    {
+        idCategoria=4;
+    }
+    else if(tipo=='gestion_5')//memoria anual
+    {
+        idCategoria=5;
+    }
+    else if(tipo=='gestion_6')//notificaciones
+    {
+        idCategoria=6;
+    }
+    else if(tipo=='gestion_7')//contratos
+    {
+        idCategoria=7;
+    }
+    else if(tipo=='btnPresupuestoAll')//presupuestos 
+    {
+        idCategoria=0;
+    }    
+    else if(tipo=='btninforme_8')//construccion
+    {
+        idCategoria=8;
+    }
+    else if(tipo=='btninforme_9')//informe d seguridad
+    {
+        idCategoria=9;
+    }
+    else if(tipo=='btninforme_10')//informes de psicosocoiliga
+    {
+        idCategoria=10;
+    }
+    else if(tipo=='btninforme_11')//informes de ergonomia
+    {
+        idCategoria=11;
+    }
+    else if(tipo=='btninforme_12')//informes de higiene
+    {
+        idCategoria=12;
+    }
+    else if(tipo=='btnformacion')//formacion
+    {
+        idCategoria=13;
+    }
+    else if(tipo=='btnmedicina')//medicina
+    {
+        idCategoria=14;
+    }
+    else{
+        return 'Error categoria no valida';
+    }   
+
+    try 
+    {   
+        const result =await pool.request()        
+        .input('idDocumento', sql.Int,idCategoria)   
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,idDocumentoProyecto,Proyecto=codigoAlterno,Centro,Categoria,documento,observacion,registro=CONVERT(varchar(10),registro,103) from CategoriaDocumento c inner join DocumentosProyectos dp on (c.idDocumento=dp.idDocumento) inner join contratos co on (dp.idContrato=co.idContrato) where idEmpresa=@idEmpresa and c.idDocumento=@idDocumento`);
+        return result.recordset
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
 }//fin de la clase
 
 

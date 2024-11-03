@@ -1,0 +1,58 @@
+<%- include('./partials/head') %>
+<div class="container-fluid mt-4 pt-5 text-center">
+    <div class="row justify-content-center filacontenedor ">
+        <h3 class="mt-1">DOCUMENTOS </h3>
+        <h4><%=message[0].Categoria %></h4>
+        <i id="ifolder" class="material-icons">folder</i>
+        <div class="row justify-content-center m-0 p-0">
+            <div class="datosGral">
+                <!---->
+                <div class="input-group mb-2 gap-2 ">                        
+                    <div class="input-group-sm col-12 col-md-5 col-sm-5 shadow">
+                        <input type="text" id="buscadordocumento" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
+                    </div>                   
+                </div>            
+                
+                <!---->
+                <div class="tablecentro col-12  d-flex mt-1 flex-column">
+                    <H4>LISTA DE DOCUMENTOS</H4>
+                    
+                </div>
+                <div class="table-responsive ">
+                <table class="table table-bordered table-striped table-sm shadow">
+                    <thead  class="shadow ">
+                        <tr id="trhead">
+                            <th >Nº</th>
+                            <th>Proyecto</th>
+                            <th>Centros</th>
+                            <th>Documento</th>
+                            <th>Observacion</th>
+                            <th>Registro</th>                            
+                            <th id="tdbotonesdescarga">Descargar</th>                                                   
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-documentos">
+                        <% message.forEach((item) => { %>
+                            <tr>                             
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.Proyecto %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Centro %></td>
+ 
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
+                                <td >
+                                    <button id="btnEstadoPersona" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> <i id="idescarga"  class="material-icons"><%= "cloud_download" %></i><span class="tooltip-text">Descargar Documento</span></button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<script src="/js/documentosempresa.js"></script>
+
+<%- include('./partials/foot') %>

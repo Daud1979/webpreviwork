@@ -13,4 +13,6 @@ router.post('/cargarPersonalCentro',homeController.cargarPersonalCentro)
 router.post('/modificarEstadoPersonal',homeController.modificarEstadoPersonal);
 router.post('/registrarpersonal',homeController.registerpersonal);
 router.post('/registrarcentro',homeController.registercenter);
+router.post('/mostrarpdfempresa',homeController.mostrarpdfempresa);
+router.post('/listadocumentos',homeController.enviarapdf);
 module.exports = router;

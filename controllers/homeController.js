@@ -73,3 +73,16 @@ exports.registercenter = async(req,res)=>{
   registrar = await User.registrarcentro(centro,encargado,ciudad,direccion,codigopostal,telefono,email,personal,idEmpresa)
   res.json(registrar);
 }
+exports.mostrarpdfempresa = async(req,res)=>{
+  const {tipo}=req.body;  
+  const idEmpresa = req.session.userId;
+  message = await User.mostrarpdf(tipo,idEmpresa);
+  (message.length)==0?res.json({confirm:false,message:'NO EXISTEN DOCUMENTOS'}):res.json({confirm:true,message:'SI EXISTEN DATOS'})
+}
+
+exports.enviarapdf=async(req,res)=>{
+  const {tipo}=req.body;  
+  const idEmpresa = req.session.userId;
+  message =await User.mostrarpdf(tipo,idEmpresa);
+  (req.session.userId>0)? res.render('documentosempresa',message):res.redirect('/');  
+}
