@@ -122,10 +122,10 @@ async function descargarpdf(documentId, button) {
         document.body.appendChild(link);
         link.click();
         link.remove();
-
+        
         // Mensaje de éxito
         alert('El archivo se ha descargado correctamente.');
-
+         
         // Liberar el objeto URL
         window.URL.revokeObjectURL(url);
 

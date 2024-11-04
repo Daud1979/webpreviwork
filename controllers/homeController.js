@@ -111,23 +111,55 @@ exports.downloadpdf = async(req,res)=>{
   //(booleandescarga)?res.json({ message: 'SE DESCARGO EL ARCHIVO' }):res.json({ message: 'SE PRODUJO UN ERROR AL DESCARGAR' })
 }
 
+// async function downloadFromS3(s3Key, newFileName) {
+//   const bucketName = process.env.S3_BUCKET_NAME;
+//   const s3 = new S3Client({
+//     region: process.env.AWS_REGION,
+//     credentials: {
+//         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//     },
+// });
+
+//   // Directorios de Descargas y Escritorio
+//   const downloadsDir = path.join(os.homedir(), 'Downloads');
+//   const desktopDir = path.join(os.homedir(), 'Desktop');
+
+//   // Definir el directorio de destino basado en la existencia de la carpeta de Descargas
+//   const downloadDir = fs.existsSync(downloadsDir) ? downloadsDir : desktopDir;
+//   const filePath = path.join(downloadDir, newFileName);
+//   try {
+//     const params = { Bucket: bucketName, Key: s3Key };
+//     const command = new GetObjectCommand(params);
+
+//     // Obtener el archivo desde S3 como flujo de datos (stream)
+//     const response = await s3.send(command);
+
+//     // Guardar el archivo descargado usando un stream
+//     await streamPipeline(response.Body, fs.createWriteStream(filePath));
+//     console.log(`Archivo descargado y guardado como: ${filePath}`);
+//     return true
+//   } 
+//   catch (error) 
+//   {
+//     console.error(`Error al descargar el archivo desde S3: ${error.message}`);
+//    return false
+//   } 
+// }
 async function downloadFromS3(s3Key, newFileName) {
   const bucketName = process.env.S3_BUCKET_NAME;
   const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
-});
+  });
 
-  // Directorios de Descargas y Escritorio
-  const downloadsDir = path.join(os.homedir(), 'Downloads');
+  // Directorio del escritorio
   const desktopDir = path.join(os.homedir(), 'Desktop');
+  const filePath = path.join(desktopDir, newFileName);
 
-  // Definir el directorio de destino basado en la existencia de la carpeta de Descargas
-  const downloadDir = fs.existsSync(downloadsDir) ? downloadsDir : desktopDir;
-  const filePath = path.join(downloadDir, newFileName);
   try {
     const params = { Bucket: bucketName, Key: s3Key };
     const command = new GetObjectCommand(params);
@@ -137,12 +169,10 @@ async function downloadFromS3(s3Key, newFileName) {
 
     // Guardar el archivo descargado usando un stream
     await streamPipeline(response.Body, fs.createWriteStream(filePath));
-    console.log(`Archivo descargado y guardado como: ${filePath}`);
-    return true
-  } 
-  catch (error) 
-  {
+    console.log(`Archivo descargado y guardado en el escritorio como: ${filePath}`);
+    return true;
+  } catch (error) {
     console.error(`Error al descargar el archivo desde S3: ${error.message}`);
-   return false
-  } 
+    return false;
+  }
 }
