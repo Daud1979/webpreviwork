@@ -99,37 +99,51 @@ function validarObjeto(obj) {
 
 
 async function descargarpdf(documentId, button) {
-    // Cambiar el color del icono a rojo
     const icon = button.querySelector('.material-icons');
     icon.style.color = 'Grey';
+    const row = button.closest('tr');
 
+    // Obtener el contenido de la celda de la cuarta columna (índice 3)
+    const documentCell = row.cells[3]; // Índice 3 para la cuarta columna (cero indexado)
+    const documentName = documentCell.textContent.trim();
+  
     try {
-        // Iniciar la descarga
-        const response = await fetch(`/home/download/${documentId}`);
-        if (!response.ok) throw new Error('Error en la descarga');
+        const response = await fetch('/home/downloadpdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: documentId })
+        });
 
-        // Crear un Blob para descargar el archivo
+        if (!response.ok) {
+            throw new Error('Error al descargar el archivo');
+        }
+
+        // Crear un enlace de descarga
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = documentName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
-        // Obtener el nombre del archivo desde las cabeceras de respuesta
-        const disposition = response.headers.get('Content-Disposition');
-        const fileName = disposition ? disposition.split('filename=')[1] : 'archivo.descargado';
-        link.download = fileName;
-
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        
-        // Mensaje de éxito
-        alert('El archivo se ha descargado correctamente.');
-         
-        // Liberar el objeto URL
-        window.URL.revokeObjectURL(url);
-
+        icon.style.color = 'Green'; // Cambiar color a verde si la descarga fue exitosa
     } catch (error) {
-        console.error('Error en la descarga:', error);        
+        console.error('Error en la descarga:', error);
+        icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
     }
 }
+
+
+
+
+
+
+
+
+
+
