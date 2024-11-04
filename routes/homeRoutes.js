@@ -15,4 +15,5 @@ router.post('/registrarpersonal',homeController.registerpersonal);
 router.post('/registrarcentro',homeController.registercenter);
 router.post('/mostrarpdfempresa',homeController.mostrarpdfempresa);
 router.post('/listadocumentos',homeController.enviarapdf);
+router.get('/download/:id',homeController.downloadpdf);
 module.exports = router;

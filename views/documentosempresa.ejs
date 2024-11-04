@@ -41,8 +41,11 @@
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
                                 <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
-                                <td >
-                                    <button id="btnEstadoPersona" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> <i id="idescarga"  class="material-icons"><%= "cloud_download" %></i><span class="tooltip-text">Descargar Documento</span></button>
+                                <td>
+                                    <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> 
+                                        <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
+                                        <span class="tooltip-text">Descargar Documento</span>
+                                    </button>
                                 </td>
                             </tr>
                         <% }); %>

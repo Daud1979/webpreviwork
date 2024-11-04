@@ -2,6 +2,7 @@ const connectDB = require('../config/db');
 const sql = require('mssql');
 const crypto = require('crypto');
 class User {
+
 static async findByUsername(idEmpresa) {
     const pool = await connectDB();
     try{
@@ -80,6 +81,7 @@ static async validatePassword(username,pass,email) {
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEmpresa){
     const pool=await await connectDB();
     try 
@@ -100,6 +102,7 @@ static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEm
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async listCentroEmpresa(idEmpresa){
     const pool=await await connectDB();
     try 
@@ -115,6 +118,7 @@ static async listCentroEmpresa(idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async listTodosTrabajadorEmpresa(idEmpresa){
     const pool=await await connectDB();
     try 
@@ -130,6 +134,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async listTodosTrabajadorCentro(idCentro,idEmpresa){
     const pool=await await connectDB();
     try 
@@ -334,8 +339,6 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
     }
 }
 
-
-
 static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,fechaAlta,estado,idEmpresa){
     const pool=await await connectDB();
     try 
@@ -377,6 +380,24 @@ static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,tele
         .input('ntrabajadorCentro', sql.VarChar,personal)
         .input('idEmpresa', sql.Int, idEmpresa)
         .execute('REGISTRAR_CENTRO');
+        return result.recordset
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async descargarpdf(idDocumentoProyecto,idEmpresa){
+    
+    const pool=await await connectDB();
+    try 
+    {   
+        const result =await pool.request()        
+        .input('idDocumentoProyecto', sql.Int,idDocumentoProyecto)   
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .query(`select documentoAWS,documento from CategoriaDocumento c inner join DocumentosProyectos dp on (c.idDocumento=dp.idDocumento) inner join contratos co on (dp.idContrato=co.idContrato) where idEmpresa=@idEmpresa and idDocumentoProyecto=@idDocumentoProyecto`);
         return result.recordset
     } 
     catch (error) 

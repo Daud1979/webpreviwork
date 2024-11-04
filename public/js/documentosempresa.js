@@ -96,3 +96,40 @@ $(document).on("keydown", ".edit-input", function(event) {
 function validarObjeto(obj) {
     return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
 }
+
+
+async function descargarpdf(documentId, button) {
+    // Cambiar el color del icono a rojo
+    const icon = button.querySelector('.material-icons');
+    icon.style.color = 'Grey';
+
+    try {
+        // Iniciar la descarga
+        const response = await fetch(`/home/download/${documentId}`);
+        if (!response.ok) throw new Error('Error en la descarga');
+
+        // Crear un Blob para descargar el archivo
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+
+        // Obtener el nombre del archivo desde las cabeceras de respuesta
+        const disposition = response.headers.get('Content-Disposition');
+        const fileName = disposition ? disposition.split('filename=')[1] : 'archivo.descargado';
+        link.download = fileName;
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        // Mensaje de éxito
+        alert('El archivo se ha descargado correctamente.');
+
+        // Liberar el objeto URL
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Error en la descarga:', error);        
+    }
+}
