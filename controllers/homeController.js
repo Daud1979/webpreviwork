@@ -36,7 +36,8 @@ exports.personal=async (req,res)=>{//enviar a trabajadores
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
   listPersonal = await User.listTodosTrabajadorEmpresa(idEmpresa);
-  (req.session.userId>0)? res.render('personal',{listCentro,listPersonal}):res.redirect('/');
+  listPuesto = await User.listPuestoEmpresa(idEmpresa);
+  (req.session.userId>0)? res.render('personal',{listCentro,listPersonal,listPuesto}):res.redirect('/');
 }
 exports.modifyCentros=async(req,res)=>{
   const datos = req.body;
@@ -48,11 +49,11 @@ exports.modifyCentros=async(req,res)=>{
 exports.modifyPersonal=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
-  updateData = await User.modifyPersonal(datos.id,datos.nuevoValor,datos.indexColumna,idEmpresa)
+
+  updateData = await User.modifyPersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.idpuesto,datos.telefono,datos.Fregistro,datos.Fbaja,datos.estado,datos.idTrabajador,idEmpresa)
   const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
   res.json({message:mensaje});
 }
-
 
 exports.cargarPersonalCentro=async(req,res)=>{
   const datos = req.body;
@@ -66,15 +67,16 @@ exports.modificarEstadoPersonal=async(req,res)=>{
   const idEmpresa = req.session.userId;
  
   updateData = await User.modifyEstadoPersonal(datos.idTrabajador,idEmpresa)
-  res.json({message:updateData});
+  res.json({updateData});
 }
 
 exports.registerpersonal = async(req,res)=>{
   const datos =req.body;
   const idEmpresa = req.session.userId;
-  const fechaAlta =new Date();
-  const estado='H'; ;
-  registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,fechaAlta,estado,idEmpresa)
+  
+  const estado='H';
+ 
+  registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,datos.idpuesto,datos.Fregistro,estado,idEmpresa)
   res.json(registrar);
 }
 

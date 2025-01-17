@@ -37,8 +37,11 @@
                             <th>N.I.F.</th>
                             <th>Nombres</th>
                             <th>Apellidos</th>
+                            <th>Puesto</th>
                             <th>Email</th>
                             <th>Telefono</th>
+                            <th>Registro</th>
+                            <th>F. Baja</th>
                             <th>Estado</th>                            
                             <th id="tdbotones">Opciones</th>                                                   
                         </tr>
@@ -50,11 +53,14 @@
                                 <td class="align-rigth" id="tdNIF" data-id="<%= item.idTrabajador %>"><%= item.NIF %></td>
                                 <td class="align-left" id="tdnombres" data-id="<%= item.idTrabajador %>"><%= item.nombres %></td>
                                 <td class="align-left" id="tdapellidos" data-id="<%= item.idTrabajador %>"><%= item.apellidos %></td>
+                                <td class="align-left" id="tdpuesto" data-id="<%= item.idTrabajador %>"><%= item.Puesto %></td>
                                 <td class="align-left" id="tdemail" data-id="<%= item.idTrabajador %>"><%= item.email %></td>
                                 <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.telefono %></td>
+                                <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Registro %></td>
+                                <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Baja %></td>
                                 <td class="align-left estado" id="tdestado" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>                                
                                 <td >
-                                    <button id="btnEstadoPersona" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> <i id="iapto"  class="material-icons"><%= "restart_alt" %></i><span class="tooltip-text">Alta/Baja</span></button>
+                                    <button id="btnEstadoPersona"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> <i id="iapto"  class="material-icons"><%= "restart_alt" %></i><span class="tooltip-text">Actualizar Datos</span></button>
                                     <button id="btnFormacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"><i id="iformacion" class="material-icons"><%= "school" %></i><span class="tooltip-text">Formación</span></button>
                                     <button id="btndInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"><i id="iinformacion"  class="material-icons"><%= "analytics" %></i><span class="tooltip-text">Información</span></button>
                                     <button id="btnAptoRM" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"><i id="iaptorm"  class="material-icons"><%= "medical_information" %></i><span class="tooltip-text">Apto R.M.</span></button>
@@ -97,7 +103,7 @@
             </div>        
             <div class="datosGral   ms-0 me-0 p-0 ">
                 <div class="input-group m-0 p-0 input-group-sm">
-                    <span class="input-group-text" id="basic-addon1">Nombre</span>
+                    <span class="input-group-text" id="basic-addon1">Nombres</span>
                     <input type="text" id="nombrepersonal"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
                 </div>
             </div>      
@@ -119,6 +125,23 @@
                     <input type="number" id="telefonopersonal"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
                 </div>
             </div>  
+            <div class="datosGral   ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Puesto Trabajo</span>
+                    <select class="form-select " id="cmbpuestotrabajo" aria-label="Selector de filtro">                        
+                        <% listPuesto.forEach(opcion => { %>
+                            <option value="<%= opcion.idPuesto %>"><%= opcion.Nombre %></option>
+                        <% }); %>
+                    </select>             
+                </div>
+            </div> 
+            <div class="datosGral ms-0 me-0 p-0 col-7 col-sm-7">
+                <div class="input-group m-0 p-0 input-group-sm ">
+                    <span class="input-group-text" id="basic-addon1">F. Registro</span>
+                    <input type="date" id="FAlta"  class="form-control inputwhite" style="background: white;"  aria-label="FAlta"  aria-describedby="basic-addon1">
+                </div>
+            </div>         
+           
         </div>
         <div class="modal-footer">
                 <button type="button" id="btnregistrarpersonal" class="shadow btn text-white btn-sm">Registrar</button>
@@ -130,7 +153,100 @@
   </div>
   <!--fin modal-->
 
+<!--modal modificar personal-->
+<!-- Modal -->
+<div class="modal fade" id="modalmodificarpersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-4" id="exampleModalLabel">Modificar Personal</h1>        
+        </div>
+        <div class="modal-body">
+            <div class="datosGral   ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Centros</span>
+                    <select class="form-select " id="Ucmbcentrospersonalmodificar" aria-label="Selector de filtro">                        
+                        <% listCentro.forEach(opcion => { %>
+                            <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
+                        <% }); %>
+                    </select>             
+                </div>
+            </div>   
+            <div class="datosGral   ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">N.I.F.</span>
+                    <input type="text" id="Unifpersonal"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1" value="">
+                </div>
+            </div>        
+            <div class="datosGral   ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Nombres</span>
+                    <input type="text" id="Unombrepersonal"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>      
+            <div class="datosGral   ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Apellidos</span>
+                    <input type="text" id="Uapellidospersonal"  class="form-control inputwhite" style="background: white;" aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>    
+            <div class="datosGral  ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Email</span>
+                    <input type="text" id="Uemailpersonal"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>        
+            <div class="datosGral  ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Telefono</span>
+                    <input type="number" id="Utelefonopersonal"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>  
+            <div class="datosGral   ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Puesto Trabajo</span>
+                    <select class="form-select " id="Ucmbpuestotrabajo" aria-label="Selector de filtro">                        
+                        <% listPuesto.forEach(opcion => { %>
+                            <option value="<%= opcion.idPuesto %>"><%= opcion.Nombre %></option>
+                        <% }); %>
+                    </select>             
+                </div>
+            </div> 
+            <div class="datosGral ms-0 me-0 p-0 col-7 col-sm-7">
+                <div class="input-group m-0 p-0 input-group-sm ">
+                    <span class="input-group-text" id="basic-addon1">F. Registro</span>
+                    <input type="date" id="UFAlta"  class="form-control inputwhite" style="background: white;"  aria-label="FAlta"  aria-describedby="basic-addon1">
+                </div>
+            </div>     
+            <div class="datosGral ms-0 me-0 p-0 col-7 col-sm-7">
+                <div class="input-group m-0 p-0 input-group-sm ">
+                    <span class="input-group-text" id="basic-addon1">F. de Baja</span>
+                    <input type="date" id="UFBaja"  class="form-control inputwhite" style="background: white;"  aria-label="FAlta"  aria-describedby="basic-addon1">
+                </div>
+            </div>     
+            <div class="datosGral ms-0 me-0 p-0 col-7 col-sm-7">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Estado</span>
+                    <select class="form-select " id="Ucmbestado" aria-label="Selector de filtro">                        
+                      
+                            <option value="H">Alta</option>
+                            <option value="D">Baja</option>
+                    </select>             
+                </div>
+            </div>     
+        </div>
+        <div class="modal-footer">
+                <button type="button" id="btnmodificarpersonal" class="shadow btn text-white btn-sm">Modificar</button>
+                <button type="button" id="closemodificarPersonal" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>       
+                <input type="text" id="UidTrabajador"  class="form-control inputwhite" style="background: white;"  aria-label="UidTrabajador" hidden  aria-describedby="basic-addon1"> 
+        </div>
+        <label id="messagemodify"></label>
+      </div>
+    </div>
+  </div>
+  <!--fin modal-->
 
+  
 <script src="/js/personal.js"></script>
 
 <%- include('./partials/foot') %>

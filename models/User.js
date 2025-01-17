@@ -119,13 +119,30 @@ static async listCentroEmpresa(idEmpresa){
     }
 }
 
+static async listPuestoEmpresa(idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .query(`select idPuesto,Nombre from PuestoTrabajoEmpresa where idEmpresa=@idEmpresa`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+
 static async listTodosTrabajadorEmpresa(idEmpresa){
     const pool=await await connectDB();
     try 
     {
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa`);          
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -144,7 +161,7 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa and idCentro=@idCentro`);          
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa and idCentro=@idCentro`);          
         return (result.recordset)
         }
         else
@@ -152,7 +169,7 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
             const result =await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
            
-            .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,email,telefono,Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t where idEmpresa=@idEmpresa `);          
+            .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa`);          
             return (result.recordset)
         }
     } 
@@ -239,55 +256,28 @@ static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
     }
 }
 
-static async modifyPersonal(id,nuevoValor,indexColumna,idEmpresa){
+static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefono,Fregistro,Fbaja,estado,idTrabajador,idEmpresa){
     const pool=await await connectDB();
+    console.log(idCentro)
     try 
-    {        
-        if (indexColumna==1)
-        {
-            const result =await pool.request()
-            .input('NIF', sql.VarChar,nuevoValor)
-            .input('idTrabajador', sql.Int, id)
+    {       
+       
+        const result =await pool.request()
+            .input('idCentro', sql.Int, idCentro)
+            .input('NIF', sql.VarChar, NIF)
+            .input('nombres', sql.VarChar, nombres)
+            .input('apellidos', sql.VarChar, apellidos)
+            .input('email', sql.VarChar, email)            
+            .input('idpuesto', sql.Int, idpuesto)
+            .input('telefono', sql.VarChar,telefono)
+            .input('Fregistro', sql.Date,Fregistro)
+            .input('Fbaja', sql.VarChar,Fbaja)
+            .input('estado', sql.VarChar,estado)
+            .input('idTrabajador', sql.Int, idTrabajador)
             .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`UPDATE  TrabajadorEmpresa set NIF=@NIF WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            .query(`UPDATE  TrabajadorEmpresa set idCentro=@idCentro, NIF=@NIF,nombres=@nombres,apellidos=@apellidos,email=@email, idpuesto=@idpuesto, telefono=@telefono,fechaAlta=@Fregistro,fechaBaja=@Fbaja,estado=@estado WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
             return (result.rowsAffected[0])
-        }
-        else if (indexColumna==2)
-        {
-            const result =await pool.request()
-            .input('nombres', sql.VarChar,nuevoValor)
-            .input('idTrabajador', sql.Int, id)
-            .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`UPDATE  TrabajadorEmpresa set nombres=@nombres WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
-            return (result.rowsAffected[0])
-        }
-        else if (indexColumna==3)
-        {
-            const result =await pool.request()
-            .input('apellidos', sql.VarChar,nuevoValor)
-            .input('idTrabajador', sql.Int, id)
-            .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`UPDATE  TrabajadorEmpresa set apellidos=@apellidos WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
-            return (result.rowsAffected[0])
-        }
-        else if (indexColumna==4)
-        {
-            const result =await pool.request()
-            .input('email', sql.VarChar,nuevoValor)
-            .input('idTrabajador', sql.Int, id)
-            .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`UPDATE  TrabajadorEmpresa set email=@email WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
-            return (result.rowsAffected[0])
-        }
-        else if (indexColumna==5)
-        {
-            const result =await pool.request()
-            .input('telefono', sql.VarChar,nuevoValor)
-            .input('idTrabajador', sql.Int, id)
-            .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`UPDATE  TrabajadorEmpresa set telefono=@telefono WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
-            return (result.rowsAffected[0])
-        }     
+            
         
     } 
     catch (error) 
@@ -304,11 +294,11 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
         const result = await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
             .input('idTrabajador', sql.Int, idTrabajador)
-            .query(`SELECT estado FROM TrabajadorEmpresa WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+            .query(`select idTrabajador,NIF,nombres,apellidos,email,telefono,fechaAlta=convert(date,fechaAlta,103),fechaBaja=convert(date,fechaBaja,103),idCentro,estado,idEmpresa,idPuesto FROM TrabajadorEmpresa WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
         
         // Asegurarte de que se devuelva al menos un registro
         if (result.recordset.length > 0) {
-            estado = result.recordset[0].estado; // Obtener el valor del estado
+            return (result.recordset); // Obtener el valor del estado
         } else {
             throw new Error('No se encontró el trabajador o empresa.');
         }
@@ -317,29 +307,29 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 
-    try {
-        // Actualizar el estado basado en el valor actual
-        const pool = await connectDB(); // Reconectar para la actualización
-        if (estado === 'H') {
-            await pool.request()
-                .input('idEmpresa', sql.Int, idEmpresa)
-                .input('idTrabajador', sql.Int, idTrabajador)
-                .query(`UPDATE TrabajadorEmpresa SET estado='D' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
-            return 'Baja';
-        } else {
-            await pool.request()
-                .input('idEmpresa', sql.Int, idEmpresa)
-                .input('idTrabajador', sql.Int, idTrabajador)
-                .query(`UPDATE TrabajadorEmpresa SET estado='H' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
-            return 'Alta';
-        }
-    } catch (error) {
-        console.error('Error en la actualización de estado:', error);
-        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-    }
+    // try {
+    //     // Actualizar el estado basado en el valor actual
+    //     const pool = await connectDB(); // Reconectar para la actualización
+    //     if (estado === 'H') {
+    //         await pool.request()
+    //             .input('idEmpresa', sql.Int, idEmpresa)
+    //             .input('idTrabajador', sql.Int, idTrabajador)
+    //             .query(`UPDATE TrabajadorEmpresa SET estado='D' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+    //         return 'Baja';
+    //     } else {
+    //         await pool.request()
+    //             .input('idEmpresa', sql.Int, idEmpresa)
+    //             .input('idTrabajador', sql.Int, idTrabajador)
+    //             .query(`UPDATE TrabajadorEmpresa SET estado='H' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+    //         return 'Alta';
+    //     }
+    // } catch (error) {
+    //     console.error('Error en la actualización de estado:', error);
+    //     throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    // }
 }
 
-static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,fechaAlta,estado,idEmpresa){
+static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idpuesto,fechaAlta,estado,idEmpresa){
     const pool=await await connectDB();
     try 
     {   
@@ -347,8 +337,10 @@ static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,fec
          const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
+        .input('idPuesto', sql.Int, idpuesto)
         .input('estado', sql.VarChar, estado)
         .input('fechaAlta', sql.DateTime, fechaAlta)
+        .input('fechaBaja', sql.VarChar, null)
         .input('telefono', sql.VarChar, telefono)
         .input('email', sql.VarChar, email)
         .input('nombres', sql.VarChar, nombres)
