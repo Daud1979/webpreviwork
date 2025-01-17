@@ -135,6 +135,57 @@ static async listPuestoEmpresa(idEmpresa){
     }
 }
 
+static async seleccTrabajador(idEmpresa,idTrabajador){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idTrabajador', sql.Int, idTrabajador)
+        .query(`select * from trabajadorempresa tp inner join CentrosEmpresa ce on (tp.idCentro=ce.idCentro) inner join PuestoTrabajoEmpresa pte on (tp.idPuesto=pte.idPuesto) where tp.idTrabajador=@idTrabajador and tp.idEmpresa=@idEmpresa`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async listTodosTrabajadorEmpresa(idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async listInformacion(idEmpresa,idDocumento,idTrabajador,idContrato){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idDocumento', sql.Int, idDocumento)
+        .input('idTrabajador', sql.Int, idTrabajador)
+        .input('idContrato', sql.Int, idContrato)
+        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,codigoAlterno,Categoria=ld.documento,dp.documento,observacion,registro=CONVERT(varchar(10),registro,103),documentoAWS,idDocumentoProyecto from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  WHERE dp.idDocumento=@idDocumento and idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
 
 static async listTodosTrabajadorEmpresa(idEmpresa){
     const pool=await await connectDB();
@@ -381,8 +432,7 @@ static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,tele
     }
 }
 
-static async descargarpdf(idDocumentoProyecto,idEmpresa){
-    
+static async descargarpdf(idDocumentoProyecto,idEmpresa){    
     const pool=await await connectDB();
     try 
     {   

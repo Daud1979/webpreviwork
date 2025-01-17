@@ -313,6 +313,7 @@ botones.forEach((boton) => {
         UFBaja = document.querySelector('#UFBaja');
         Ucmbestado = document.querySelector('#Ucmbestado');
         UidTrabajador =document.querySelector('#UidTrabajador');
+        
         if (idBoton=='btnEstadoPersona')
         {            
             const data={idTrabajador}           
@@ -344,6 +345,9 @@ botones.forEach((boton) => {
                 .catch((error) => {
                 console.error('Error:', error);
                 });
+        }
+        else if (idBoton == 'btnInformacion'){
+            redirigirConPost('/home/informacionpersonal',{idTrabajador});
         }
       
     });
@@ -489,9 +493,48 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
                         console.error('Error:', error);
                         });
                 }
+                else if (idBoton === 'btnInformacion'){
+                    
+                    redirigirConPost('/home/informacionpersonal',{idTrabajador});
+                }
             });
         });
     }
 });
 
 
+function cargarInformacion(idTrabajador){
+    const data = { idTrabajador:idTrabajador };  
+    fetch('/home/informacionpersonal', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).catch((error) => {
+        console.error('Error al enviar los datos:', error);
+    });
+}
+
+function redirigirConPost(url, data) {
+    // Crear un formulario temporal
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+
+    // Agregar los datos como campos ocultos
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = data[key];
+            form.appendChild(input);
+        }
+    }
+
+    // Añadir el formulario al documento, enviarlo y luego eliminarlo
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+}

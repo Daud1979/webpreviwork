@@ -1,0 +1,85 @@
+<%- include('./partials/head') %>
+<div class="container-fluid mt-4 pt-5 text-center">
+    <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
+        <h3 class="mt-1">INFORMACIÓN DEL TRABAJADOR</h3>
+        <div class="datospersonalinformacion col-12 col-sm-4">
+            <% if (listTrabajador && listTrabajador.length > 0) { %>
+                <% listTrabajador.forEach(trabajador => { %>
+            <div class="datosGral  ms-0 me-0 p-0 col-sm-6 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">N.I.F:</span>
+                    <input type="text" id="NIF"  value="<%= trabajador.NIF %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>  
+            <div class="datosGral  ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Nombre</span>
+                    <input type="text" id="nombre" value="<%= trabajador.nombres %>"   class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>  
+            <div class="datosGral  ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Apellidos</span>
+                    <input type="text" id="apellidos" value="<%= trabajador.apellidos %>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>  
+            <div class="datosGral  ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Centro de Trabajo</span>
+                    <input type="text" id="centro" value="<%= trabajador.nombreCentro %>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div> 
+            <div class="datosGral  ms-0 me-0 p-0 ">
+                <div class="input-group m-0 p-0 input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Puesto de Trabajo</span>
+                    <input type="text" id="puesto" value="<%= trabajador.Nombre %>"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>             
+            <% }) %>
+            <% }  %>
+        </div>
+    </div><!--fin cabeza-->
+    <div class="row justify-content-center filacontenedor "><!--inicio plantillas-->
+        <h4 class="mt-1">PLANTILLAS DE INFORMACION</h4>
+        <div class="datospersonalinformacion ">
+            <div class="table-responsive ">
+                <table class="table table-bordered table-striped table-sm shadow">
+                    <thead  class="shadow ">
+                        <tr id="trhead">
+                            <th >Nº</th>
+                            <th>Contrato</th>
+                            <th>Categoria</th>
+                            <th>Documentos</th>                            
+                            <th>Observacion</th>
+                            <th>Registro</th>                            
+                            <th id="tdbotonesdescarga">Descargar</th>                                                   
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-documentos">
+                        <% listDocumento.forEach((item) => { %>
+                            <tr>                             
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.codigoAlterno %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Categoria %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
+                                <td>
+                                    <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                        <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
+                                        <span class="tooltip-text">Descargar Documento</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                </div>
+        </div>
+    </div><!--plantillas-->
+
+      
+</div>
+<script src="/js/informacion.js"></script>
+
+<%- include('./partials/foot') %>

@@ -27,11 +27,26 @@ exports.centros=async (req,res)=>{//enviar a centros
   listCentro = await User.listCentroEmpresa(idEmpresa);
   (req.session.userId>0)? res.render('centros',{listCentro}):res.redirect('/');
 }
+
+exports.informationpersonal=async(req,res)=>{
+   
+   const idTrabajador=req.body.idTrabajador;
+    const idEmpresa = req.session.userId;
+    const idTrabajador_=0;
+    const idDocumento=15;
+    const idContrato=2;
+    const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);
+    const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,idContrato);
+ 
+    (req.session.userId>0)? res.render('informacion',{listTrabajador,listDocumento}):res.redirect('/');
+}
+
 exports.centrospersonal=async (req,res)=>{//enviar a centros
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
   (req.session.userId>0)? res.render('centros',{listCentro,listTrabajadores}):res.redirect('/');
 }
+
 exports.personal=async (req,res)=>{//enviar a trabajadores
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
@@ -39,6 +54,7 @@ exports.personal=async (req,res)=>{//enviar a trabajadores
   listPuesto = await User.listPuestoEmpresa(idEmpresa);
   (req.session.userId>0)? res.render('personal',{listCentro,listPersonal,listPuesto}):res.redirect('/');
 }
+
 exports.modifyCentros=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
@@ -125,7 +141,9 @@ exports.downloadpdf = async (req, res) => {
 
     const bucketName = process.env.S3_BUCKET_NAME;
     const s3Key = datos[0].documentoAWS;
-    const sanitizedFileName = encodeURIComponent('prueba.pdf'); // Codificación del nombre de archivo
+
+    // Obtener el nombre del archivo de la base de datos, con un valor por defecto
+    const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
 
     const s3 = new S3Client({
         region: process.env.AWS_REGION,
@@ -136,20 +154,76 @@ exports.downloadpdf = async (req, res) => {
     });
 
     try {
+        // Comando para obtener el objeto desde S3
         const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
         const response = await s3.send(command);
-        const newFileName = "NombrePersonalizado.pdf";
-        // Configuración de headers para enviar el archivo como descarga
+
+        // Configuración de headers para la descarga del archivo
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="${sanitizedFileName}"`);
 
-        // Enviar el archivo como flujo
-        response.Body.pipe(res);
+        // Leer el archivo desde el Body del objeto
+        const stream = response.Body;
+
+        // Verificar si `stream` es un flujo legible
+        if (stream.pipe) {
+            stream.pipe(res);
+        } else {
+            console.error('El cuerpo de la respuesta no es un flujo legible.');
+            res.status(500).send('Error al procesar la descarga del archivo.');
+        }
     } catch (error) {
         console.error('Error al descargar el archivo desde S3:', error);
         res.status(500).json({ error: 'Error al descargar el archivo' });
     }
 };
+
+
+
+
+
+// exports.downloadpdf = async (req, res) => {
+//     const id = req.body.id;
+//     const idEmpresa = req.session.userId;
+
+//     // Obtener los datos del archivo desde la base de datos
+//     const datos = await User.descargarpdf(id, idEmpresa);
+   
+//     // Validar si `datos` es un arreglo y tiene contenido
+//     if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
+//         console.error("Archivo no encontrado o clave de S3 no válida");
+//         return res.status(404).send('Archivo no encontrado');
+//     }
+
+//     const bucketName = process.env.S3_BUCKET_NAME;
+//     const s3Key = datos[0].documentoAWS;
+//     const sanitizedFileName = encodeURIComponent('prueba.pdf'); // Codificación del nombre de archivo
+
+//     const s3 = new S3Client({
+//         region: process.env.AWS_REGION,
+//         credentials: {
+//             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//         },
+//     });
+
+//     try {
+      
+//         const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
+//         const response = await s3.send(command);
+//         const newFileName = "NombrePersonalizado.pdf";
+//         // Configuración de headers para enviar el archivo como descarga
+//         res.setHeader('Content-Type', 'application/pdf');
+//         res.setHeader('Content-Disposition', `attachment; filename="${sanitizedFileName}"`);
+
+//         // Enviar el archivo como flujo
+//         response.Body.pipe(res);
+//     } catch (error) {
+//         console.error('Error al descargar el archivo desde S3:', error);
+//         res.status(500).json({ error: 'Error al descargar el archivo' });
+//     }
+// };
+
 
 
 
