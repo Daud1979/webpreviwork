@@ -36,3 +36,33 @@ async function descargarpdf(documentId, button) {
         icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
     }
 }
+
+const toggleButton = document.getElementById('toggleButton');
+const tablaContainer = document.getElementById('tablaContainer');
+const toggleButtonPersonal = document.getElementById('toggleButtonPersonal');
+const tablaContainerPersonal = document.getElementById('tablaContainerPersonal');
+
+// Agregar evento click al botón
+toggleButton.addEventListener('click', () => {
+  if (tablaContainer.classList.contains('d-none')) {
+    // Mostrar la tabla
+    tablaContainer.classList.remove('d-none');
+    toggleButton.textContent = '-';
+  } else {
+    // Ocultar la tabla
+    tablaContainer.classList.add('d-none');
+    toggleButton.textContent = '+';
+  }
+});
+
+toggleButtonPersonal.addEventListener('click', () => {
+    if (tablaContainerPersonal.classList.contains('d-none')) {
+      // Mostrar la tabla
+      tablaContainerPersonal.classList.remove('d-none');
+      toggleButtonPersonal.textContent = '-';
+    } else {
+      // Ocultar la tabla
+      tablaContainerPersonal.classList.add('d-none');
+      toggleButtonPersonal.textContent = '+';
+    }
+  });

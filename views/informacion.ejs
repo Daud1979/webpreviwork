@@ -39,10 +39,13 @@
             <% }  %>
         </div>
     </div><!--fin cabeza-->
-    <div class="row justify-content-center filacontenedor "><!--inicio plantillas-->
-        <h4 class="mt-1">PLANTILLAS DE INFORMACION</h4>
+    <div class="row  filacontenedor "><!--inicio plantillas-->
+        <div class="buttontoggle">
+            <h4 >PLANTILLAS DE INFORMACIÓN</h4>
+            <button id="toggleButton" class="btn btn-primary ">+</button>
+        </div>
         <div class="datospersonalinformacion ">
-            <div class="table-responsive ">
+            <div id="tablaContainer" class="table-responsive ">
                 <table class="table table-bordered table-striped table-sm shadow">
                     <thead  class="shadow ">
                         <tr id="trhead">
@@ -77,7 +80,47 @@
                 </div>
         </div>
     </div><!--plantillas-->
-
+    <div class="row  filacontenedor "><!--inicio plantillas-->
+        <div class="buttontogglePersonal">
+            <h4 >DOCUMENTOS DE INFORMACIÓN DEL TRABAJADOR</h4>
+            <button id="toggleButtonPersonal" class="btn btn-primary ">+</button>
+        </div>
+        <div class="datospersonalinformacion ">
+            <div id="tablaContainerPersonal" class="table-responsive ">
+                <table class="table table-bordered table-striped table-sm shadow">
+                    <thead  class="shadow ">
+                        <tr id="trhead">
+                            <th >Nº</th>
+                            <th>Contrato</th>
+                            <th>Categoria</th>
+                            <th>Documentos</th>                            
+                            <th>Observacion</th>
+                            <th>Registro</th>                            
+                            <th id="tdbotonesdescarga">Descargar</th>                                                   
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-documentos">
+                        <% listDocumento.forEach((item) => { %>
+                            <tr>                             
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.codigoAlterno %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Categoria %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
+                                <td>
+                                    <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                        <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
+                                        <span class="tooltip-text">Descargar Documento</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                </div>
+        </div>
+    </div><!--plantillas-->
       
 </div>
 <script src="/js/informacion.js"></script>

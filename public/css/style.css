@@ -312,3 +312,29 @@ td span {
 .datospersonalinformacion input{
   pointer-events: none;
 }
+.buttontoggle{
+  display: flex;
+  justify-content: space-between;
+align-items: center;
+  background: #dfdddd;
+  border-bottom: solid 2px black;
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0 1rem 0 1rem;
+}
+.buttontoggle h4{
+  text-shadow: none;
+}
+.buttontogglePersonal{
+  display: flex;
+  justify-content: space-between;
+align-items: center;
+  background: #dfdddd;
+  border-bottom: solid 2px black;
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0 1rem 0 1rem;
+}
+.buttontogglePersonal h4{
+  text-shadow: none;
+}
