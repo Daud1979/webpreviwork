@@ -436,6 +436,7 @@ static async descargarpdf(idDocumentoProyecto,idEmpresa){
     const pool=await await connectDB();
     try 
     {   
+        console.log(idDocumentoProyecto,idEmpresa);
         const result =await pool.request()        
         .input('idDocumentoProyecto', sql.Int,idDocumentoProyecto)   
         .input('idEmpresa', sql.Int, idEmpresa)

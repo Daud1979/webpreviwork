@@ -1,18 +1,22 @@
 async function descargarpdf(documentId, button) {
     const icon = button.querySelector('.material-icons');
+
     icon.style.color = 'Grey';
     const row = button.closest('tr');
     // Obtener el contenido de la celda de la cuarta columna (índice 3)
     const documentCell = row.cells[3]; // Índice 3 para la cuarta columna (cero indexado)
     const documentName = documentCell.textContent.trim();
-  console.log(documentName);
+    const nif= document.querySelector('#NIF');
+    const nombre = document.querySelector('#nombre');
+    const apellidos= document.querySelector('#apellidos');
+    
     try {
         const response = await fetch('/home/downloadpdf_', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: documentId })
+            body: JSON.stringify({ id: documentId,nif:nif.value,nombre:nombre.value,apellidos:apellidos.value })
         });
 
         if (!response.ok) {
