@@ -2,6 +2,7 @@
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
         <h3 class="mt-1">INFORMACIÓN DEL TRABAJADOR</h3>
+     
         <div class="datospersonalinformacion col-12 col-sm-4">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
                 <% listTrabajador.forEach(trabajador => { %>
@@ -44,8 +45,13 @@
             <h4 >PLANTILLAS DE INFORMACIÓN</h4>
             <button id="toggleButton" class="btn btn-primary ">+</button>
         </div>
+       
         <div class="datospersonalinformacion ">
+          
             <div id="tablaContainer" class="table-responsive ">
+                <div class="input-group-sm col-12 col-md-5 col-sm-5">
+                    <input type="text" id="buscadorinformacionglobal" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
+                </div>
                 <table class="table table-bordered table-striped table-sm shadow">
                     <thead  class="shadow ">
                         <tr id="trhead">
@@ -87,29 +93,30 @@
         </div>
         <div class="datospersonalinformacion ">
             <div id="tablaContainerPersonal" class="table-responsive ">
+                <div class="input-group-sm col-12 col-md-5 col-sm-5">
+                    <input type="text" id="buscadorinformaciontrabajador" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
+                </div>
                 <table class="table table-bordered table-striped table-sm shadow">
                     <thead  class="shadow ">
                         <tr id="trhead">
                             <th >Nº</th>
-                            <th>Contrato</th>
-                            <th>Categoria</th>
-                            <th>Documentos</th>                            
-                            <th>Observacion</th>
+                            <th>Puesto Trabajado</th>
+                            <th>Certificados</th>
+                            <th>Documentos</th>                                                        
                             <th>Registro</th>                            
                             <th id="tdbotonesdescarga">Descargar</th>                                                   
                         </tr>
                     </thead>
-                    <tbody id="tabla-documentos">
-                        <% listDocumento.forEach((item) => { %>
+                    <tbody id="tablainformaciontrabajador">
+                        <% listDocumentoTrabajador.forEach((item) => { %>
                             <tr>                             
                                 <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
-                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.codigoAlterno %></td>
-                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Categoria %></td>
-                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
-                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
-                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.PuestoTrabajo %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Certificado %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>                                
+                                <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.Registro %></td>
                                 <td>
-                                    <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                    <button id="btndescargarTrabajador" onclick="descargarpdfTrabajador(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
                                         <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
                                         <span class="tooltip-text">Descargar Documento</span>
                                     </button>

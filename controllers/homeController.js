@@ -7,6 +7,7 @@ const { pipeline } = require('stream');
 const { promisify } = require('util');
 const streamPipeline = promisify(pipeline);
 const User = require('../models/User');
+const { PDFDocument, rgb } = require('pdf-lib');
 /*aqui lo aws*/
 
 exports.index =async (req, res) => {
@@ -32,12 +33,14 @@ exports.informationpersonal=async(req,res)=>{
    const idTrabajador=req.body.idTrabajador;
     const idEmpresa = req.session.userId;
     const idTrabajador_=0;
-    const idDocumento=15;
-    const idContrato=2;
+    const idDocumento=15;//esto hay que verpa los otros doc
+    
     const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);
-    const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,idContrato);
- 
-    (req.session.userId>0)? res.render('informacion',{listTrabajador,listDocumento}):res.redirect('/');
+   
+    const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,);
+    const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador);
+    console.log(listDocumentoTrabajador);
+    (req.session.userId>0)? res.render('informacion',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
 
 exports.centrospersonal=async (req,res)=>{//enviar a centros
@@ -125,66 +128,66 @@ const s3 = new S3Client({
 
 
 
-// exports.downloadpdf = async (req, res) => {
-//     const id = req.body.id;
-//     const idEmpresa = req.session.userId;
+exports.downloadpdftrabajador = async (req, res) => {
+    const id = req.body.id;
+    const idEmpresa = req.session.userId;
 
-//     // Obtener los datos del archivo desde la base de datos
-//     const datos = await User.descargarpdf(id, idEmpresa);
+    // Obtener los datos del archivo desde la base de datos
+    const datos = await User.descargarpdf(id, idEmpresa);
 
-//     // Validar si `datos` es un arreglo y tiene contenido
-//     if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
-//         console.error("Archivo no encontrado o clave de S3 no válida");
-//         return res.status(404).send('Archivo no encontrado');
-//     }
+    // Validar si `datos` es un arreglo y tiene contenido
+    if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
+        console.error("Archivo no encontrado o clave de S3 no válida");
+        return res.status(404).send('Archivo no encontrado');
+    }
 
-//     const bucketName = process.env.S3_BUCKET_NAME;
-//     const s3Key = datos[0].documentoAWS;
+    const bucketName = process.env.S3_BUCKET_NAME;
+    const s3Key = datos[0].documentoAWS;
 
-//     // Obtener el nombre del archivo de la base de datos, con un valor por defecto
-//     const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
+    // Obtener el nombre del archivo de la base de datos, con un valor por defecto
+    const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
 
-//     const s3 = new S3Client({
-//         region: process.env.AWS_REGION,
-//         credentials: {
-//             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//         },
-//     });
+    const s3 = new S3Client({
+        region: process.env.AWS_REGION,
+        credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        },
+    });
 
-//     try {
-//         // Comando para obtener el objeto desde S3
-//         const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
-//         const response = await s3.send(command);
+    try {
+        // Comando para obtener el objeto desde S3
+        const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
+        const response = await s3.send(command);
 
-//         // Configuración de headers para la descarga del archivo
-//         res.setHeader('Content-Type', 'application/pdf');
-//         res.setHeader('Content-Disposition', `attachment; filename="${sanitizedFileName}"`);
+        // Configuración de headers para la descarga del archivo
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${sanitizedFileName}"`);
 
-//         // Leer el archivo desde el Body del objeto
-//         const stream = response.Body;
+        // Leer el archivo desde el Body del objeto
+        const stream = response.Body;
 
-//         // Verificar si `stream` es un flujo legible
-//         if (stream.pipe) {
-//             stream.pipe(res);
-//         } else {
-//             console.error('El cuerpo de la respuesta no es un flujo legible.');
-//             res.status(500).send('Error al procesar la descarga del archivo.');
-//         }
-//     } catch (error) {
-//         console.error('Error al descargar el archivo desde S3:', error);
-//         res.status(500).json({ error: 'Error al descargar el archivo' });
-//     }
-// };
-
-
+        // Verificar si `stream` es un flujo legible
+        if (stream.pipe) {
+            stream.pipe(res);
+        } else {
+            console.error('El cuerpo de la respuesta no es un flujo legible.');
+            res.status(500).send('Error al procesar la descarga del archivo.');
+        }
+    } catch (error) {
+        console.error('Error al descargar el archivo desde S3:', error);
+        res.status(500).json({ error: 'Error al descargar el archivo' });
+    }
+};
 
 
 
 
 
 
-// // Utilidad para convertir el stream en un buffer
+
+
+// Utilidad para convertir el stream en un buffer
 // function streamToBuffer(stream) {
 //     return new Promise((resolve, reject) => {
 //         const chunks = [];
@@ -322,7 +325,7 @@ const streamToBuffer = async (stream) => {
 /*HASTA AQUI ES CORRECTO */
 
 
-const { PDFDocument, rgb } = require('pdf-lib');
+
 
 
 
@@ -334,7 +337,7 @@ function formatFecha(fecha) {
   return `${dia}/${mes}/${anio}`;
 }
 
-
+//con losdatos al final
 exports.downloadpdf = async (req, res) => {
   const id = req.body.id;
   const idEmpresa = req.session.userId;

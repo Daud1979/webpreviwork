@@ -338,3 +338,9 @@ align-items: center;
 .buttontogglePersonal h4{
   text-shadow: none;
 }
+#buscadorinformacionglobal{
+  pointer-events:auto;
+}
+#buscadorinformaciontrabajador{
+  pointer-events:auto;
+}

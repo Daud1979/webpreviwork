@@ -17,6 +17,7 @@ router.post('/mostrarpdfempresa',homeController.mostrarpdfempresa);
 router.post('/listadocumentos',homeController.enviarapdf);
 router.post('/downloadpdf',homeController.downloadpdf);
 router.post('/downloadpdf_',homeController.downloadpdf);
+router.post('/downloadpdfTrabajador',homeController.downloadpdftrabajador);
 //
 router.post('/informacionpersonal',homeController.informationpersonal);
 module.exports = router;

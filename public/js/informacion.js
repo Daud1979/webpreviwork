@@ -40,7 +40,48 @@ async function descargarpdf(documentId, button) {
         icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
     }
 }
+async function descargarpdfTrabajador(documentId, button) {
+  const icon = button.querySelector('.material-icons');
 
+  icon.style.color = 'Grey';
+  const row = button.closest('tr');
+  // Obtener el contenido de la celda de la cuarta columna (índice 3)
+  const documentCell = row.cells[3]; // Índice 3 para la cuarta columna (cero indexado)
+  const documentName = documentCell.textContent.trim();
+  const nif= document.querySelector('#NIF');
+  const nombre = document.querySelector('#nombre');
+  const apellidos= document.querySelector('#apellidos');
+  
+  try {
+      const response = await fetch('/home/downloadpdfTrabajador', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id: documentId })
+      });
+
+      if (!response.ok) {
+          throw new Error('Error al descargar el archivo');
+      }
+
+      // Crear un enlace de descarga
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = documentName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      icon.style.color = 'Green'; // Cambiar color a verde si la descarga fue exitosa
+  } catch (error) {
+      console.error('Error en la descarga:', error);
+      icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
+  }
+}
 const toggleButton = document.getElementById('toggleButton');
 const tablaContainer = document.getElementById('tablaContainer');
 const toggleButtonPersonal = document.getElementById('toggleButtonPersonal');
@@ -70,3 +111,37 @@ toggleButtonPersonal.addEventListener('click', () => {
       toggleButtonPersonal.textContent = '+';
     }
   });
+
+  document.getElementById("buscadorinformacionglobal").addEventListener("input", function() {
+    const searchValue = this.value.toLowerCase();
+   
+    const rows = document.querySelectorAll("#tabla-documentos tr");
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
+        
+        if (rowText.includes(searchValue)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+
+document.getElementById("buscadorinformaciontrabajador").addEventListener("input", function() {
+  const searchValue = this.value.toLowerCase();
+ 
+  const rows = document.querySelectorAll("#tablainformaciontrabajador tr");
+
+  rows.forEach(row => {
+      const cells = row.querySelectorAll("td");
+      const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
+      
+      if (rowText.includes(searchValue)) {
+          row.style.display = "";
+      } else {
+          row.style.display = "none";
+      }
+  });
+});
