@@ -1,346 +1,379 @@
 body {
-    font-family: 'Roboto', sans-serif;
-  }
-  .navbar {
-    margin-top: 0;
-    background: #4058FB;
-    border-bottom: .15rem solid rgb(24, 24, 24); 
-  }
-  a{
-    align-items: center;
-    color: black;
-    text-decoration: none;
-  }
-  .material-icons {
-    color:#4058FB; /* Cambiar el color */
-    font-size: 70px; /* Cambiar el tamaño */
-    vertical-align: middle; /* Alinear con el texto */
-    margin: 5px; /* Espacio alrededor */
-    text-shadow: 4px 3px rgb(51, 51, 51);
+  font-family: 'Roboto', sans-serif;
+}
+.navbar {
+  margin-top: 0;
+  background: #4058FB;
+  border-bottom: .15rem solid rgb(24, 24, 24); 
+}
+a{
+  align-items: center;
+  color: black;
+  text-decoration: none;
+}
+.material-icons {
+  color:#509aee; /* Cambiar el color */
+  font-size: 70px; /* Cambiar el tamaño */
+  vertical-align: middle; /* Alinear con el texto */
+  margin: 5px; /* Espacio alrededor */
+  text-shadow: 4px 3px rgb(51, 51, 51);
+}
+#idsubir {
+color:#057294; /* Cambiar el color */
+font-size: 25px; /* Cambiar el tamaño */
+vertical-align: middle; /* Alinear con el texto */
+margin: 5px; /* Espacio alrededor */
+text-shadow: 4px 3px rgb(51, 51, 51);
 }
 #ititle{
-  font-size: 1.6rem;
-  text-shadow: 3px 3px rgb(153, 152, 152);
+font-size: 1.6rem;
+text-shadow: 3px 3px rgb(153, 152, 152);
 }
 #basic-addon1{
-  background: #d7d7d8;
-  color: rgb(14, 13, 13);
+background: #d7d7d8;
+color: rgb(14, 13, 13);
 }
 p{
-  color: black;
-  text-shadow: 1px 2px rgb(226, 224, 224);
-  font-size: 0.9rem;
+color: black;
+text-shadow: 1px 2px rgb(226, 224, 224);
+font-size: 0.9rem;
 }
 #icentro{
-  font-size: 4rem;
-  color: rgb(5, 129, 47);
+font-size: 4rem;
+color: rgb(5, 129, 47);
 }
 #itrabajador{
-  font-size: 4rem;
-  color: rgb(5, 129, 92);
+font-size: 4rem;
+color: rgb(5, 129, 92);
 }
 #iaddtrabajador{
-  font-size: 2rem;
-  color: #0ca9c5;
-  margin: 0;
-  padding: 0;
+font-size: 2rem;
+color: #0ca9c5;
+margin: 0;
+padding: 0;
 }
 #iaddtrabajador:hover{
-  color: #4058FB;
+color: #4058FB;
 }
 #addtrabajador{
-   margin: 0; 
-   padding: 0;
-   margin: auto auto;
-   width: 10px;
-   
+ margin: 0; 
+ padding: 0;
+ margin: auto auto;
+ width: 10px;
+ 
 }
 #addtrabajador:hover{ 
-    cursor:pointer;  
+  cursor:pointer;  
 }
 
 .titlefolder{
-  border-radius: 5px;
-  background: #F8F9FA;
-  box-shadow: 1px 1px rgb(175, 175, 175);
+border-radius: 5px;
+background: #F8F9FA;
+box-shadow: 1px 1px rgb(175, 175, 175);
 }
 .align-right {
-  text-align: right;
+text-align: right;
 }
 .align-left {
-  text-align: left;
+text-align: left;
 }
 h5{
-  margin: auto 0;
-  text-shadow: 10px 5px rgb(235, 234, 234);
+margin: auto 0;
+text-shadow: 10px 5px rgb(235, 234, 234);
 }
 h4{
-  margin: auto 0;
-  text-shadow: 10px 5px rgb(235, 234, 234);
+margin: auto 0;
+text-shadow: 10px 5px rgb(235, 234, 234);
 }
 .navbar-brand{
-  text-shadow: 4px 3px rgb(17, 17, 17,0.4);
+text-shadow: 4px 3px rgb(17, 17, 17,0.4);
 }
 
 h3{
-  text-shadow:10px 5px rgb(235, 234, 234);;
+text-shadow:10px 5px rgb(235, 234, 234);;
 }
 
 .folders{
-  margin: 0.5rem;
-  width: 160px;
-  height: 130px;
-  border-radius: 5px;
-  background: rgb(253, 253, 253);
-  box-shadow: 1px 2px rgb(175, 175, 175);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+margin: 0.5rem;
+width: 160px;
+height: 130px;
+border-radius: 5px;
+background: rgb(253, 253, 253);
+box-shadow: 1px 2px rgb(175, 175, 175);
+display: flex;
+flex-direction: column;
+justify-content: center;
 }
 .folders:hover{
-  background: #b9b9b9;
-  cursor:pointer;
+background: #b9b9b9;
+cursor:pointer;
 }
 #ifolder{
-  font-size: 4rem;
-  color: rgb(221, 236, 9);
+font-size: 4rem;
+color: rgb(221, 236, 9);
 }
 #message{
-    padding-top: 1rem;
-    color: rgb(209, 9, 9);
-    size: 1.5rem;
-    font-style: italic;
+  padding-top: 1rem;
+  color: rgb(209, 9, 9);
+  size: 1.5rem;
+  font-style: italic;
 }
 #messagemodificar{
-  padding-top: 0.1rem;
-  color: rgb(209, 9, 9);
-  size: 1.5rem;
-  font-style: italic;
+padding-top: 0.1rem;
+color: rgb(209, 9, 9);
+size: 1.5rem;
+font-style: italic;
 }
 .messageregisteradd{
-  padding-top: 0.1rem;
-  color: rgb(29, 131, 3);
-  size: 1.5rem;
-  font-style: italic;
-  text-align: center;
+padding-top: 0.1rem;
+color: rgb(29, 131, 3);
+size: 1.5rem;
+font-style: italic;
+text-align: center;
 }
 .messageregisteralert{
-  padding-top: 0.1rem;
-  color: rgb(209, 9, 9);
-  size: 1.5rem;
-  font-style: italic;
-  text-align: center;
+padding-top: 0.1rem;
+color: rgb(209, 9, 9);
+size: 1.5rem;
+font-style: italic;
+text-align: center;
 }
- /* Fondo de pantalla completa para el modal */
+/* Fondo de pantalla completa para el modal */
 .boot{
-  color: white;
-  background: #4058FB;
-  box-shadow: 2px 1px rgb(175, 175, 175);
+color: white;
+background: #4058FB;
+box-shadow: 2px 1px rgb(175, 175, 175);
 }
 #btnModificarEmpresa{
-  background: #4058FB;
+background: #4058FB;
 }
 #btnregistrarpersonalmodal{
-  background:#4058FB;
-  color:#fdfdfd;
+background:#4058FB;
+color:#fdfdfd;
 }
 #btnregistrarpersonal{
-  background:#4058FB;
-  color:#fdfdfd;
+background:#4058FB;
+color:#fdfdfd;
 }
 #btnmodificarpersonal{
-  background:#4058FB;
-  color:#fdfdfd;
+background:#4058FB;
+color:#fdfdfd;
 }
 #btnregistrarcentro{
-  background:#4058FB;;
-  color:#fdfdfd;
+background:#4058FB;;
+color:#fdfdfd;
 }
 #btnregistrarcentro:hover{
-  background:#8e8e8f;
-  color:#0a0a0a;
+background:#8e8e8f;
+color:#0a0a0a;
 }
 #btnregistrarpersonal:hover{
-  background:#8e8e8f;
-  color:#0a0a0a;
+background:#8e8e8f;
+color:#0a0a0a;
 }
 .btnidpersonalfila{
-  color:#4058FB;
+color:#4058FB;
+}
+.btnidpersonalfilasubir{
+color:#046c8b;
 }
 #exampleModalLabel{
-  color: white;
-  text-shadow:5px 2px rgb(116, 114, 114,0.3);
- 
+color: white;
+text-shadow:5px 2px rgb(116, 114, 114,0.3);
+
 }
 .modal-header{
-  background:  #4058FB;
- 
+background:  #4058FB;
+
 }
 #spanerror{
-  color: rgb(196, 6, 6);
-  font-size: 0.7rem;
-  font-style: italic;
+color: rgb(196, 6, 6);
+font-size: 0.7rem;
+font-style: italic;
 }
 #iapto{
-  text-shadow: none; 
-  font-size: 1.4rem; 
-  font-weight: 800;
-  margin: 0;
-  padding: 0;
-  color: green;
+text-shadow: none; 
+font-size: 1.4rem; 
+font-weight: 800;
+margin: 0;
+padding: 0;
+color: green;
 }
 #iformacion{
-  text-shadow: none; 
-  font-size: 1.4rem; 
-  font-weight: 800;
-  margin: 0;
-  padding: 0;
-  color: rgb(12, 12, 12);
+text-shadow: none; 
+font-size: 1.4rem; 
+font-weight: 800;
+margin: 0;
+padding: 0;
+color: rgb(12, 12, 12);
 }
 th{
-  font-size: 0.9rem;
-  padding: .5rem;
+font-size: 0.9rem;
+padding: .5rem;
 }
 td{
-  font-size: 0.9rem;
-  padding:.7rem;
-  margin: .5rem;
-  border-color: black;
-  
+font-size: 0.9rem;
+padding:.7rem;
+margin: .5rem;
+border-color: black;
+
 }
 #iinformacion{
-  text-shadow: none; 
-  font-size: 1.4rem; 
-  font-weight: 800;
-  margin: 0;
-  padding: 0;
-  color: rgb(3, 66, 68);
+text-shadow: none; 
+font-size: 1.4rem; 
+font-weight: 800;
+margin: 0;
+padding: 0;
+color: rgb(3, 66, 68);
 }
 #iaptorm{
-  text-shadow: none; 
-  font-size: 1.4rem; 
-  font-weight: 800;
-  margin: 0;
-  padding: 0;
-  color: rgb(5, 132, 134);
+text-shadow: none; 
+font-size: 1.4rem; 
+font-weight: 800;
+margin: 0;
+padding: 0;
+color: rgb(5, 132, 134);
 
 }
 #icrrm{
-  text-shadow: none; 
-  font-size: 1.4rem; 
-  font-weight: 800;
-  margin: 0;
-  padding: 0;
-  color: rgb(19, 59, 235);
+text-shadow: none; 
+font-size: 1.4rem; 
+font-weight: 800;
+margin: 0;
+padding: 0;
+color: rgb(19, 59, 235);
 }
 #iautorizaciones{
-  text-shadow: none; 
-  font-size: 1.4rem; 
-  font-weight: 800;
-  margin: 0;
-  padding: 0;
-  color: rgb(134, 8, 14);
+text-shadow: none; 
+font-size: 1.4rem; 
+font-weight: 800;
+margin: 0;
+padding: 0;
+color: rgb(134, 8, 14);
 }
 
 /***********/
-  /* Estilos para el botón */
-  .btnidpersonalfila {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-  }
+/* Estilos para el botón */
+.btnidpersonalfila {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
 
-  /* Estilos para el tooltip */
-  .btnidpersonalfila .tooltip-text {
-    visibility: hidden;
-    width: 150px;
-    background-color: #636262;
-    color: #fff;
-    text-align: center;
-    border-radius: 4px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 65%; /* Ubica el tooltip arriba del botón */
-    left: 60%;
-    transform: translateX(-50%);
-    opacity: 10;
-    transition: opacity 0.3s;
-  }
+/* Estilos para el tooltip */
+.btnidpersonalfila .tooltip-text {
+  visibility: hidden;
+  width: 150px;
+  background-color: #636262;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 65%; /* Ubica el tooltip arriba del botón */
+  left: 60%;
+  transform: translateX(-50%);
+  opacity: 10;
+  transition: opacity 0.3s;
+}
 
-  /* Flecha del tooltip */
-  .btnidpersonalfila .tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: #333 transparent transparent transparent;
-  }
+/* Flecha del tooltip */
+.btnidpersonalfila .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
 
-  /* Mostrar el tooltip al hacer hover */
-  .btnidpersonalfila:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-  }
-  td .btn {
-    margin: 0 !important; /* Elimina el margin */
-    padding: 0 !important; /* Elimina el padding */
+/* Mostrar el tooltip al hacer hover */
+.btnidpersonalfila:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+td .btn {
+  margin: 0 !important; /* Elimina el margin */
+  padding: 0 !important; /* Elimina el padding */
 }
 td i {
-  margin: 0 !important; /* Elimina el margin */
-  padding: 0 !important; /* Elimina el padding */
+margin: 0 !important; /* Elimina el margin */
+padding: 0 !important; /* Elimina el padding */
 }
 td span {
-  margin: 0 !important; /* Elimina el margin */
-  padding: 0 !important; /* Elimina el padding */
+margin: 0 !important; /* Elimina el margin */
+padding: 0 !important; /* Elimina el padding */
 }
 
 #tdbotones{  
 
-  width: 180px;
-  padding: 0;
-  margin: 0;
+width: 180px;
+padding: 0;
+margin: 0;
 }
 #tdbotones i{
-  text-shadow: 3px 5px #adacac;
-  padding: 0;
-  margin: 0;
+text-shadow: 3px 5px #adacac;
+padding: 0;
+margin: 0;
 }
 .datospersonalinformacion input{
-  pointer-events: none;
+pointer-events: none;
 }
 .buttontoggle{
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 align-items: center;
-  background: #dfdddd;
-  border-bottom: solid 2px black;
-  margin: 0;
-  margin-top: 1rem;
-  padding: 0 1rem 0 1rem;
+background: #dfdddd;
+border-bottom: solid 2px black;
+margin: 0;
+margin-top: 1rem;
+padding: 0 1rem 0 1rem;
 }
 .buttontoggle h4{
-  text-shadow: none;
+text-shadow: none;
 }
 .buttontogglePersonal{
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 align-items: center;
-  background: #dfdddd;
-  border-bottom: solid 2px black;
-  margin: 0;
-  margin-top: 1rem;
-  padding: 0 1rem 0 1rem;
+background: #dfdddd;
+border-bottom: solid 2px black;
+margin: 0;
+margin-top: 1rem;
+padding: 0 1rem 0 1rem;
 }
 .buttontogglePersonal h4{
-  text-shadow: none;
+text-shadow: none;
 }
 #buscadorinformacionglobal{
-  pointer-events:auto;
+pointer-events:auto;
 }
 #buscadorinformaciontrabajador{
-  pointer-events:auto;
+pointer-events:auto;
+}
+.custom-file-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+#lblpdffile{
+  font-size: 0.9rem;
+  background:#057294;
+  color: white;
+}
+#pdfFile{
+  font-size: 1rem;
+}
+#idTrabajadorupload{
+  display: none;
+}
+#idDocumentoupload{
+  display: none;
+}
+#idTrabajador{
+  text-align: center;
+  font-style: italic;
 }

@@ -2,7 +2,8 @@ const express = require('express');
 const homeController = require('../controllers/homeController');
 const requireAuth = require('../middlewares/authMiddleware');
 const router = express.Router();
-
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 router.get('/', requireAuth, homeController.index);
 router.post('/modificardatosEmpresa',homeController.modifyEmpresa);
 router.post('/modificarCentros',homeController.modifyCentros)
@@ -18,6 +19,8 @@ router.post('/listadocumentos',homeController.enviarapdf);
 router.post('/downloadpdf',homeController.downloadpdf);
 router.post('/downloadpdf_',homeController.downloadpdf);
 router.post('/downloadpdfTrabajador',homeController.downloadpdftrabajador);
+router.post('/uploadpdf', upload.single('pdfFile'), homeController.uploadpdf);
+
 //
 router.post('/informacionpersonal',homeController.informationpersonal);
 module.exports = router;

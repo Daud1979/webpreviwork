@@ -1,3 +1,21 @@
+const toggleButton = document.getElementById('toggleButton');
+const tablaContainer = document.getElementById('tablaContainer');
+const toggleButtonPersonal = document.getElementById('toggleButtonPersonal');
+const tablaContainerPersonal = document.getElementById('tablaContainerPersonal');
+const pdfInput = document.getElementById('pdfFile');
+const fileNameDisplay = document.getElementById('fileName');
+const errorMessage = document.getElementById('errorMessage');
+const  closeRegistrarPersonal = document.querySelector('#closeRegistrarPersonal');
+
+
+
+function carga(documentId){
+  const idDocumentoupload = document.querySelector('#idDocumentoupload');
+  idDocumentoupload.value=documentId;
+  const idTrabajadorupload = document.querySelector('#idTrabajadorupload');
+  const idTrabajador = document.querySelector('#idTrabajador');
+idTrabajadorupload.value=idTrabajador.value;
+ }
 async function descargarpdf(documentId, button) {
     const icon = button.querySelector('.material-icons');
 
@@ -82,11 +100,6 @@ async function descargarpdfTrabajador(documentId, button) {
       icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
   }
 }
-const toggleButton = document.getElementById('toggleButton');
-const tablaContainer = document.getElementById('tablaContainer');
-const toggleButtonPersonal = document.getElementById('toggleButtonPersonal');
-const tablaContainerPersonal = document.getElementById('tablaContainerPersonal');
-
 // Agregar evento click al botón
 toggleButton.addEventListener('click', () => {
   if (tablaContainer.classList.contains('d-none')) {
@@ -110,13 +123,11 @@ toggleButtonPersonal.addEventListener('click', () => {
       tablaContainerPersonal.classList.add('d-none');
       toggleButtonPersonal.textContent = '+';
     }
-  });
+});
 
-  document.getElementById("buscadorinformacionglobal").addEventListener("input", function() {
-    const searchValue = this.value.toLowerCase();
-   
+document.getElementById("buscadorinformacionglobal").addEventListener("input", function() {
+    const searchValue = this.value.toLowerCase();   
     const rows = document.querySelectorAll("#tabla-documentos tr");
-
     rows.forEach(row => {
         const cells = row.querySelectorAll("td");
         const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
@@ -144,4 +155,48 @@ document.getElementById("buscadorinformaciontrabajador").addEventListener("input
           row.style.display = "none";
       }
   });
+});
+  
+closeRegistrarPersonal.addEventListener('click',()=>{
+    pdfFile = document.querySelector('#pdfFile');
+    fileName = document.querySelector('#fileName');
+    observacion = document.querySelector('#Observacion');
+    fecha = document.querySelector('#FAlta');
+    pdfFile.value='';
+    observacion.value='';
+    fecha.value='';
+    fileName.value='';
+});
+
+
+pdfInput.addEventListener('change', function () {
+    if (pdfInput.files.length > 0) {
+      fileNameDisplay.value = pdfInput.files[0].name;     
+      errorMessage.classList.add('d-none');
+     
+    }
+  });
+
+  //Validación del formulario
+  document.getElementById('uploadForm').addEventListener('submit', function (e) {  
+    if (!pdfInput.files.length || pdfInput.files[0].type !== 'application/pdf') {
+      e.preventDefault(); // Detener el envío del formulario
+      errorMessage.classList.remove('d-none');
+      pdfInput.classList.add('is-invalid');
+    } else {
+      errorMessage.classList.add('d-none');
+      pdfInput.classList.remove('is-invalid');
+    }
+  });
+
+  document.getElementById("pdfFile").addEventListener("change", function () {
+    const fileInput = this;
+    const fileNameField = document.getElementById("fileName");
+    const hiddenFileNameField = document.getElementById("pdfFileName");
+
+    if (fileInput.files && fileInput.files.length > 0) {
+        const fileName = fileInput.files[0].name; // Obtiene el nombre del archivo
+        fileNameField.value = fileName; // Muestra el nombre en el campo de texto
+        hiddenFileNameField.value = fileName; // Asigna el nombre al campo oculto
+    }
 });

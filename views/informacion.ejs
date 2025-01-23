@@ -8,6 +8,12 @@
                 <% listTrabajador.forEach(trabajador => { %>
             <div class="datosGral  ms-0 me-0 p-0 col-sm-6 ">
                 <div class="input-group m-0 p-0 input-group-sm">
+                        <span class="input-group-text" id="basic-addon1">Codigo Trabajador:</span>
+                        <input type="text" id="idTrabajador"  value="<%= trabajador.idTrabajador %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">
+                </div>
+            </div>  
+            <div class="datosGral  ms-0 me-0 p-0 col-sm-6 ">
+                <div class="input-group m-0 p-0 input-group-sm">
                     <span class="input-group-text" id="basic-addon1">N.I.F:</span>
                     <input type="text" id="NIF"  value="<%= trabajador.NIF %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">
                 </div>
@@ -61,7 +67,8 @@
                             <th>Documentos</th>                            
                             <th>Observacion</th>
                             <th>Registro</th>                            
-                            <th id="tdbotonesdescarga">Descargar</th>                                                   
+                            <th id="tdbotonesdescarga">Subir    </th>                   
+                            <th id="tdbotonesdescarga">Descargar</th>                                                
                         </tr>
                     </thead>
                     <tbody id="tabla-documentos">
@@ -73,6 +80,12 @@
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
                                 <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
+                                <td>                                 
+                                    <button id="btncargarTrabajador" data-bs-toggle="modal" onclick="carga(<%=item.idDocumentoProyecto%>)" data-bs-target="#modalsubirpdf" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idDocumentoProyecto %>"> 
+                                        <i id="idsubir" class="material-icons"><%= "cloud_upload" %></i>
+                                        <span class="tooltip-text">Subir Documento</span>
+                                    </button>
+                                </td>
                                 <td>
                                     <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
                                         <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
@@ -102,6 +115,7 @@
                             <th >Nº</th>
                             <th>Puesto Trabajado</th>
                             <th>Certificados</th>
+                            <th>Observacion</th>          
                             <th>Documentos</th>                                                        
                             <th>Registro</th>                            
                             <th id="tdbotonesdescarga">Descargar</th>                                                   
@@ -113,6 +127,7 @@
                                 <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.PuestoTrabajo %></td>
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Certificado %></td>
+                                <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Observacion %></td>
                                 <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>                                
                                 <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.Registro %></td>
                                 <td>
@@ -127,9 +142,54 @@
                 </table>
                 </div>
         </div>
-    </div><!--plantillas-->
-      
+    </div><!--plantillas-->      
 </div>
-<script src="/js/informacion.js"></script>
+<!-- Modal -->
+<div class="modal fade" id="modalsubirpdf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form id="uploadForm" class="mt-4" enctype="multipart/form-data" method="POST" action="uploadpdf"> 
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-4" id="exampleModalLabel">Subir PDF</h1>        
+                </div>
+                <div class="modal-body">
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <label class="form-label">Seleccione un Archivo PDF</label>
+                        <div class="input-group m-0 p-0 input-group-sm">                          
+                            <label id="lblpdffile" for="pdfFile" class="btn">Buscar</label>                        
+                            <input type="file" class="custom-file-input" id="pdfFile" name="pdfFile" accept="application/pdf" required>
+                            <input type="text" class="form-control" id="fileName" placeholder="Ningún archivo seleccionado" readonly>
+                            <input type="hidden" id="pdfFileName" name="pdfFileName">
+                        </div>                        
+                    </div>
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Observacion</span>
+                            <input type="text" id="Observacion" name="Observacion" class="form-control inputwhite" style="background: white;">
+                        </div>
+                    </div>
+                    <div class="datosGral ms-0 me-0 p-0 col-6 col-sm-6">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">F. Registro</span>
+                            <input type="date" id="FAlta" name="FAlta" class="form-control inputwhite" style="background: white;">
+                        </div>
+                    </div>      
+                </div>
+                <div class="modal-footer">
+                   
+                    <input id="idTrabajadorupload" name="idTrabajadorupload" type="text">                  
+                    <input type="text" id="idDocumentoupload" name="idDocumentoupload">
+                    <div id="errorMessage" class="text-danger d-none">Por favor, seleccione un archivo PDF antes de enviar.</div>
+                    <button type="submit" id="btnregistrarpersonal" class="shadow btn text-white btn-sm">Subir</button>                   
+                    <button type="button" id="closeRegistrarPersonal" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>        
+                </div>
+            </div>
+        </div>
+    </form>
+    
+</div>
+  <!--fin modal-->
+<script src="/js/informacion.js">     
+</script>
 
 <%- include('./partials/foot') %>

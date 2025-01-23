@@ -167,6 +167,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
     try 
@@ -175,7 +176,7 @@ static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idDocumento', sql.Int, idDocumento)
         .input('idTrabajador', sql.Int, idTrabajador)   
-        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumento ASC) AS n,NIF,nombres=case when nombre =null then '' else nombre end+' '+case when apellidos =null then '' else apellidos end,[PuestoTrabajo]=pte.Nombre,[Registro]=convert(varchar(10),clc.registro,103),[Certificado]=clc.CategoriaDocumentoFuera,clc.documento,idDocumentoProyecto,clc.documentoAWS from TrabajadorEmpresa te inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) inner join DocumentosProyectos clc on (te.idTrabajador=clc.idTrabajador) inner join CentroContratos cc on (cc.idCentro=te.idCentro) where idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa`);          
+        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumento ASC) AS n,NIF,nombres=case when nombre =null then '' else nombre end+' '+case when apellidos =null then '' else apellidos end,[PuestoTrabajo]=pte.Nombre,[Registro]=convert(varchar(10),clc.registro,103),[Certificado]=clc.CategoriaDocumentoFuera,Observacion=observacion,clc.documento,idDocumentoProyecto,clc.documentoAWS from TrabajadorEmpresa te inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) inner join DocumentosProyectos clc on (te.idTrabajador=clc.idTrabajador) inner join CentroContratos cc on (cc.idCentro=te.idCentro) where idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -184,6 +185,7 @@ static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     } 
 }
+
 static async listInformacion(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
     try 
@@ -324,7 +326,7 @@ static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
 
 static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefono,Fregistro,Fbaja,estado,idTrabajador,idEmpresa){
     const pool=await await connectDB();
-    console.log(idCentro)
+   
     try 
     {       
        
@@ -451,7 +453,7 @@ static async descargarpdf(idDocumentoProyecto,idEmpresa){
     const pool=await await connectDB();
     try 
     {   
-        console.log(idDocumentoProyecto,idEmpresa);
+        
         const result =await pool.request()        
         .input('idDocumentoProyecto', sql.Int,idDocumentoProyecto)   
         .input('idEmpresa', sql.Int, idEmpresa)
@@ -543,6 +545,63 @@ static async mostrarpdf(tipo,idEmpresa){
     catch (error) 
     {
         console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+
+
+static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,docAWS,obs,reg){
+    
+    const pool=await await connectDB();   
+        const trabajador =await pool.request()        
+        .input('idTrabajador', sql.Int, idTrabajador)
+        .query(`select idCentro=cc.idCentro,nombreCentro from TrabajadorEmpresa te inner join CentroContratos cc on (te.idCentro=cc.idCentro) where idTrabajador=@idTrabajador `);          
+        trabajador.recordset;  
+    
+        const datosDocumento =await pool.request()        
+        .input('idDocumentoProyecto', sql.Int, idDocumentoProyecto)
+        .query(`select idDocumento=dp.idDocumento,idListaDocumento=dp.idListaDocumento,idContrato=idContrato,Observacion=Observacion,idUsuario=idUsuario,CategoriaDocumentoFuera=ld.Documento,registro=getdate() from DocumentosProyectos dp inner join listaDocumento ld on (dp.idListaDocumento=ld.idListaDocumento) where idDocumentoProyecto=@idDocumentoProyecto`);          
+        datosDocumento.recordset;
+        const resultTrabajador= trabajador.recordset[0];
+        const resultDocumento= datosDocumento.recordset[0];       
+        const idDocumento = resultDocumento.idDocumento;
+        const Centro=resultTrabajador.nombreCentro;
+        const idListaDocumento =resultDocumento.idListaDocumento;
+        const idContrato = resultDocumento.idContrato;
+        const documento=doc;
+        const Observacion=obs;
+        const registro=reg;
+        const idUsuario=resultDocumento.idUsuario;
+        const idTrabajado=idTrabajador;
+        const documentoAWS=idTrabajado+''+idDocumentoProyecto+''+docAWS;
+        const idCentro = resultTrabajador.idCentro;
+
+        const CategoriaDocumentoFuera=resultDocumento.CategoriaDocumentoFuera;
+        
+        
+    try 
+    {         
+        const result =await pool.request()
+        .input('idDocumento', sql.Int, idDocumento)
+        .input('Centro', sql.VarChar, Centro)
+        .input('idListaDocumento', sql.Int, idListaDocumento)
+        .input('idContrato', sql.Int, idContrato)
+        .input('documento', sql.VarChar, documento)
+        .input('observacion', sql.VarChar, Observacion)
+        .input('registro', sql.DateTime, registro)
+        .input('idUsuario', sql.Int, idUsuario)
+        .input('documentoAWS', sql.VarChar, documentoAWS)
+        .input('idCentro', sql.Int, idCentro)
+        .input('idTrabajador', sql.Int, idTrabajado)
+        .input('CategoriaDocumentoFuera', sql.VarChar, CategoriaDocumentoFuera)
+        .execute('REGISTRAR_DOCUMENTOSPROYETOS');
+       return {idDocumento};
+       
+    } 
+    catch (error) 
+    {
+        console.error('Error en el registro del documento:', error);
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
