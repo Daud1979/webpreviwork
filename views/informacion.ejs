@@ -1,4 +1,5 @@
 <%- include('./partials/head') %>
+
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
         <h3 class="mt-1">INFORMACIÓN DEL TRABAJADOR</h3>
@@ -6,13 +7,13 @@
         <div class="datospersonalinformacion col-12 col-sm-4">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
                 <% listTrabajador.forEach(trabajador => { %>
-            <div class="datosGral  ms-0 me-0 p-0 col-sm-6 ">
+            <div class="datosGral  ms-0 me-0 p-0 col-sm-4 ">
                 <div class="input-group m-0 p-0 input-group-sm">
                         <span class="input-group-text" id="basic-addon1">Codigo Trabajador:</span>
-                        <input type="text" id="idTrabajador"  value="<%= trabajador.idTrabajador %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">
+                        <input type="text" id="idTrabajador"  value="<%= trabajador.idTrabajador %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">                        
                 </div>
             </div>  
-            <div class="datosGral  ms-0 me-0 p-0 col-sm-6 ">
+            <div class="datosGral  ms-0 me-0 p-0 col-sm-4 ">
                 <div class="input-group m-0 p-0 input-group-sm">
                     <span class="input-group-text" id="basic-addon1">N.I.F:</span>
                     <input type="text" id="NIF"  value="<%= trabajador.NIF %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">

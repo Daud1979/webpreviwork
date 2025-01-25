@@ -142,7 +142,8 @@ static async seleccTrabajador(idEmpresa,idTrabajador){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idTrabajador', sql.Int, idTrabajador)
-        .query(`select * from trabajadorempresa tp inner join CentrosEmpresa ce on (tp.idCentro=ce.idCentro) inner join PuestoTrabajoEmpresa pte on (tp.idPuesto=pte.idPuesto) where tp.idTrabajador=@idTrabajador and tp.idEmpresa=@idEmpresa`);          
+        // .query(`select * from trabajadorempresa tp inner join CentrosEmpresa ce on (tp.idCentro=ce.idCentro) inner join PuestoTrabajoEmpresa pte on (tp.idPuesto=pte.idPuesto) where tp.idTrabajador=@idTrabajador and tp.idEmpresa=@idEmpresa`);          
+        .query(`select idTrabajador='PVW-'+convert(varchar,idTrabajador),NIF,nombres,apellidos,email,telefono,fechaAlta,ce.idCentro,tp.estado,tp.idEmpresa,tp.idPuesto,fechaAlta,FNac,nombreCentro,direccionCentro,ntrabajadorCentro,pte.Nombre from trabajadorempresa tp inner join CentrosEmpresa ce on (tp.idCentro=ce.idCentro) inner join PuestoTrabajoEmpresa pte on (tp.idPuesto=pte.idPuesto) where tp.idTrabajador=@idTrabajador and tp.idEmpresa=@idEmpresa`)
         return (result.recordset)
     } 
     catch (error) 
@@ -374,27 +375,6 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
         console.error('Error en la consulta de estado:', error);
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
-
-    // try {
-    //     // Actualizar el estado basado en el valor actual
-    //     const pool = await connectDB(); // Reconectar para la actualización
-    //     if (estado === 'H') {
-    //         await pool.request()
-    //             .input('idEmpresa', sql.Int, idEmpresa)
-    //             .input('idTrabajador', sql.Int, idTrabajador)
-    //             .query(`UPDATE TrabajadorEmpresa SET estado='D' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
-    //         return 'Baja';
-    //     } else {
-    //         await pool.request()
-    //             .input('idEmpresa', sql.Int, idEmpresa)
-    //             .input('idTrabajador', sql.Int, idTrabajador)
-    //             .query(`UPDATE TrabajadorEmpresa SET estado='H' WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
-    //         return 'Alta';
-    //     }
-    // } catch (error) {
-    //     console.error('Error en la actualización de estado:', error);
-    //     throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-    // }
 }
 
 static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idpuesto,fechaAlta,estado,idEmpresa){
@@ -548,8 +528,6 @@ static async mostrarpdf(tipo,idEmpresa){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
-
-
 
 static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,docAWS,obs,reg){
     

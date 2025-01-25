@@ -374,6 +374,5 @@ pointer-events:auto;
   display: none;
 }
 #idTrabajador{
-  text-align: center;
-  font-style: italic;
+  text-align: left;  
 }
