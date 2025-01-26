@@ -153,21 +153,43 @@ static async seleccTrabajador(idEmpresa,idTrabajador){
     }
 }
 
-static async listTodosTrabajadorEmpresa(idEmpresa){
-    const pool=await await connectDB();
-    try 
-    {
-        const result =await pool.request()
-        .input('idEmpresa', sql.Int, idEmpresa)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa`);          
-        return (result.recordset)
-    } 
-    catch (error) 
-    {
+static async listTodosTrabajadorEmpresa(idEmpresa) {
+    const pool = await connectDB();
+    try {
+        const result = await pool.request()
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .query(`
+                SELECT 
+                    idTrabajador,
+                    idCentro,
+                    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
+                    NIF,
+                    nombres,
+                    apellidos,
+                    Puesto = pte.Nombre,
+                    email,
+                    telefono,
+                    Registro = CONVERT(varchar(10), fechaAlta, 103),
+                    Baja = CASE 
+                        WHEN fechaBaja IS NULL THEN '' 
+                        WHEN CONVERT(datetime, fechaBaja) = '1900-01-01 00:00:00.000' THEN '' 
+                        ELSE CONVERT(varchar(10), fechaBaja, 103) 
+                    END,
+                    Estado = CASE 
+                        WHEN estado = 'H' THEN 'Alta' 
+                        ELSE 'Baja' 
+                    END
+                FROM TrabajadorEmpresa t
+                INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
+                WHERE t.idEmpresa = @idEmpresa
+            `);
+        return result.recordset;
+    } catch (error) {
         console.error('Error en la modificación de datos:', error);
-        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+        throw error;
     }
 }
+
 
 static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
@@ -377,7 +399,7 @@ static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
     }
 }
 
-static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idpuesto,fechaAlta,estado,idEmpresa){
+static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idpuesto,fechaAlta,estado,idEmpresa,fNac){
     const pool=await await connectDB();
     try 
     {   
@@ -388,6 +410,7 @@ static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idp
         .input('idPuesto', sql.Int, idpuesto)
         .input('estado', sql.VarChar, estado)
         .input('fechaAlta', sql.DateTime, fechaAlta)
+        .input('fNac', sql.DateTime, fNac)
         .input('fechaBaja', sql.VarChar, null)
         .input('telefono', sql.VarChar, telefono)
         .input('email', sql.VarChar, email)

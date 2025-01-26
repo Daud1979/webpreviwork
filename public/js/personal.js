@@ -153,6 +153,7 @@ btnregistrarpersonal.addEventListener('click',()=>{
     const telefono=document.querySelector('#telefonopersonal');
     const idpuesto = document.querySelector('#cmbpuestotrabajo');
     const Fregistro = document.querySelector('#FAlta');
+    const fNac = document.querySelector('#fNac');
     const message = document.querySelector('#messageregister');
     const data ={
         idCentro:idcentro.value,
@@ -162,7 +163,8 @@ btnregistrarpersonal.addEventListener('click',()=>{
         email:email.value,
         idpuesto:idpuesto.value,
         telefono:telefono.value,
-        Fregistro:Fregistro.value
+        Fregistro:Fregistro.value,
+        fNac:fNac.value
     }
     if (isValidEmail(email.value) && validarObjeto(data) && (Fregistro!=""))
     {
@@ -182,8 +184,7 @@ btnregistrarpersonal.addEventListener('click',()=>{
                {
                 
                 message.classList.add('messageregisteradd');
-                    message.innerHTML="SE REGISTRO CORRECTAMENTE";
-                   
+                    message.innerHTML="SE REGISTRO CORRECTAMENTE";                   
                     nif.value="";
                     nombre.value="";
                     apellidos.value="";
@@ -398,34 +399,15 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
                             <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>
                            <td class="align-center m-0 p-0 " id="tdbotones">
                                 <button id="btnEstadoPersona" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" data-id="${item.idTrabajador}">
-                                    <i id="iapto" class="material-icons">restart_alt</i>
-                                    <span class="tooltip-text">Actualizar Datos</span>
-                                </button>
-
-                                <button id="btnFormacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
-                                    <i id="iformacion" class="material-icons">school</i>
-                                    <span class="tooltip-text">Formación</span>
-                                </button>
+                                    <i id="iapto" class="material-icons">manage_accounts</i>
+                                    <span class="tooltip-text">Modificar</span>
+                                </button>                            
 
                                 <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
-                                    <i id="iinformacion" class="material-icons">analytics</i>
-                                    <span class="tooltip-text">Información</span>
+                                    <i id="iinformacion" class="material-icons">folder</i>
+                                    <span class="tooltip-text">Carpeta</span>
                                 </button>
 
-                                <button id="btnAptoRM" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
-                                    <i id="iaptorm" class="material-icons">medical_information</i>
-                                    <span class="tooltip-text">Apto R.M.</span>
-                                </button>
-
-                                <button id="btnRenuncia" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
-                                    <i id="icrrm" class="material-icons">monitor_heart</i>
-                                    <span class="tooltip-text">Consentimiento Renuncia R.M.</span>
-                                </button>
-
-                                <button id="btnAutorizacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
-                                    <i id="iautorizaciones" class="material-icons">verified_user</i>
-                                    <span class="tooltip-text">Autorizaciones</span>
-                                </button>
                             </td>
                         </tr>
                     `);

@@ -2,7 +2,7 @@
 
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
-        <h3 class="mt-1">INFORMACIÓN DEL TRABAJADOR</h3>
+        <h3 class="mt-1">DOCUMENTOS DEL TRABAJADOR</h3>
      
         <div class="datospersonalinformacion col-12 col-sm-4">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
@@ -46,8 +46,35 @@
             <% }) %>
             <% }  %>
         </div>
-    </div><!--fin cabeza-->
-    <div class="row  filacontenedor "><!--inicio plantillas-->
+        <!--DESDE EL TAB-->
+            <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">Formación</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">Información</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">Reconocimiento Medico R.M.</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab" aria-controls="tab4" aria-selected="false">Concentimiento/Renuncia R.M.</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab" aria-controls="tab5" aria-selected="false">Autorización</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" type="button" role="tab" aria-controls="tab6" aria-selected="false">Epis</button>
+        </li>   
+            </ul>
+            <div class="tab-content mt-4" id="myTabContent">
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+          <h3>Página 1</h3>
+          <p>Contenido de la página 1.</p>
+        </div>
+        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+            <!--AQUI EL TAB-->
+                <div class="row  filacontenedor "><!--inicio plantillas-->
         <div class="buttontoggle">
             <h4 >PLANTILLAS DE INFORMACIÓN</h4>
             <button id="toggleButton" class="btn btn-primary ">+</button>
@@ -69,7 +96,7 @@
                             <th>Documentos</th>                            
                             <th>Observacion</th>
                             <th>Registro</th>                            
-                            <th id="tdbotonesdescarga">Subir    </th>                   
+                            <th id="tdbotonesdescarga">Subir </th>                   
                             <th id="tdbotonesdescarga">Descargar</th>                                                
                         </tr>
                         </thead>
@@ -101,8 +128,8 @@
                 </div>
             </div>
         </div>
-    </div><!--plantillas-->
-    <div class="row  filacontenedor "><!--inicio plantillas-->
+                </div><!--plantillas-->
+                <div class="row  filacontenedor "><!--inicio plantillas-->
         <div class="buttontogglePersonal">
             <h4 >DOCUMENTOS DE INFORMACIÓN DEL TRABAJADOR</h4>
             <button id="toggleButtonPersonal" class="btn btn-primary ">+</button>
@@ -147,8 +174,29 @@
                 </div>
             </div>
         </div>
-    </div><!--plantillas-->      
-</div>
+                </div><!--plantillas-->    
+            <!--HASTA AQUI EL TAB--> 
+        </div>
+        <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+          <h3>Página 3</h3>
+          <p>Contenido de la página 3.</p>
+        </div>
+        <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+          <h3>Página 4</h3>
+          <p>Contenido de la página 4.</p>
+        </div>
+        <div class="tab-pane fade" id="tab5" role="tabpanel" aria-labelledby="tab5-tab">
+          <h3>Página 5</h3>
+          <p>Contenido de la página 5.</p>
+        </div>
+        <div class="tab-pane fade" id="tab6" role="tabpanel" aria-labelledby="tab6-tab">
+            <h3>Página 6</h3>
+            <p>Contenido de la página 6.</p>
+          </div>
+            </div>
+    </div><!--fin cabeza-->
+   
+</div> 
 <!-- Modal -->
 <div class="modal fade" id="modalsubirpdf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <form id="uploadForm" class="mt-4" enctype="multipart/form-data" method="POST" action="uploadpdf"> 
@@ -193,7 +241,8 @@
     </form>
     
 </div>
-  <!--fin modal-->
+<!--fin modal-->
+
 <script src="/js/informacion.js">     
 </script>
 

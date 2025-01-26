@@ -197,7 +197,7 @@ font-size: 1.4rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color: green;
+color: rgb(32, 158, 196);
 }
 #iformacion{
 text-shadow: none; 
@@ -224,7 +224,8 @@ font-size: 1.4rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color: rgb(3, 66, 68);
+color: #f5cd5f;
+
 }
 #iaptorm{
 text-shadow: none; 
@@ -263,7 +264,7 @@ color: rgb(134, 8, 14);
 /* Estilos para el tooltip */
 .btnidpersonalfila .tooltip-text {
   visibility: hidden;
-  width: 150px;
+  width: 80px;
   background-color: #636262;
   color: #fff;
   text-align: center;
@@ -272,7 +273,7 @@ color: rgb(134, 8, 14);
   position: absolute;
   z-index: 1;
   bottom: 65%; /* Ubica el tooltip arriba del botón */
-  left: 60%;
+  left: 40%;
   transform: translateX(-50%);
   opacity: 10;
   transition: opacity 0.3s;
@@ -307,10 +308,12 @@ td span {
 margin: 0 !important; /* Elimina el margin */
 padding: 0 !important; /* Elimina el padding */
 }
-
+#tdbotonesdescarga{
+  width: 50px;
+}
 #tdbotones{  
 
-width: 180px;
+width: 65px;
 padding: 0;
 margin: 0;
 }

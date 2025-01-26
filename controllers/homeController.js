@@ -406,9 +406,10 @@ exports.registerpersonal = async(req,res)=>{
   const datos =req.body;
   const idEmpresa = req.session.userId;  
   const estado='H'; 
+  
   if (req.session.userId>0)
   {
-    registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,datos.idpuesto,datos.Fregistro,estado,idEmpresa)
+    registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,datos.idpuesto,datos.Fregistro,estado,idEmpresa,datos.fNac)
     res.json(registrar);
   }
   else
