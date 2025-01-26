@@ -7,19 +7,19 @@
         <div class="row justify-content-center m-0 p-0">
             <div class="datosGral">
                 <!---->
+                <div class="tablecentro col-12  d-flex mt-1 flex-column">
+                    <H4>LISTA DE DOCUMENTOS</H4>                    
+                </div>
                 <div class="input-group mb-2 gap-2 ">                        
                     <div class="input-group-sm col-12 col-md-5 col-sm-5 shadow">
                         <input type="text" id="buscadordocumento" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
                     </div>                   
-                </div>            
-                
+                </div>             
                 <!---->
-                <div class="tablecentro col-12  d-flex mt-1 flex-column">
-                    <H4>LISTA DE DOCUMENTOS</H4>
-                    
-                </div>
+                
                 <div class="table-responsive ">
-                <table class="table table-bordered table-striped table-sm shadow">
+                    <div class="table-wrapper overflow-auto" style="max-height: 800px;">
+                        <table class="table table-bordered table-striped table-sm shadow">
                     <thead  class="shadow ">
                         <tr id="trhead">
                             <th >Nº</th>
@@ -50,7 +50,8 @@
                             </tr>
                         <% }); %>
                     </tbody>
-                </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

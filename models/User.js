@@ -552,12 +552,15 @@ static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,
         const registro=reg;
         const idUsuario=resultDocumento.idUsuario;
         const idTrabajado=idTrabajador;
-        const documentoAWS=idTrabajado+''+idDocumentoProyecto+''+docAWS;
+        const documentoAWS=idTrabajado+''+idListaDocumento+''+docAWS;
         const idCentro = resultTrabajador.idCentro;
 
         const CategoriaDocumentoFuera=resultDocumento.CategoriaDocumentoFuera;
         
-        
+        const devolver={
+            idDocumento:idDocumento,
+            documentoAWS:documentoAWS
+        }
     try 
     {         
         const result =await pool.request()
@@ -574,7 +577,7 @@ static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,
         .input('idTrabajador', sql.Int, idTrabajado)
         .input('CategoriaDocumentoFuera', sql.VarChar, CategoriaDocumentoFuera)
         .execute('REGISTRAR_DOCUMENTOSPROYETOS');
-       return {idDocumento};
+        return devolver;
        
     } 
     catch (error) 

@@ -376,3 +376,14 @@ pointer-events:auto;
 #idTrabajador{
   text-align: left;  
 }
+#idiconssubir{
+  color: white;
+  text-shadow: none;
+}
+#btnregistrarpdf{
+  background:#057294;
+  color:#fdfdfd;
+  }
+  table th{
+    position: sticky; top: 0; background: white; z-index: 2;
+  }

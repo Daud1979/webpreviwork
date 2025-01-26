@@ -1,7 +1,7 @@
 require('dotenv').config();
 const User = require('../models/User');
 const multer = require('multer');
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand,PutObjectCommand } = require('@aws-sdk/client-s3');
 const upload = multer({ dest: 'uploads/' }); 
 const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
@@ -100,7 +100,9 @@ exports.downloadpdftrabajador = async (req, res) => {
     console.error("Archivo no encontrado o clave de S3 no válida");
     return res.status(404).send('Archivo no encontrado');
     }
+    
     const bucketName = process.env.S3_BUCKET_NAME;
+ 
     const s3Key = datos[0].documentoAWS;
     const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
     const s3 = new S3Client({
@@ -246,7 +248,8 @@ exports.downloadpdftrabajador = async (req, res) => {
     res.redirect('/')
   }
 };
-          
+
+  
 exports.uploadpdf = async (req, res) => {
   if (req.session.userId>0)
     {
@@ -291,15 +294,8 @@ exports.uploadpdf = async (req, res) => {
               // Consultar listas relacionadas
               const listTrabajador = await User.seleccTrabajador(idEmpresa, idTrabajador[1]);
               const listDocumento = await User.listInformacion(idEmpresa,  datosAWS.idDocumento, idTrabajador_);
-              const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,  datosAWS.idDocumento, idTrabajador[1]);
-          
-              // Renderizar la vista o redirigir según el estado de la sesión
-              if (req.session.userId > 0) {
-                const error='';
-                res.render('informacion', { listTrabajador, listDocumento, listDocumentoTrabajador});
-              } else {
-                res.redirect('/');
-              }
+              const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,  datosAWS.idDocumento, idTrabajador[1]);           
+              res.render('informacion', { listTrabajador, listDocumento, listDocumentoTrabajador});              
       } catch (error) {             
        
         res.render('errorupload',{idTrabajador}); // Pasar el mensaje de error a la vista
@@ -311,6 +307,7 @@ exports.uploadpdf = async (req, res) => {
       res.redirect('/');
     }
 };
+  
 
           /*MODIFICAR Y REGISTRAR AQUI, VERIFICAR SI HAY SESSION ACTIVA*/
 exports.modifyEmpresa=async(req,res)=>{
