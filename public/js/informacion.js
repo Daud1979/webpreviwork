@@ -64,7 +64,7 @@ async function descargarpdfTrabajador(documentId, button) {
   icon.style.color = 'Grey';
   const row = button.closest('tr');
   // Obtener el contenido de la celda de la cuarta columna (índice 3)
-  const documentCell = row.cells[3]; // Índice 3 para la cuarta columna (cero indexado)
+  const documentCell = row.cells[4]; // Índice 3 para la cuarta columna (cero indexado)
   const documentName = documentCell.textContent.trim();
   const nif= document.querySelector('#NIF');
   const nombre = document.querySelector('#nombre');

@@ -530,7 +530,7 @@ static async mostrarpdf(tipo,idEmpresa){
 }
 
 static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,docAWS,obs,reg){
-    
+  
     const pool=await await connectDB();   
         const trabajador =await pool.request()        
         .input('idTrabajador', sql.Int, idTrabajador)
