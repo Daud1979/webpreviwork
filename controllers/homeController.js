@@ -254,7 +254,7 @@ exports.downloadpdftrabajador = async (req, res) => {
 // Inicializa el cliente de S3
 
 
-exports.uploadpdf = async (req, res) => {
+exports.uploadpdf = async (req, res) => {  
   if (req.session.userId > 0) {
     const idTrabajador = req.body.idTrabajadorupload.split('-');
     const bucketName = process.env.S3_BUCKET_NAME;
@@ -264,7 +264,6 @@ exports.uploadpdf = async (req, res) => {
       if (!req.file) {
         return res.status(400).json({ error: 'No se ha seleccionado ningún archivo' });
       }
-
       // Generar el nombre del archivo para AWS
       const docAWS = `${getFormattedDate()}.pdf`; // Nombre del archivo en S3
       const idEmpresa = req.session.userId;
@@ -280,7 +279,6 @@ exports.uploadpdf = async (req, res) => {
       } else {
         fechaAlta = new Date(fechaAlta); // Asegurarse de que sea una instancia de Date
       }
-
       // Subir los datos al sistema (guardar la información en la base de datos)
       const datosAWS = await User.cargarpdfTrabajador(
         idTrabajador[1],
@@ -312,7 +310,7 @@ exports.uploadpdf = async (req, res) => {
 
       // Consultar listas relacionadas
       const listTrabajador = await User.seleccTrabajador(idEmpresa, idTrabajador[1]);
-      const listDocumento = await User.listInformacion(idEmpresa, datosAWS.idDocumento, idTrabajador[1]);
+      const listDocumento = await User.listInformacion(idEmpresa, datosAWS.idDocumento, idTrabajador_);
       const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa, datosAWS.idDocumento, idTrabajador[1]);
 
       // Renderizar la vista o redirigir según el estado de la sesión
