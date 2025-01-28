@@ -229,7 +229,7 @@ static async listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idL
 }
 
 
-
+/*para informacion y concentimiento*/
 static async listInformacion(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
     try 
@@ -239,6 +239,26 @@ static async listInformacion(idEmpresa,idDocumento,idTrabajador){
         .input('idDocumento', sql.Int, idDocumento)
         .input('idTrabajador', sql.Int, idTrabajador)   
         .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,codigoAlterno,Categoria=ld.documento,dp.documento,observacion,registro=CONVERT(varchar(10),registro,103),documentoAWS,idDocumentoProyecto from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  WHERE dp.idDocumento=@idDocumento and idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+/*para epis y autorizacion*/
+static async listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocumento){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idDocumento', sql.Int, idDocumento)
+        .input('idTrabajador', sql.Int, idTrabajador)   
+        .input('idListaDocumento', sql.Int, idListaDocumento)   
+        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,codigoAlterno,Categoria=ld.documento,dp.documento,observacion,registro=CONVERT(varchar(10),registro,103),documentoAWS,idDocumentoProyecto from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  WHERE dp.idDocumento=@idDocumento and idTrabajador=@idTrabajador and idEmpresa=@idEmpresa and ld.idListaDocumento=@idListaDocumento`);          
         return (result.recordset)
     } 
     catch (error) 

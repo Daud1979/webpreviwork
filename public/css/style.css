@@ -44,7 +44,7 @@ color: rgb(5, 129, 47);
 }
 #itrabajador{
 font-size: 4rem;
-color: rgb(5, 129, 92);
+color: #0ca9c5;
 }
 #iaddtrabajador{
 font-size: 2rem;
@@ -197,7 +197,8 @@ font-size: 1.4rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color: rgb(32, 158, 196);
+color: #0ca9c5;
+text-shadow: 1px 2px rgb(24, 23, 23);
 }
 #iformacion{
 text-shadow: none; 
@@ -224,9 +225,10 @@ font-size: 1.4rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color: #f5cd5f;
-
+color:rgb(179, 190, 20);
+text-shadow: 1px 2px rgb(24, 23, 23);
 }
+
 #iaptorm{
 text-shadow: none; 
 font-size: 1.4rem; 

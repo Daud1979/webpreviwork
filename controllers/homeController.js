@@ -98,6 +98,46 @@ exports.concentimientorenunciapersonal=async(req,res)=>{
   (req.session.userId>0)? res.render('concentimientorenuncia',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
 
+exports.autorizacion=async(req,res)=>{   
+  idTrabajador=0;
+  
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
+
+  const idEmpresa = req.session.userId;
+  const idDocumento=16;//esto hay que verpa los otros doc    
+  const idListaDocumento=73
+  const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
+  const listDocumento= await User.listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador_,idListaDocumento);
+  const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);    
+  (req.session.userId>0)? res.render('autorizacion',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
+}
+
+exports.epis=async(req,res)=>{   
+  idTrabajador=0;
+  
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
+
+  const idEmpresa = req.session.userId;
+  const idDocumento=16;//esto hay que verpa los otros doc    
+  const idListaDocumento=72
+  const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
+  const listDocumento= await User.listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador_,idListaDocumento);
+  const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);    
+  (req.session.userId>0)? res.render('epis',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
+}
+
 exports.centrospersonal=async (req,res)=>{//enviar a centros
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
@@ -353,6 +393,147 @@ exports.uploadpdfconcentimiento = async (req, res) => {
     res.redirect('/');
   }
 };
+
+exports.uploadpdfautorizacion = async (req, res) => {  
+ 
+  if (req.session.userId > 0) {
+    const idTrabajador = req.body.idTrabajadorupload.split('-');
+    
+    const bucketName = process.env.S3_BUCKET_NAME;
+
+    try {
+      // Verifica que el archivo haya sido cargado
+      if (!req.file) {
+        return res.status(400).json({ error: 'No se ha seleccionado ningún archivo' });
+      }
+      // Generar el nombre del archivo para AWS
+      const docAWS = `${getFormattedDate()}.pdf`; // Nombre del archivo en S3
+      const idEmpresa = req.session.userId;
+      const observacion = req.body.Observacion;
+      let fechaAlta = req.body.FAlta;
+      const idDocumento = req.body.idDocumentoupload;
+      const nombrepdf = req.body.pdfFileName;
+      const archivo = req.file;
+
+      // Si no se proporciona `fechaAlta`, usar la fecha actual
+      if (!fechaAlta || fechaAlta.trim() === '') {
+        fechaAlta = new Date();
+      } else {
+        fechaAlta = new Date(fechaAlta); // Asegurarse de que sea una instancia de Date
+      }
+      // Subir los datos al sistema (guardar la información en la base de datos)
+      const datosAWS = await User.cargarpdfTrabajador(
+        idTrabajador[1],
+        idDocumento,
+        idEmpresa,
+        nombrepdf,
+        docAWS,
+        observacion,
+        fechaAlta
+      );
+
+      // Mover el archivo cargado a la ubicación deseada en el servidor (carpeta uploads)
+      const nuevaRuta = path.join(__dirname, '../uploads', archivo.originalname);
+      fs.renameSync(archivo.path, nuevaRuta);
+
+      // Preparar los parámetros para subir el archivo a S3
+      const params = {
+        Bucket: bucketName,
+        Key: datosAWS.documentoAWS, // Nombre que tendrá el archivo en S3
+        Body: fs.createReadStream(nuevaRuta), // Usamos un stream para enviar el archivo a S3
+        ContentType: archivo.mimetype, // Tipo MIME del archivo
+      };
+
+      // Subir el archivo a S3
+      await s3.send(new PutObjectCommand(params));
+
+      // Eliminar el archivo del servidor después de subirlo a S3
+      fs.unlinkSync(nuevaRuta);
+      const idListaDocumento=73;
+      const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador[1]);   
+      const listDocumento= await User.listAutorizacionEpis(idEmpresa,datosAWS.idDocumento,idTrabajador_,idListaDocumento);    
+      const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,datosAWS.idDocumento,idTrabajador[1],idListaDocumento);    
+      (req.session.userId>0)? res.render('autorizacion',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
+
+    } catch (error) {
+      console.error('Error al procesar la carga del archivo:', error.message);
+      res.render('errorupload', { idTrabajador }); // Pasar el mensaje de error a la vista
+    }
+  } else {
+    res.redirect('/');
+  }
+};
+
+exports.uploadpdfepis = async (req, res) => {  
+ 
+  if (req.session.userId > 0) {
+    const idTrabajador = req.body.idTrabajadorupload.split('-');
+    
+    const bucketName = process.env.S3_BUCKET_NAME;
+
+    try {
+      // Verifica que el archivo haya sido cargado
+      if (!req.file) {
+        return res.status(400).json({ error: 'No se ha seleccionado ningún archivo' });
+      }
+      // Generar el nombre del archivo para AWS
+      const docAWS = `${getFormattedDate()}.pdf`; // Nombre del archivo en S3
+      const idEmpresa = req.session.userId;
+      const observacion = req.body.Observacion;
+      let fechaAlta = req.body.FAlta;
+      const idDocumento = req.body.idDocumentoupload;
+      const nombrepdf = req.body.pdfFileName;
+      const archivo = req.file;
+
+      // Si no se proporciona `fechaAlta`, usar la fecha actual
+      if (!fechaAlta || fechaAlta.trim() === '') {
+        fechaAlta = new Date();
+      } else {
+        fechaAlta = new Date(fechaAlta); // Asegurarse de que sea una instancia de Date
+      }
+      // Subir los datos al sistema (guardar la información en la base de datos)
+      const datosAWS = await User.cargarpdfTrabajador(
+        idTrabajador[1],
+        idDocumento,
+        idEmpresa,
+        nombrepdf,
+        docAWS,
+        observacion,
+        fechaAlta
+      );
+
+      // Mover el archivo cargado a la ubicación deseada en el servidor (carpeta uploads)
+      const nuevaRuta = path.join(__dirname, '../uploads', archivo.originalname);
+      fs.renameSync(archivo.path, nuevaRuta);
+
+      // Preparar los parámetros para subir el archivo a S3
+      const params = {
+        Bucket: bucketName,
+        Key: datosAWS.documentoAWS, // Nombre que tendrá el archivo en S3
+        Body: fs.createReadStream(nuevaRuta), // Usamos un stream para enviar el archivo a S3
+        ContentType: archivo.mimetype, // Tipo MIME del archivo
+      };
+
+      // Subir el archivo a S3
+      await s3.send(new PutObjectCommand(params));
+
+      // Eliminar el archivo del servidor después de subirlo a S3
+      fs.unlinkSync(nuevaRuta);
+      const idListaDocumento=72;
+      const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador[1]);   
+      const listDocumento= await User.listAutorizacionEpis(idEmpresa,datosAWS.idDocumento,idTrabajador_,idListaDocumento);    
+      const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,datosAWS.idDocumento,idTrabajador[1],idListaDocumento);    
+      (req.session.userId>0)? res.render('epis',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
+
+    } catch (error) {
+      console.error('Error al procesar la carga del archivo:', error.message);
+      res.render('errorupload', { idTrabajador }); // Pasar el mensaje de error a la vista
+    }
+  } else {
+    res.redirect('/');
+  }
+};
+
 
 exports.uploadpdf = async (req, res) => {  
  
