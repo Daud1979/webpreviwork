@@ -390,3 +390,6 @@ pointer-events:auto;
   table th{
     position: sticky; top: 0; background: white; z-index: 2;
   }
+  /* #idTrabajador{
+    display: none;
+  } */

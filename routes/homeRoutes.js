@@ -22,5 +22,6 @@ router.post('/downloadpdfTrabajador',homeController.downloadpdftrabajador);
 router.post('/uploadpdf', upload.single('pdfFile'), homeController.uploadpdf);
 
 //
-router.post('/informacionpersonal',homeController.informationpersonal);
+router.post('/trabajador/informacion',homeController.informationpersonal);
+router.post('/trabajador/concentimientorenuncia',homeController.concentimientorenunciapersonal);
 module.exports = router;

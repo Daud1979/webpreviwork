@@ -209,6 +209,27 @@ static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
     } 
 }
 
+static async listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idDocumento', sql.Int, idDocumento)
+        .input('idListaDocumento', sql.Int, idListaDocumento)
+        .input('idTrabajador', sql.Int, idTrabajador)   
+        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumento ASC) AS n,NIF,nombres=case when nombre =null then '' else nombre end+' '+case when apellidos =null then '' else apellidos end,[PuestoTrabajo]=pte.Nombre,[Registro]=convert(varchar(10),clc.registro,103),[Certificado]=clc.CategoriaDocumentoFuera,Observacion=observacion,clc.documento,idDocumentoProyecto,clc.documentoAWS from TrabajadorEmpresa te inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) inner join DocumentosProyectos clc on (te.idTrabajador=clc.idTrabajador) inner join CentroContratos cc on (cc.idCentro=te.idCentro) where idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa and idListaDocumento=@idListaDocumento`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    } 
+}
+
+
+
 static async listInformacion(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
     try 

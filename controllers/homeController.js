@@ -60,15 +60,44 @@ exports.centros=async (req,res)=>{//enviar a centros
   (req.session.userId>0)? res.render('centros',{listCentro}):res.redirect('/');
 }
 exports.informationpersonal=async(req,res)=>{   
-  const idTrabajador=req.body.idTrabajador;
-  const idEmpresa = req.session.userId;
+  idTrabajador=0;  
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
   
+  const idEmpresa = req.session.userId;  
   const idDocumento=15;//esto hay que verpa los otros doc    
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
   const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,);
-  const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador);    
+  const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador);  
+  
   (req.session.userId>0)? res.render('informacion',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
+
+exports.concentimientorenunciapersonal=async(req,res)=>{   
+  idTrabajador=0;
+  
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
+
+  const idEmpresa = req.session.userId;
+  const idDocumento=14;//esto hay que verpa los otros doc    
+  const idListaDocumento=67
+  const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
+  const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,);
+  const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);    
+  (req.session.userId>0)? res.render('concentimientorenuncia',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
+}
+
 exports.centrospersonal=async (req,res)=>{//enviar a centros
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
@@ -254,7 +283,7 @@ exports.downloadpdftrabajador = async (req, res) => {
 // Inicializa el cliente de S3
 
 
-exports.uploadpdf = async (req, res) => {
+exports.uploadpdf = async (req, res) => {  
   if (req.session.userId > 0) {
     const idTrabajador = req.body.idTrabajadorupload.split('-');
     const bucketName = process.env.S3_BUCKET_NAME;
@@ -264,7 +293,6 @@ exports.uploadpdf = async (req, res) => {
       if (!req.file) {
         return res.status(400).json({ error: 'No se ha seleccionado ningún archivo' });
       }
-
       // Generar el nombre del archivo para AWS
       const docAWS = `${getFormattedDate()}.pdf`; // Nombre del archivo en S3
       const idEmpresa = req.session.userId;
@@ -280,7 +308,6 @@ exports.uploadpdf = async (req, res) => {
       } else {
         fechaAlta = new Date(fechaAlta); // Asegurarse de que sea una instancia de Date
       }
-
       // Subir los datos al sistema (guardar la información en la base de datos)
       const datosAWS = await User.cargarpdfTrabajador(
         idTrabajador[1],
@@ -312,7 +339,7 @@ exports.uploadpdf = async (req, res) => {
 
       // Consultar listas relacionadas
       const listTrabajador = await User.seleccTrabajador(idEmpresa, idTrabajador[1]);
-      const listDocumento = await User.listInformacion(idEmpresa, datosAWS.idDocumento, idTrabajador[1]);
+      const listDocumento = await User.listInformacion(idEmpresa, datosAWS.idDocumento, idTrabajador_);
       const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa, datosAWS.idDocumento, idTrabajador[1]);
 
       // Renderizar la vista o redirigir según el estado de la sesión

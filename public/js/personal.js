@@ -348,7 +348,7 @@ botones.forEach((boton) => {
                 });
         }
         else if (idBoton == 'btnInformacion'){
-            redirigirConPost('/home/informacionpersonal',{idTrabajador});
+            redirigirConPost('/home/trabajador/informacion',{idTrabajador});
         }
       
     });
@@ -477,7 +477,7 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
                 }
                 else if (idBoton === 'btnInformacion'){
                     
-                    redirigirConPost('/home/informacionpersonal',{idTrabajador});
+                    redirigirConPost('/home/trabajador/informacion',{idTrabajador});
                 }
             });
         });
@@ -487,7 +487,7 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
 
 function cargarInformacion(idTrabajador){
     const data = { idTrabajador:idTrabajador };  
-    fetch('/home/informacionpersonal', {
+    fetch('/home/trabajador/informacion', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

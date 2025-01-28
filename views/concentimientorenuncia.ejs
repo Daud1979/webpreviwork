@@ -2,7 +2,7 @@
 
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
-        <h3 class="mt-1">DOCUMENTO DE INFORMACION</h3>
+        <h3 class="mt-1">DOCUMENTO CONCENTIMIENTO/RENUNCIA R.M.</h3>
      
         <div class="datospersonalinformacion col-12 col-sm-4">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
@@ -65,7 +65,7 @@
                             <input type="hidden"     id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link active" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información</button>
+                    <button type="submit" class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--reconocimiento-->
@@ -82,10 +82,10 @@
                 <form method="POST" action="/home/trabajador/concentimientorenuncia">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
                         <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden"   id="idTra1bajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
+                            <input type="hidden"   id="idTrabajador1" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Consentimiento/Renuncia R.M.</button>
+                    <button type="submit" class="nav-link active" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Consentimiento/Renuncia R.M.</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--autorizacion-->
@@ -111,11 +111,11 @@
         </ul>
         
         <div class="tab-content mt-4" id="myTabContent">            
-            <div class="tab-pane fade show active" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+            <div class="tab-pane fade show active" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
                 <!--AQUI EL TAB-->
                 <div class="row  filacontenedor "><!--inicio plantillas-->
                     <div class="buttontoggle">
-                        <h4 >PLANTILLAS DE INFORMACIÓN</h4>
+                        <h4 >PLANTILLAS CONCENTIMIENTO/RENUNCIA DEL TRABAJADOR</h4>
                         <button id="toggleButton" class="btn btn-primary ">+</button>
                     </div>
                     <div class="datospersonalinformacion ">
@@ -168,7 +168,7 @@
                 </div><!--plantillas-->
                 <div class="row  filacontenedor "><!--inicio plantillas-->
                     <div class="buttontogglePersonal">
-                        <h4 >DOCUMENTOS DE INFORMACIÓN DEL TRABAJADOR</h4>
+                        <h4 >DOCUMENTOS DE CONCENTIMIENTO/RENUNCIA DEL TRABAJADOR</h4>
                         <button id="toggleButtonPersonal" class="btn btn-primary ">+</button>
                     </div>
                     <div class="datospersonalinformacion ">
@@ -263,7 +263,7 @@
 </div>
 <!--fin modal-->
 
-<script src="/js/informacion.js">     
+<script src="/js/concentimientorenuncia.js">     
 </script>
 
 <%- include('./partials/foot') %>
