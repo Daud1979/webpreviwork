@@ -227,7 +227,22 @@ static async listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idL
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     } 
 }
-
+static async listFormacion(idEmpresa,idTrabajador){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)       
+        .input('idTrabajador', sql.Int, idTrabajador)   
+        .query(`select ROW_NUMBER() OVER(ORDER BY idcursoOnline ASC) AS n,puesto=pte.Nombre,registro=CONVERT(varchar(10),coc.registro,103),[CursoOnline]=CourseOnline,idStudentOnline from cursosonlineControl coc inner join TrabajadorEmpresa te on (coc.idTrabajador=te.idTrabajador) inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) where pte.idEmpresa=@idEmpresa and te.idTrabajador=@idTrabajador`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    } 
+}
 
 /*para informacion y concentimiento*/
 static async listInformacion(idEmpresa,idDocumento,idTrabajador){

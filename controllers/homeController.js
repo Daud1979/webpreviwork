@@ -7,7 +7,8 @@ const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 const os = require('os'); // Para obtener las carpetas de usuario
-
+const axios = require("axios");
+const xml2js = require("xml2js");
 const idTrabajador_=0;
 
 /*FUNCIONES EXTRAS*/
@@ -53,12 +54,28 @@ const anio = fecha.getFullYear(); // Obtiene el año con 4 dígitos
 return `${dia}/${mes}/${anio}`;
 }
           /*SOLO DIRECCIONAMIENTOS*/
+exports.formacion=async(req,res)=>{   
+  idTrabajador=0;  
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
+  const idEmpresa = req.session.userId;
+  const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
+  const listDocumentoTrabajador= await User.listFormacion(idEmpresa,idTrabajador);  
+  (req.session.userId>0)? res.render('formacion',{listTrabajador,listDocumentoTrabajador}):res.redirect('/');
+}
 
+          
 exports.centros=async (req,res)=>{//enviar a centros
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
   (req.session.userId>0)? res.render('centros',{listCentro}):res.redirect('/');
 }
+
 exports.informationpersonal=async(req,res)=>{   
   idTrabajador=0;  
   if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
@@ -206,7 +223,9 @@ exports.downloadpdftrabajador = async (req, res) => {
     res.redirect('/');
   }
 };
-          
+       
+
+
 exports.downloadpdf = async (req, res) => {
     const id = req.body.id;
     const idEmpresa = req.session.userId;
@@ -726,3 +745,220 @@ exports.mostrarpdfempresa = async(req,res)=>{
   }
 }
 
+
+
+
+
+
+
+
+
+exports.downloadpdftrabajadorOnline = async (req, res) => {
+  if (!req.session.userId || req.session.userId <= 0) {
+    return res.redirect("/");
+  }
+
+  const idStudent = req.body.id;
+  if (!idStudent) {
+    return res.status(400).json({ error: "El ID del estudiante es requerido." });
+  }
+
+  try {
+    const username = process.env.USERNAMEONLINE;
+    const password = process.env.PASSWORDONLINE;
+    const key = process.env.KEYONLINE;
+    const soapUrl = process.env.SOAP_URL;
+
+    const soapRequest = `
+      <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                     xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Header>
+          <LoginInfo xmlns="http://prv.org/">
+            <username>${username}</username>
+            <password>${password}</password>
+            <key>${key}</key>
+          </LoginInfo>
+        </soap:Header>
+        <soap:Body>
+          <getStudent xmlns="http://prv.org/">
+            <idStudent>${idStudent}</idStudent>
+            <certificate>1</certificate>
+            <test>0</test>
+          </getStudent>
+        </soap:Body>
+      </soap:Envelope>`;
+
+    console.log("📢 Enviando solicitud SOAP...");
+
+    const response = await axios.post(soapUrl, soapRequest, {
+      headers: {
+        "Content-Type": "text/xml",
+        "SOAPAction": "http://prv.org/getStudent",
+      },
+      responseType: "text",
+    });
+
+    console.log("📢 Respuesta XML recibida:");
+    console.log(response.data);
+
+    // Usar xml2js para analizar la respuesta
+    const parser = new xml2js.Parser();
+    parser.parseString(response.data, (err, result) => {
+      if (err) {
+        console.error("❌ Error al parsear XML:", err);
+        return res.status(500).json({ error: "Error al procesar el certificado." });
+      }
+
+      try {
+        // Extraer el base64 del certificado desde la respuesta
+        const base64PDF = result["soap:Envelope"]["soap:Body"][0]["getStudentResponse"][0]["getStudentResult"][0]["Student"][0]["listCertificates"][0]["certificates"][0]["certificates"][0];
+
+        if (!base64PDF) {
+          return res.status(404).json({ error: "Certificado no encontrado." });
+        }
+
+        // Decodificar el base64 y enviar el archivo PDF al usuario
+        const byteCharacters = Buffer.from(base64PDF, "base64");
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=certificado.pdf");
+        res.send(byteCharacters);
+
+      } catch (error) {
+        console.error("❌ Error al procesar el PDF:", error);
+        return res.status(500).json({ error: "Error al procesar el certificado." });
+      }
+    });
+
+  } catch (error) {
+    console.error("❌ Error al obtener el PDF:", error);
+    res.status(500).json({ error: "Error al descargar el certificado. Inténtalo nuevamente más tarde." });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+// exports.downloadpdftrabajadorOnline = async (req, res) => {
+
+//   if (!req.session.userId || req.session.userId <= 0) {
+//     return res.redirect("/");
+//   }
+
+//   const idStudent = req.body.id;
+//   if (!idStudent) {
+//     return res.status(400).json({ error: "El ID del estudiante es requerido." });
+//   }
+
+//   try {
+//     const username = process.env.USERNAMEONLINE;
+//     const password = process.env.PASSWORDONLINE;
+//     const key = process.env.KEYONLINE;
+//     const soapUrl = process.env.SOAP_URL;
+
+//     const soapRequest = `
+//       <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+//                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+//                      xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+//         <soap:Header>
+//           <LoginInfo xmlns="http://prv.org/">
+//             <username>${username}</username>
+//             <password>${password}</password>
+//             <key>${key}</key>
+//           </LoginInfo>
+//         </soap:Header>
+//         <soap:Body>
+//           <getStudent xmlns="http://prv.org/">
+//             <idStudent>${idStudent}</idStudent>
+//             <certificate>1</certificate>
+//             <test>0</test>
+//           </getStudent>
+//         </soap:Body>
+//       </soap:Envelope>`;
+
+//     console.log("📢 Enviando solicitud SOAP...");
+
+//     const response = await axios.post(soapUrl, soapRequest, {
+//       headers: {
+//         "Content-Type": "text/xml",
+//         "SOAPAction": "http://prv.org/getStudent",
+//       },
+//       responseType: "text",
+//     });
+
+//     console.log("📢 Respuesta XML recibida:");
+//     console.log(response.data);
+ 
+//   } catch (error) {
+//     console.error("❌ Error al obtener el PDF:", error);
+//     res.status(500).json({ error: "Error al descargar el certificado. Inténtalo nuevamente más tarde." });
+//   }
+// };
+
+
+
+
+
+
+
+//aqui la muestra
+// exports.downloadpdftrabajadorOnline = async (req, res) => {
+//   if (!req.session.userId || req.session.userId <= 0) {
+//     return res.redirect("/");
+//   }
+
+//   const idStudent = req.body.id;
+//   if (!idStudent) {
+//     return res.status(400).json({ error: "El ID del estudiante es requerido." });
+//   }
+//     const username = process.env.USERNAMEONLINE;
+//     const password = process.env.PASSWORDONLINE;
+//     const key = process.env.KEYONLINE;   
+//     var data = `<?xml version="1.0" encoding="utf-8"?>
+// <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+//   <soap:Header>
+//     <LoginInfo xmlns="http://prv.org/">
+//       <username>${username}</username>
+//       <password>${password}</password>
+//       <key>${key}</key>
+//     </LoginInfo>
+//   </soap:Header>
+//  <soap:Body>
+// 		<getStudent xmlns="http://prv.org/">
+//       <idStudent>${idStudent}</idStudent>
+//       <certificate>1</certificate>
+//       <test>0</test>
+//     </getStudent>
+//   </soap:Body>
+// </soap:Envelope>`
+    
+//     var config = {
+//       method: 'post',
+//       maxBodyLength: Infinity,
+//       url: 'https://ws2.curso-online.net/studentsmanagement2.asmx',
+//       headers: { 
+//         'Content-Type': 'text/xml'
+//       },
+//       data : data
+//     };
+    
+//     axios(config)
+//     .then(function (response) {
+//       console.log('si');
+//       console.log(JSON.stringify(response.data));
+//     })
+//     .catch(function (error) {
+//       console.log(error);
+//     });
+    
+ 
+ 
+// };

@@ -2,7 +2,7 @@
 
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
-        <h3 class="mt-1">DOCUMENTO EPIS</h3>
+        <h3 class="mt-1">FORMACION ONLINE</h3>
      
         <div class="datospersonalinformacion col-12 col-sm-4">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
@@ -55,7 +55,7 @@
                             <input type="hidden"      id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Formación</button>
+                    <button type="submit" class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Formación</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--informacion-->
@@ -105,70 +105,17 @@
                             <input type="hidden" id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link active" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Epis</button>
+                    <button type="submit" class="nav-link" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Epis</button>
                 </form>
             </li>
         </ul>
         
         <div class="tab-content mt-4" id="myTabContent">            
             <div class="tab-pane fade show active" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
-                <!--AQUI EL TAB-->
-                <div class="row  filacontenedor "><!--inicio plantillas-->
-                    <div class="buttontoggle">
-                        <h4 >PLANTILLAS DE EPIS</h4>
-                        <button id="toggleButton" class="btn btn-primary ">+</button>
-                    </div>
-                    <div class="datospersonalinformacion ">
-                       <div id="tablaContainer" class="table-responsive ">
-                            <div class="input-group-sm col-12 col-md-5 col-sm-5 mt-1 mb-1 shadow">
-                                <input type="text" id="buscadorinformacionglobal" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="table-wrapper overflow-auto" style="max-height: 400px;">
-                                <table class="table table-bordered table-striped table-sm shadow">
-                                    <thead  class="shadow ">
-                                        <tr id="trhead">
-                                            <th >Nº</th>
-                                            <th>Contrato</th>
-                                            <th>Categoria</th>
-                                            <th>Documentos</th>                            
-                                            <th>Observacion</th>
-                                            <th>Registro</th>                            
-                                            <th id="tdbotonesdescarga">Subir </th>                   
-                                            <th id="tdbotonesdescarga">Descargar</th>                                                
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabla-documentos">
-                                        <% listDocumento.forEach((item) => { %>
-                                        <tr>                             
-                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.codigoAlterno %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Categoria %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
-                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
-                                            <td>                                 
-                                                <button id="btncargarTrabajador" data-bs-toggle="modal" onclick="carga(<%=item.idDocumentoProyecto%>)" data-bs-target="#modalsubirpdf" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idDocumentoProyecto %>"> 
-                                                    <i id="idsubir" class="material-icons"><%= "cloud_upload" %></i>
-                                                    <span class="tooltip-text">Subir Documento</span>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
-                                                    <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
-                                                    <span class="tooltip-text">Descargar Documento</span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <% }); %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div><!--plantillas-->
+                <!--AQUI EL TAB-->         
                 <div class="row  filacontenedor "><!--inicio plantillas-->
                     <div class="buttontogglePersonal">
-                        <h4 >DOCUMENTOS DE EPIS DEL TRABAJADOR</h4>
+                        <h4 >DOCUMENTOS DE CURSO ONLINE DEL TRABAJADOR</h4>
                         <button id="toggleButtonPersonal" class="btn btn-primary ">+</button>
                     </div>
                     <div class="datospersonalinformacion ">
@@ -182,24 +129,20 @@
                                         <tr id="trhead">
                                             <th >Nº</th>
                                             <th>Puesto Trabajado</th>
-                                            <th>Certificados</th>
-                                            <th>Observacion</th>          
-                                            <th>Documentos</th>                                                        
                                             <th>Registro</th>                            
+                                            <th>Curso Online</th>
                                             <th id="tdbotonesdescarga">Descargar</th>                                                   
                                         </tr>
                                     </thead>
                                     <tbody id="tablainformaciontrabajador">
                                         <% listDocumentoTrabajador.forEach((item) => { %>
                                         <tr>                             
-                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.n %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.PuestoTrabajo %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Certificado %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Observacion %></td>
-                                            <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>                                
-                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.Registro %></td>
+                                            <td class="text-end" data-id="<%= item.idStudentOnline %>"><%= item.n %></td>
+                                            <td class="text-start" data-id="<%= item.idStudentOnline %>"><%= item.puesto %></td>
+                                            <td class="text-end" data-id="<%= item.idStudentOnline %>"><%= item.registro %></td>
+                                            <td class="text-start" data-id="<%= item.idStudentOnline %>"><%= item.CursoOnline %></td>                                   
                                             <td>
-                                                <button id="btndescargarTrabajador" onclick="descargarpdfTrabajador(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                                <button id="btndescargarTrabajador" onclick="descargarpdfTrabajador(<%=item.idStudentOnline%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idStudentOnline %>"> 
                                                     <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
                                                     <span class="tooltip-text">Descargar Documento</span>
                                                 </button>
@@ -217,53 +160,8 @@
         </div><!--fin cabeza-->
    
 </div> 
-<!-- Modal -->
-<div class="modal fade" id="modalsubirpdf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <form id="uploadForm" class="mt-4" enctype="multipart/form-data" method="POST" action="/home/uploadpdfepis"> 
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-4" id="exampleModalLabel">Subir PDF</h1>        
-                </div>
-                <div class="modal-body">
-                    <div class="datosGral ms-0 me-0 p-0 mb-1">
-                        <label class="form-label">Seleccione un Archivo PDF</label>
-                        <div class="input-group m-0 p-0 input-group-sm">                          
-                            <label id="lblpdffile" for="pdfFile" class="btn"><i id="idiconssubir" class="material-icons">search</i>                     </label>                        
-                            <input type="file" class="custom-file-input" id="pdfFile" name="pdfFile" accept="application/pdf" required>
-                            <input type="text" class="form-control" id="fileName" placeholder="Ningún archivo seleccionado" readonly>
-                            <input type="hidden" id="pdfFileName" name="pdfFileName">
-                        </div>                        
-                    </div>
-                    <div class="datosGral ms-0 me-0 p-0">
-                        <div class="input-group m-0 p-0 input-group-sm">
-                            
-                            <textarea placeholder="Observación" class="form-control" id="Observacion" name="Observacion" rows="4"></textarea>                           
-                        </div>
-                    </div>
-                    <div class="datosGral ms-0 me-0 p-0 col-6 col-sm-6">
-                        <div class="input-group m-0 p-0 input-group-sm">
-                            <span class="input-group-text" id="basic-addon1">F. Registro</span>
-                            <input type="date" id="FAlta" name="FAlta" class="form-control inputwhite" style="background: white;">
-                        </div>
-                    </div>      
-                </div>
-                <div class="modal-footer">
-                   
-                    <input id="idTrabajadorupload" name="idTrabajadorupload" type="text">                  
-                    <input type="text" id="idDocumentoupload" name="idDocumentoupload">
-                    <div id="errorMessage" class="text-danger d-none">Por favor, seleccione un archivo PDF antes de enviar.</div>
-                    <button type="submit" id="btnregistrarpdf" class="shadow btn text-white btn-sm">Subir</button>                   
-                    <button type="button" id="closeRegistrarPersonal" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>        
-                </div>
-            </div>
-        </div>
-    </form>
-    
-</div>
-<!--fin modal-->
 
-<script src="/js/epis.js">     
+<script src="/js/formacion.js">     
 </script>
 
 <%- include('./partials/foot') %>

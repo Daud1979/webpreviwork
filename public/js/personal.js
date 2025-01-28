@@ -348,7 +348,7 @@ botones.forEach((boton) => {
                 });
         }
         else if (idBoton == 'btnInformacion'){
-            redirigirConPost('/home/trabajador/informacion',{idTrabajador});
+            redirigirConPost('/home/trabajador/formacion',{idTrabajador});
         }
       
     });
@@ -487,7 +487,7 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
 
 function cargarInformacion(idTrabajador){
     const data = { idTrabajador:idTrabajador };  
-    fetch('/home/trabajador/informacion', {
+    fetch('/home/trabajador/formacion', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
