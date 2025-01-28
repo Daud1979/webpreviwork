@@ -20,7 +20,7 @@ router.post('/downloadpdf',homeController.downloadpdf);
 router.post('/downloadpdf_',homeController.downloadpdf);
 router.post('/downloadpdfTrabajador',homeController.downloadpdftrabajador);
 router.post('/uploadpdf', upload.single('pdfFile'), homeController.uploadpdf);
-
+router.post('/uploadpdfconcentimiento', upload.single('pdfFile'), homeController.uploadpdfconcentimiento);
 //
 router.post('/trabajador/informacion',homeController.informationpersonal);
 router.post('/trabajador/concentimientorenuncia',homeController.concentimientorenunciapersonal);
