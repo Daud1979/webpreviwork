@@ -555,7 +555,7 @@ static async mostrarpdf(tipo,idEmpresa){
     }
     else if(tipo=='gestion_7')//contratos
     {
-        idCategoria=7;
+        idCategoria=9;
     }
     else if(tipo=='btnPresupuestoAll')//presupuestos 
     {
@@ -567,7 +567,7 @@ static async mostrarpdf(tipo,idEmpresa){
     }
     else if(tipo=='btninforme_9')//informe d seguridad
     {
-        idCategoria=9;
+        idCategoria=7;//esto va asi
     }
     else if(tipo=='btninforme_10')//informes de psicosocoiliga
     {

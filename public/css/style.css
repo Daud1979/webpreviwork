@@ -395,3 +395,8 @@ pointer-events:auto;
   /* #idTrabajador{
     display: none;
   } */
+
+.filacontenedor{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
