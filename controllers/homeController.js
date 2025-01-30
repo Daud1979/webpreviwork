@@ -170,7 +170,7 @@ exports.personal=async (req,res)=>{//enviar a trabajadores
 exports.enviarapdf=async(req,res)=>{
   const {tipo}=req.body;  
   const idEmpresa = req.session.userId;
-  console.log(tipo);
+  
   message =await User.mostrarpdf(tipo,idEmpresa);
   (req.session.userId>0)? res.render('documentosempresa',message):res.redirect('/');  
 }
