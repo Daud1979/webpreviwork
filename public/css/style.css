@@ -379,7 +379,10 @@ pointer-events:auto;
   display: none;
 }
 #idTrabajador{
-  text-align: left;  
+  text-align: center;  
+}
+#NIF{
+  text-align: right;  
 }
 #idiconssubir{
   color: white;
@@ -399,4 +402,23 @@ pointer-events:auto;
 .filacontenedor{
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.datospersonalinformaciongral{  
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0.8rem;
+  border-bottom:solid 1px rgb(207, 206, 206);
+}
+.subdiv{
+  padding: 0;
+  margin: 0;
+  
+}
+.datosGral{
+  padding: 1rem;
+}
+.toggleButton{
+  background: solid 1px #4058FB;
+  padding: 0.5rem;
 }

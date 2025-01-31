@@ -3,49 +3,75 @@
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
         <h3 class="mt-1">DOCUMENTO DE INFORMACION</h3>
-     
-        <div class="datospersonalinformacion col-12 col-sm-4">
+        <!--DATOS DEL TRABAJADOR -->
+        <div class="datospersonalinformaciongral row g-3">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
                 <% listTrabajador.forEach(trabajador => { %>
-            <div class="datosGral  ms-0 me-0 p-0 col-sm-4 ">
-                <div class="input-group m-0 p-0 input-group-sm">
-                        <span class="input-group-text" id="basic-addon1">Codigo Trabajador:</span>
-                        <input type="text" id="idTrabajador"  value="<%= trabajador.idTrabajador %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">                        
+        
+                <div class="subdiv col-12 col-md-4 col-xl-2">
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Código Trabajador:</span>
+                            <input type="text" id="idTrabajador" value="<%= trabajador.idTrabajador %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>  
+                    <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-6">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">N.I.F:</span>
+                            <input type="text" id="NIF" value="<%= trabajador.NIF %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>  
                 </div>
-            </div>  
-            <div class="datosGral  ms-0 me-0 p-0 col-sm-4 ">
-                <div class="input-group m-0 p-0 input-group-sm">
-                    <span class="input-group-text" id="basic-addon1">N.I.F:</span>
-                    <input type="text" id="NIF"  value="<%= trabajador.NIF %>" class="form-control inputwhite" style="background: white;" value="" aria-label="Username"  aria-describedby="basic-addon1">
+        
+                <div class="subdiv col-12 col-md-8 col-xl-3">
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Nombre</span>
+                            <input type="text" id="nombre" value="<%= trabajador.nombres %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>  
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Apellidos</span>
+                            <input type="text" id="apellidos" value="<%= trabajador.apellidos %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>  
                 </div>
-            </div>  
-            <div class="datosGral  ms-0 me-0 p-0 ">
-                <div class="input-group m-0 p-0 input-group-sm">
-                    <span class="input-group-text" id="basic-addon1">Nombre</span>
-                    <input type="text" id="nombre" value="<%= trabajador.nombres %>"   class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+        
+                <div class="subdiv col-12 col-md-8 col-xl-3">
+                    <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Teléfono</span>
+                            <input type="text" id="telefono" value="<%= trabajador.telefono %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>  
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Correo Electrónico</span>
+                            <input type="text" id="email" value="<%= trabajador.email %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>  
                 </div>
-            </div>  
-            <div class="datosGral  ms-0 me-0 p-0 ">
-                <div class="input-group m-0 p-0 input-group-sm">
-                    <span class="input-group-text" id="basic-addon1">Apellidos</span>
-                    <input type="text" id="apellidos" value="<%= trabajador.apellidos %>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
+        
+                <div class="subdiv col-12 col-md-8 col-xl-3">
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Centro de Trabajo</span>
+                            <input type="text" id="centro" value="<%= trabajador.nombreCentro %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div> 
+                    <div class="datosGral ms-0 me-0 p-0">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Puesto de Trabajo</span>
+                            <input type="text" id="puesto" value="<%= trabajador.Nombre %>" class="form-control inputwhite" style="background: white;" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>    
                 </div>
-            </div>  
-            <div class="datosGral  ms-0 me-0 p-0 ">
-                <div class="input-group m-0 p-0 input-group-sm">
-                    <span class="input-group-text" id="basic-addon1">Centro de Trabajo</span>
-                    <input type="text" id="centro" value="<%= trabajador.nombreCentro %>" class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
-                </div>
-            </div> 
-            <div class="datosGral  ms-0 me-0 p-0 ">
-                <div class="input-group m-0 p-0 input-group-sm">
-                    <span class="input-group-text" id="basic-addon1">Puesto de Trabajo</span>
-                    <input type="text" id="puesto" value="<%= trabajador.Nombre %>"  class="form-control inputwhite" style="background: white;"  aria-label="Username"  aria-describedby="basic-addon1">
-                </div>
-            </div>             
-            <% }) %>
-            <% }  %>
-        </div>
+        
+                <% }) %>
+            <% } %>
+        </div>        
+        <!--AQUI FIN DE LOS DATOS TRABAJADOR-->
         <!--DESDE EL TAB-->
         <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
             <li class="nav-item" role="presentation"><!--formacion-->
@@ -110,7 +136,7 @@
             </li>
         </ul>
         
-        <div class="tab-content mt-4" id="myTabContent">            
+        <div class="tab-content " id="myTabContent">            
             <div class="tab-pane fade show active" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
                 <!--AQUI EL TAB-->
                 <div class="row  filacontenedor "><!--inicio plantillas-->
