@@ -30,4 +30,5 @@ router.post('/trabajador/concentimientorenuncia',homeController.concentimientore
 router.post('/trabajador/autorizacion',homeController.autorizacion);
 router.post('/trabajador/epis',homeController.epis);
 router.post('/trabajador/formacion',homeController.formacion);
+router.post('/trabajador/reconocimiento',homeController.reconocimientomedico);
 module.exports = router;

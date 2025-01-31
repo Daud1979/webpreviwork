@@ -79,7 +79,7 @@
                             <input type="hidden"      id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Formación</button>
+                    <button type="submit" class="nav-link " id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Formación</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--informacion-->
@@ -99,7 +99,7 @@
                             <input type="hidden"    id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Reconocimiento Médico R.M.</button>
+                    <button type="submit" class="nav-link active" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Reconocimiento Médico R.M.</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--consentimiento renuncia-->
@@ -137,48 +137,6 @@
         <div class="tab-content " id="myTabContent">            
             <div class="tab-pane fade show active" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
                 <!--AQUI LA TABLA-->         
-                <div class="row  filacontenedor "><!--inicio plantillas-->
-                    <div class="buttontogglePersonal">
-                        <h4 >DOCUMENTOS DE CURSO ONLINE</h4>
-                        <button id="toggleButtonPersonalOnline" class="btn btn-primary ">+</button>
-                    </div>
-                    <div class="datospersonalinformacion ">
-                        <div id="tablaContainerPersonalOnline" class="table-responsive ">
-                            <div class="input-group-sm col-12 col-md-5 col-sm-5  mt-1 mb-1 shadow">
-                                <input type="text" id="buscadorinformaciontrabajadorOnline" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="table-wrapper overflow-auto" style="max-height: 400px;">
-                                <table class="table table-bordered table-striped table-sm shadow">
-                                    <thead  class="shadow ">
-                                        <tr id="trhead">
-                                            <th >Nº</th>
-                                            <th>Puesto Trabajado</th>
-                                            <th>Registro</th>                            
-                                            <th>Curso Online</th>
-                                            <th id="tdbotonesdescarga">Descargar</th>                                                   
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tablainformaciontrabajadorOnline">
-                                        <% listDocumentoTrabajadorOnline.forEach((item) => { %>
-                                        <tr>                             
-                                            <td class="text-end" data-id="<%= item.idStudentOnline %>"><%= item.n %></td>
-                                            <td class="text-start" data-id="<%= item.idStudentOnline %>"><%= item.puesto %></td>
-                                            <td class="text-end" data-id="<%= item.idStudentOnline %>"><%= item.registro %></td>
-                                            <td class="text-start" data-id="<%= item.idStudentOnline %>"><%= item.CursoOnline %></td>                                   
-                                            <td>
-                                                <button id="btndescargarTrabajador" onclick="descargarpdfTrabajadorOnline(<%=item.idStudentOnline%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idStudentOnline %>"> 
-                                                    <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
-                                                    <span class="tooltip-text">Descargar Documento</span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <% }); %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div><!--plantillas-->   
                 <div class="row  filacontenedor "><!--inicio plantillas-->
                     <div class="buttontogglePersonal">
                         <h4 >DOCUMENTOS DE CURSOS REALIZADOS</h4>

@@ -359,6 +359,9 @@ pointer-events:auto;
 #buscadorinformaciontrabajador{
 pointer-events:auto;
 }
+#buscadorinformaciontrabajadorOnline{
+  pointer-events:auto;
+  }
 .custom-file-input {
   opacity: 0;
   position: absolute;

@@ -64,9 +64,30 @@ exports.formacion=async(req,res)=>{
     idTrabajador=req.body.idTrabajador;
   }
   const idEmpresa = req.session.userId;
+  const idDocumento=13;//esto hay que verpa los otros doc  
+  const idListaDocumento=67
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
-  const listDocumentoTrabajador= await User.listFormacion(idEmpresa,idTrabajador);  
-  (req.session.userId>0)? res.render('formacion',{listTrabajador,listDocumentoTrabajador}):res.redirect('/');
+  const listDocumentoTrabajadorOnline= await User.listFormacion(idEmpresa,idTrabajador);  
+  const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador); 
+  (req.session.userId>0)? res.render('formacion',{listTrabajador,listDocumentoTrabajadorOnline,listDocumentoTrabajador}):res.redirect('/');
+}
+
+exports.reconocimientomedico=async(req,res)=>{   
+  idTrabajador=0;  
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
+  const idEmpresa = req.session.userId;
+  const idDocumento=14;//esto hay que verpa los otros doc  
+  const idListaDocumento=63
+  const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
+  //const listDocumentoTrabajadorOnline= await User.listFormacion(idEmpresa,idTrabajador);  
+  const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);  
+  (req.session.userId>0)? res.render('reconocimientomedico',{listTrabajador,listDocumentoTrabajador}):res.redirect('/');
 }
 
           
