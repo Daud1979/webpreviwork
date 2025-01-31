@@ -8,7 +8,6 @@ document.getElementById("buscadorCentro").addEventListener("input", function() {
     const searchValue = this.value.toLowerCase();
    
     const rows = document.querySelectorAll("#tabla-centros tr");
-
     rows.forEach(row => {
         const cells = row.querySelectorAll("td");
         const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
@@ -26,7 +25,7 @@ $(document).on("click", "#tabla-centros td[data-id]", function() {
     // Verifica si la celda es de la columna `idCentro` o `ntrabajadorCentro`
     indexColumna = $(this).index();
     
-    if (indexColumna === 0 || indexColumna === 8) {
+    if (indexColumna === 0 || indexColumna === 3 || indexColumna === 4 || indexColumna === 9) {
         // No permitir edición en la columna de `idCentro` (index 0) ni en `ntrabajadorCentro` (index 8)
         return;
     }
@@ -47,8 +46,8 @@ $(document).on("click", "#tabla-centros td[data-id]", function() {
 $(document).on("focusout", ".edit-input", function() {
     let nuevoValor = $(this).val().trim();
     let id = $(this).data("id");
-    
-    // Validación para evitar que el campo quede vacío
+    let originalValue = $(this).parent().data("original-value"); // Obtiene el valor original
+    //     // Validación para evitar que el campo quede vacío
     if (nuevoValor === "") {
         if (!$(this).siblings(".error-message").length) {
             $(this).after("<span id='spanerror' class='error-message'>DATO REQUERIDO</span>");
@@ -69,7 +68,11 @@ $(document).on("focusout", ".edit-input", function() {
         })
         .then(response => response.json())
         .then(data => {
-           console.log(data);
+           if (data.estado==1)
+           {
+            alert("CORREO NO VALIDO...");
+            $(this).parent().text(originalValue); // Restaura el valor original en la celda
+           }
         })
         .catch((error) => {
         console.error('Error:', error);
@@ -87,7 +90,7 @@ $(document).on("keydown", ".edit-input", function(event) {
         let originalValue = $(this).parent().data("original-value"); // Obtiene el valor original
         $(this).parent().text(originalValue); // Restaura el valor original en la celda
 
-        console.log("Valor restaurado:", originalValue);
+      
     }
 });
 
@@ -113,7 +116,7 @@ btncentromodal.addEventListener('click',()=>{
         personal:personal.value,
         codigopostal:codigopostal.value
     }
-    console.log(data);
+  
     if (isValidEmail(email.value) && validarObjeto(data))
     {
         message.innerHTML="";

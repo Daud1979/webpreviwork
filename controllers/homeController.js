@@ -679,15 +679,28 @@ exports.modifyEmpresa=async(req,res)=>{
     res.redirect('/');
   }
 }
-
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
 exports.modifyCentros=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
   if (req.session.userId>0)
   {
+    if (datos.indexColumna==7)
+    {
+      const resul= isValidEmail(datos.nuevoValor);
+      if (resul==false)
+      {
+        const mensaje =`CORREO NO VALIDO, NO SE GUARDARA EL CAMBIO`;
+        res.json({message:mensaje,estado:1});
+        return;
+      }
+    }
     updateData = await User.modifyCentros(datos.id,datos.nuevoValor,datos.indexColumna,idEmpresa)
     const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
-    res.json({message:mensaje});
+    res.json({message:mensaje,estado:0});
   }
   else
   {

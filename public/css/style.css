@@ -226,8 +226,12 @@ font-size: 1.8rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color:rgb(239, 253, 34);
+color:rgb(244, 248, 26);
 text-shadow: 2px 2px rgb(24, 23, 23);
+}
+.clmodificar{
+  text-align: end;
+  padding: 0 0.3rem 0.5rem 0;
 }
 
 #iaptorm{
