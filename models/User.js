@@ -289,7 +289,39 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
     {
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa`);          
+        .query(`SELECT 
+    idTrabajador,
+    idCentro,
+    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
+    NIF,
+    nombres,
+    apellidos,
+    Puesto = pte.Nombre,
+    email,
+    telefono,
+    Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
+    Baja = CASE 
+              WHEN fechaBaja IS NULL THEN '' 
+              WHEN fechaBaja < '2000-01-01' THEN '' 
+              ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
+           END,
+    fechaRM = CASE 
+            WHEN fechaRM IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
+    END,
+    fechaOn = CASE 
+            WHEN fechaCursoOnline IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
+    END,
+    Estado = CASE 
+                WHEN estado = 'H' THEN 'Alta' 
+                ELSE 'Baja' 
+             END
+FROM TrabajadorEmpresa t
+INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
+WHERE t.idEmpresa = @idEmpresa
+    ;
+`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -308,7 +340,37 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
-        .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa and idCentro=@idCentro`);          
+        .query(`SELECT 
+    idTrabajador,
+    idCentro,
+    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
+    NIF,
+    nombres,
+    apellidos,
+    Puesto = pte.Nombre,
+    email,
+    telefono,
+    Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
+    Baja = CASE 
+              WHEN fechaBaja IS NULL THEN '' 
+              WHEN fechaBaja < '2000-01-01' THEN '' 
+              ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
+           END,
+    fechaRM = CASE 
+            WHEN fechaRM IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
+    END,
+    fechaOn = CASE 
+            WHEN fechaCursoOnline IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
+    END,
+    Estado = CASE 
+                WHEN estado = 'H' THEN 'Alta' 
+                ELSE 'Baja' 
+             END
+FROM TrabajadorEmpresa t
+INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
+WHERE t.idEmpresa = @idEmpresa and idCentro=@idCentro`);          
         return (result.recordset)
         }
         else
@@ -316,7 +378,38 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
             const result =await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
            
-            .query(`select idTrabajador,idCentro,Centro=(select nombreCentro from CentrosEmpresa where idCentro=t.idCentro),NIF,nombres,apellidos,Puesto=pte.Nombre,email,telefono,Registro=CONVERT(varchar(10),fechaAlta,103),Baja=CONVERT(varchar(10),fechaBaja,103),Estado=case when estado='H' then 'Alta' else 'Baja' end from TrabajadorEmpresa t inner join PuestoTrabajoEmpresa pte on (t.idPuesto=pte.idPuesto) where t.idEmpresa=@idEmpresa`);          
+            .query(`SELECT 
+    idTrabajador,
+    idCentro,
+    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
+    NIF,
+    nombres,
+    apellidos,
+    Puesto = pte.Nombre,
+    email,
+    telefono,
+    Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
+    Baja = CASE 
+              WHEN fechaBaja IS NULL THEN '' 
+              WHEN fechaBaja < '2000-01-01' THEN '' 
+              ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
+           END,
+    fechaRM = CASE 
+            WHEN fechaRM IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
+    END,
+    fechaOn = CASE 
+            WHEN fechaCursoOnline IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
+    END,
+    Estado = CASE 
+                WHEN estado = 'H' THEN 'Alta' 
+                ELSE 'Baja' 
+             END
+FROM TrabajadorEmpresa t
+INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
+WHERE t.idEmpresa = @idEmpresa;
+`);          
             return (result.recordset)
         }
     } 
@@ -507,6 +600,26 @@ static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,tele
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
+static async registrarSolicitudRM(idTrabajador,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {   
+        const result =await pool.request()        
+      
+        .input('idTrabajador', sql.Int, idTrabajador)
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .output('retorno', sql.VarChar)  // Agregar el parámetro de salida
+        .execute('REGISTRAR_SOLICITUDRM');
+        return result.output.retorno
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
 
 static async descargarpdf(idDocumentoProyecto,idEmpresa){    
     const pool=await await connectDB();

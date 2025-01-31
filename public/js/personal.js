@@ -379,8 +379,6 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
             return response.json();  // Convertir la respuesta a JSON
         })
         .then(data => {
-            console.log(data);  // Imprimir los datos para depuración
-            
             // Comprobar que los datos sean un array
             if (Array.isArray(data)) {
                 // Iterar sobre el nuevo conjunto de datos y agregar filas a la tabla
@@ -392,23 +390,27 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
                             <td class="align-left" data-id="${item.idTrabajador}">${item.nombres}</td>
                             <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
                             <td class="align-left" data-id="${item.idTrabajador}">${item.Puesto}</td>
-                            <td class="align-left" data-id="${item.idTrabajador}">${item.email}</td>
-                            <td class="align-right" data-id="${item.idTrabajador}">${item.telefono}</td>
                             <td class="align-right" data-id="${item.idTrabajador}">${item.Registro}</td>
                             <td class="align-right" data-id="${item.idTrabajador}">${item.Baja}</td>
-                            <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>
-                           <td class="align-center m-0 p-0 " id="tdbotones">
-                                <button id="btnEstadoPersona" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" data-id="${item.idTrabajador}">
-                                    <i id="iapto" class="material-icons">manage_accounts</i>
-                                    <span class="tooltip-text">Modificar</span>
-                                </button>                            
-
-                                <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}">
-                                    <i id="iinformacion" class="material-icons">folder</i>
-                                    <span class="tooltip-text">Carpeta</span>
-                                </button>
-
-                            </td>
+                            <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>                         
+                                    <td>
+                                        <input type="checkbox" class="curso-checkbox large-checkbox" data-id="${item.idTrabajador}">
+                                        <div class="inscheckbox">
+                                            <label>${item.Baja}</label>
+                                        </div>
+                                    </td>
+                                    <td class="insCurso">
+                                        <div class="inslabel">
+                                            <input type="checkbox" class="curso-checkbox large-checkbox" data-id="${item.idTrabajador}">
+                                        </div>                        
+                                        <div class="inscheckbox">
+                                            <label>${item.Baja}</label>
+                                        </div>
+                                    </td>                         
+                                    <td >
+                                        <button id="btnEstadoPersona"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}"> <i id="iapto"  class="material-icons">engineering</i><span class="tooltip-text">Modificar</span></button>
+                                        <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}"><i id="iinformacion"  class="material-icons">drive_file_move</i><span class="tooltip-text">Documentos</span></button>                                 
+                                    </td>
                         </tr>
                     `);
                 });
@@ -520,3 +522,67 @@ function redirigirConPost(url, data) {
     form.submit();
     document.body.removeChild(form);
 }
+
+    // Evento para checkboxes de R.M.
+    // document.querySelectorAll(".2rm-checkbox").forEach(checkbox => {
+    //     checkbox.addEventListener("change", function() {
+    //       const idTrabajador= this.getAttribute("data-id");
+    //       /**/
+    //       console.log(idTrabajador);
+    //       const data={idTrabajador}           
+    //       fetch('/home/registrarRM', {
+    //           method: 'POST',
+    //           headers: {
+    //               'Content-Type': 'application/json'
+    //           },
+    //           body: JSON.stringify(data)
+    //           })
+    //           .then(response => response.json())
+    //           .then(data => {
+    //              alert(data) 
+                  
+    //           })
+    //           .catch((error) => {
+    //           console.error('Error:', error);
+    //           });
+
+
+    //       /**/
+    //     });
+    // });
+ // Evento para checkboxes de Curso
+ document.querySelectorAll(".rm-checkbox").forEach(checkbox => {
+    checkbox.addEventListener("click", function () {
+        const idTrabajador=this.getAttribute("data-id");
+        const data={idTrabajador:idTrabajador};
+        const row = this.closest("tr");
+            fetch('/home/registrarRM', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data !='NO') {
+                        // Encuentra el label dentro de la misma fila y actualiza su contenido
+                        const label = row.querySelector(".inscheckbox label");
+                        if (label) {
+                            label.textContent = data; // Inserta el valor devuelto
+                        }
+                    } else {
+                        alert("YA SE REGISTRO HACE MENOS DE 15 DIAS");
+                    }          
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+});
+    // Evento para checkboxes de Curso
+    document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("click", function () {
+            alert("ID Trabajador: " + this.getAttribute("data-id"));
+        });
+    });

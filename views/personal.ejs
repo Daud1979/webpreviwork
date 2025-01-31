@@ -6,22 +6,30 @@
         <div class="row justify-content-center m-0 p-0">
             <div class="datosGral">
                 <!---->
-                <div class="input-group mb-2 gap-2 ">                        
-                    <div class="input-group-sm col-12 col-md-3 col-sm-5 shadow">                            
-                        <select class="form-select " id="cmbcentrospersonal" aria-label="Selector de filtro">
-                            <option value="" selected>Seleccione un Centro</option>
-                            <% listCentro.forEach(opcion => { %>
-                                <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
-                            <% }); %>
-                        </select>    
-                    </div>            
-                    <div class="input-group-sm col-12 col-md-5 col-sm-5 shadow">
-                        <input type="text" id="buscadorpersonal" class="form-control " style="background: white;" placeholder="Buscar....." aria-label="Buscar" aria-describedby="basic-addon1">
-                       
-                    </div>
-                    <div class="input-group-sm shadow">                      
-                            <a id="btnregistrarpersonalmodal" type="button" class="btn " data-bs-toggle="modal" data-bs-target="#modalregistrarpersonal">Nuevo Registro</a>                                                   
-                    </div>
+                <div class="personalhead">                        
+                    <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Lista de Centros</span>
+                            <select class="form-select " id="cmbcentrospersonal" aria-label="Selector de filtro">
+                                <option value="" selected>Seleccione un Centro</option>
+                                <% listCentro.forEach(opcion => { %>
+                                    <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
+                                <% }); %>
+                            </select>   
+                        </div>
+                    </div>      
+                    <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
+                        <div class="input-group m-0 p-0 input-group-sm">
+                            <span class="input-group-text" id="basic-addon1">Buscar</span>
+                            <input type="text" id="buscadorpersonal" class="form-control " style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">    
+                        </div>
+                    </div> 
+                    <div class=" datosGral ms-0 me-0 p-0 col-12 col-xl-5">
+                        <div class="btnregistrarhead input-group m-0 p-0 input-group-sm">
+                            <a id="btnregistrarpersonalmodal" type="button" class="btn " data-bs-toggle="modal" data-bs-target="#modalregistrarpersonal">Nuevo Registro Trabajador</a>                                                   
+                        </div>
+                    </div>                 
+                   
                 </div>
                 
                 
@@ -31,43 +39,56 @@
                 </div>
                 <div class="table-responsive ">
                     <div class="table-wrapper overflow-auto" style="max-height: 800px;">
-                        <table class="table table-bordered table-striped table-sm shadow">
-                    <thead  class="shadow ">
-                        <tr id="trhead">
-                            <th>Centro</th>
-                            <th>N.I.F.</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Puesto</th>
-                            <th>Email</th>
-                            <th>Telefono</th>
-                            <th>Registro</th>
-                            <th>F. Baja</th>
-                            <th>Estado</th>                            
-                            <th id="tdbotones">Menu</th>                                                   
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-trabajador">
-                        <% listPersonal.forEach((item) => { %>
-                            <tr>                             
-                                <td class="align-left" id="tdCentro" data-id="<%= item.idTrabajador %>"><%= item.Centro %></td>
-                                <td class="align-rigth" id="tdNIF" data-id="<%= item.idTrabajador %>"><%= item.NIF %></td>
-                                <td class="align-left" id="tdnombres" data-id="<%= item.idTrabajador %>"><%= item.nombres %></td>
-                                <td class="align-left" id="tdapellidos" data-id="<%= item.idTrabajador %>"><%= item.apellidos %></td>
-                                <td class="align-left" id="tdpuesto" data-id="<%= item.idTrabajador %>"><%= item.Puesto %></td>
-                                <td class="align-left" id="tdemail" data-id="<%= item.idTrabajador %>"><%= item.email %></td>
-                                <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.telefono %></td>
-                                <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Registro %></td>
-                                <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Baja %></td>
-                                <td class="align-left estado" id="tdestado" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>                                
-                                <td >
-                                    <button id="btnEstadoPersona"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> <i id="iapto"  class="material-icons"><%= "manage_accounts" %></i><span class="tooltip-text">Modificar</span></button>
-                                    <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"><i id="iinformacion"  class="material-icons"><%= "folder" %></i><span class="tooltip-text">Carpeta</span></button>                                 
-                                </td> 
+                    <table id="tablapersona" class="table table-bordered table-striped table-sm shadow">
+                        <thead  class="shadow ">
+                            <tr id="trhead">
+                                <th>Centro</th>
+                                <th>N.I.F.</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Puesto</th>                             
+                                <th>F. Alta</th>
+                                <th>F. Baja</th>
+                                <th>Estado</th>     
+                                <th>Rec. Medico</th>                       
+                                <th>Ins. Curso</th>                       
+                                <th id="tdbotones">Menu</th>                                                   
                             </tr>
-                        <% }); %>
-                    </tbody>
-                        </table>
+                        </thead>
+                        <tbody id="tabla-trabajador">
+                            <% listPersonal.forEach((item) => { %>
+                                <tr>                             
+                                    <td class="align-left" id="tdCentro" data-id="<%= item.idTrabajador %>"><%= item.Centro %></td>
+                                    <td class="align-rigth" id="tdNIF" data-id="<%= item.idTrabajador %>"><%= item.NIF %></td>
+                                    <td class="align-left" id="tdnombres" data-id="<%= item.idTrabajador %>"><%= item.nombres %></td>
+                                    <td class="align-left" id="tdapellidos" data-id="<%= item.idTrabajador %>"><%= item.apellidos %></td>
+                                    <td class="align-left" id="tdpuesto" data-id="<%= item.idTrabajador %>"><%= item.Puesto %></td>                             
+
+                                    <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Registro %></td>
+                                    <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Baja %></td>
+                                    <td class="align-left estado" id="tdestado" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>       
+                                    <td>
+                                        <input type="checkbox" class="rm-checkbox large-checkbox" data-id="<%= item.idTrabajador %>">
+                                        <div class="inscheckbox">
+                                            <label ><%= item.fechaRM %></label>
+                                        </div>
+                                    </td>
+                                    <td class="insCurso">
+                                        <div class="inslabel">
+                                            <input type="checkbox"  class="curso-checkbox large-checkbox" data-id="<%= item.idTrabajador %>">
+                                        </div>                        
+                                        <div class="inscheckbox">
+                                            <label><%= item.Baja %></label>
+                                        </div>
+                                    </td>                         
+                                    <td >
+                                        <button id="btnEstadoPersona"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"> <i id="iapto"  class="material-icons"><%= "engineering" %></i><span class="tooltip-text">Modificar</span></button>
+                                        <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idTrabajador %>"><i id="iinformacion"  class="material-icons"><%= "drive_file_move" %></i><span class="tooltip-text">Documentos</span></button>                                 
+                                    </td> 
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
                     </div>
                 </div>
             </div>
@@ -80,7 +101,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-4" id="exampleModalLabel">Registrar Personal</h1>        
+          <h1 class="modal-title fs-4" id="exampleModalLabel">Registrar Trabajador</h1>        
         </div>
         <div class="modal-body">
             <div class="datosGral   ms-0 me-0 p-0 ">
@@ -163,7 +184,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-4" id="exampleModalLabel">Modificar Personal</h1>        
+          <h1 class="modal-title fs-4" id="exampleModalLabel">Modificar Trabajador</h1>        
         </div>
         <div class="modal-body">
             <div class="datosGral   ms-0 me-0 p-0 ">

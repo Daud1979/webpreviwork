@@ -150,6 +150,7 @@ background: #4058FB;
 #btnregistrarpersonalmodal{
 background:#4058FB;
 color:#fdfdfd;
+box-shadow: 2px 1px rgb(175, 175, 175);
 }
 #btnregistrarpersonal{
 background:#4058FB;
@@ -193,7 +194,7 @@ font-style: italic;
 }
 #iapto{
 text-shadow: none; 
-font-size: 1.4rem; 
+font-size: 1.8rem; 
 font-weight: 800;
 margin: 0;
 padding: 0;
@@ -202,7 +203,7 @@ text-shadow: 1px 2px rgb(24, 23, 23);
 }
 #iformacion{
 text-shadow: none; 
-font-size: 1.4rem; 
+font-size: 1.8rem; 
 font-weight: 800;
 margin: 0;
 padding: 0;
@@ -221,12 +222,12 @@ border-color: black;
 }
 #iinformacion{
 text-shadow: none; 
-font-size: 1.4rem; 
+font-size: 1.8rem; 
 font-weight: 800;
 margin: 0;
 padding: 0;
-color:rgb(179, 190, 20);
-text-shadow: 1px 2px rgb(24, 23, 23);
+color:rgb(239, 253, 34);
+text-shadow: 2px 2px rgb(24, 23, 23);
 }
 
 #iaptorm{
@@ -424,4 +425,65 @@ pointer-events:auto;
 .toggleButton{
   background: solid 1px #4058FB;
   padding: 0.5rem;
+}
+
+th {
+  vertical-align: middle !important;
+  text-align: center; /* Centra el contenido en cada celda */
+}
+td {
+  vertical-align: middle !important;
+  text-align: center; /* Centra el contenido en cada celda */
+}
+
+.large-checkbox {
+  width: 20px; /* Tamaño del checkbox */
+  height: 20px;
+  transform: scale(1); /* Aumenta el tamaño */
+  cursor: pointer;
+
+}
+ 
+
+
+/* Ajustar ancho solo a las columnas específicas dentro de esta tabla */
+#tablapersona th:nth-child(6), 
+#tablapersona th:nth-child(7), 
+#tablapersona th:nth-child(8), 
+#tablapersona td:nth-child(9), 
+#tablapersona td:nth-child(10) {
+  width: 90px; /* Ajusta según necesidad */
+  text-align: center;
+}
+#tablapersona td:nth-child(11) {/*botoes */
+  width: 80px; /* Ajusta según necesidad */
+  background: rgb(247, 246, 246);
+
+}
+/* Centrar y hacer más grandes los checkboxes dentro de la tabla */
+#tablapersona td:nth-child(9) input,
+#tablapersona td:nth-child(10) input {
+  display: block;
+  margin: 0 auto;
+}
+
+.personalhead{
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.btnregistrarhead{
+  justify-content: end;
+}
+#toggleButton{ 
+  color: white;  
+  width: 20px;
+  height: 30px;
+}
+#toggleButton,#toggleButtonPersonal,#toggleButtonPersonalOnline{ 
+  color: white;  
+  width: 30px;
+  height: 35px;
+  padding: 0;
+  margin: 0;
 }

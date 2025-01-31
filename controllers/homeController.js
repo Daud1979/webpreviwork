@@ -246,8 +246,6 @@ exports.downloadpdftrabajador = async (req, res) => {
   }
 };
        
-
-
 exports.downloadpdf = async (req, res) => {
     const id = req.body.id;
     const idEmpresa = req.session.userId;
@@ -358,8 +356,6 @@ exports.downloadpdf = async (req, res) => {
     res.redirect('/')
   }
 };
-
-
 
 // Inicializa el cliente de S3
 
@@ -651,6 +647,24 @@ exports.uploadpdf = async (req, res) => {
   
 
           /*MODIFICAR Y REGISTRAR AQUI, VERIFICAR SI HAY SESSION ACTIVA*/
+exports.registerRM=async(req,res)=>{
+  const datos = req.body;
+  const idEmpresa = req.session.userId;  
+  
+  if (req.session.userId>0)
+  {
+    
+    updateData = await User.registrarSolicitudRM(req.body.idTrabajador,req.session.userId)
+    console.log(updateData);
+    res.json(updateData);
+  }
+  else
+  {
+    res.redirect('/');
+  }
+  //
+}
+
 exports.modifyEmpresa=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;  

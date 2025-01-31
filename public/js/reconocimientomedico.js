@@ -1,7 +1,5 @@
 const toggleButton = document.getElementById('toggleButton');
 const tablaContainer = document.getElementById('tablaContainer');
-const toggleButtonPersonalOnline = document.getElementById('toggleButtonPersonalOnline');
-const tablaContainerPersonalOnline = document.getElementById('tablaContainerPersonalOnline');
 
 // const toggleButtonPersonal = document.getElementById('toggleButtonPersonal');
 // const tablaContainerPersonal = document.getElementById('tablaContainerPersonal');
@@ -16,38 +14,11 @@ toggleButtonPersonal.addEventListener('click', () => {
       toggleButtonPersonal.textContent = '+';
     }
 });
-toggleButtonPersonalOnline.addEventListener('click', () => {
-    if (tablaContainerPersonalOnline.classList.contains('d-none')) {
-      // Mostrar la tabla
-      tablaContainerPersonalOnline.classList.remove('d-none');
-      toggleButtonPersonalOnline.textContent = '-';
-    } else {
-      // Ocultar la tabla
-      tablaContainerPersonalOnline.classList.add('d-none');
-      toggleButtonPersonalOnline.textContent = '+';
-    }
-});
 
-document.getElementById("buscadorinformaciontrabajadorOnline").addEventListener("input", function() {
-  const searchValue = this.value.toLowerCase();
- 
-  const rows = document.querySelectorAll("#tablainformaciontrabajadorOnline tr");
 
-  rows.forEach(row => {
-      const cells = row.querySelectorAll("td");
-      const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
-      
-      if (rowText.includes(searchValue)) {
-          row.style.display = "";
-      } else {
-          row.style.display = "none";
-      }
-  });
-});
   
 document.getElementById("buscadorinformaciontrabajador").addEventListener("input", function() {
-    const searchValue = this.value.toLowerCase();
-   
+    const searchValue = this.value.toLowerCase();  
     const rows = document.querySelectorAll("#tablainformaciontrabajador tr");
   
     rows.forEach(row => {
