@@ -665,8 +665,7 @@ exports.registerRM=async(req,res)=>{
   if (req.session.userId>0)
   {
     
-    updateData = await User.registrarSolicitudRM(req.body.idTrabajador,req.session.userId)
-    console.log(updateData);
+    updateData = await User.registrarSolicitudRM(req.body.idTrabajador,req.session.userId)   
     res.json(updateData);
   }
   else
