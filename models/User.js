@@ -168,8 +168,12 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
                     apellidos,
                     Puesto = pte.Nombre,
                     email,
-                    telefono,
+                    telefono,                    
                     Registro = CONVERT(varchar(10), fechaAlta, 103),
+                    FNac = CASE 
+                        WHEN FNac IS NULL THEN ''                                     
+                        ELSE CONVERT(VARCHAR(10), FNac, 103) 
+                    END,
                     Baja = CASE 
                         WHEN fechaBaja IS NULL THEN '' 
                         WHEN CONVERT(datetime, fechaBaja) = '1900-01-01 00:00:00.000' THEN '' 
@@ -189,7 +193,6 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
         throw error;
     }
 }
-
 
 static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
@@ -227,6 +230,7 @@ static async listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idL
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     } 
 }
+
 static async listFormacion(idEmpresa,idTrabajador){
     const pool=await await connectDB();
     try 
@@ -290,29 +294,33 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .query(`SELECT 
-    idTrabajador,
-    idCentro,
-    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
-    NIF,
-    nombres,
-    apellidos,
-    Puesto = pte.Nombre,
-    email,
-    telefono,
-    Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
-    Baja = CASE 
-              WHEN fechaBaja IS NULL THEN '' 
-              WHEN fechaBaja < '2000-01-01' THEN '' 
-              ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
-           END,
-    fechaRM = CASE 
-            WHEN fechaRM IS NULL THEN ''           
-            ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
-    END,
-    fechaOn = CASE 
-            WHEN fechaCursoOnline IS NULL THEN ''           
-            ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
-    END,
+        idTrabajador,
+        idCentro,
+        Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
+        NIF,
+        nombres,
+        apellidos,
+        Puesto = pte.Nombre,
+        email,
+        telefono,
+        FNac = CASE 
+                WHEN FNac IS NULL THEN ''              
+                ELSE CONVERT(VARCHAR(10), FNac, 103) 
+        END,
+        Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
+        Baja = CASE 
+                WHEN fechaBaja IS NULL THEN '' 
+                WHEN fechaBaja < '2000-01-01' THEN '' 
+                ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
+        END,
+        fechaRM = CASE 
+                WHEN fechaRM IS NULL THEN ''           
+                ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
+        END,
+        fechaOn = CASE 
+                WHEN fechaCursoOnline IS NULL THEN ''           
+                ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
+        END,
     Estado = CASE 
                 WHEN estado = 'H' THEN 'Alta' 
                 ELSE 'Baja' 
@@ -350,6 +358,10 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
     Puesto = pte.Nombre,
     email,
     telefono,
+    FNac = CASE 
+              WHEN FNac IS NULL THEN ''                            
+              ELSE CONVERT(VARCHAR(10), FNac, 103) 
+           END,
     Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
     Baja = CASE 
               WHEN fechaBaja IS NULL THEN '' 
@@ -388,6 +400,10 @@ WHERE t.idEmpresa = @idEmpresa and idCentro=@idCentro`);
     Puesto = pte.Nombre,
     email,
     telefono,
+    FNac = CASE 
+              WHEN FNac IS NULL THEN ''                            
+              ELSE CONVERT(VARCHAR(10), FNac, 103) 
+    END,
     Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
     Baja = CASE 
               WHEN fechaBaja IS NULL THEN '' 
@@ -505,7 +521,7 @@ static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
     }
 }
 
-static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefono,Fregistro,Fbaja,estado,idTrabajador,idEmpresa){
+static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefono,Fregistro,Fbaja,estado,idTrabajador,idEmpresa,FNac){
     const pool=await await connectDB();
    
     try 
@@ -520,11 +536,12 @@ static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefo
             .input('idpuesto', sql.Int, idpuesto)
             .input('telefono', sql.VarChar,telefono)
             .input('Fregistro', sql.Date,Fregistro)
-            .input('Fbaja', sql.VarChar,Fbaja)
+            .input('Fbaja', sql.Date,Fbaja)
+            .input('FNac', sql.Date,FNac)
             .input('estado', sql.VarChar,estado)
             .input('idTrabajador', sql.Int, idTrabajador)
             .input('idEmpresa', sql.Int, idEmpresa)
-            .query(`UPDATE  TrabajadorEmpresa set idCentro=@idCentro, NIF=@NIF,nombres=@nombres,apellidos=@apellidos,email=@email, idpuesto=@idpuesto, telefono=@telefono,fechaAlta=@Fregistro,fechaBaja=@Fbaja,estado=@estado WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
+            .query(`UPDATE  TrabajadorEmpresa set FNac=@FNac, idCentro=@idCentro, NIF=@NIF,nombres=@nombres,apellidos=@apellidos,email=@email, idpuesto=@idpuesto, telefono=@telefono,fechaAlta=@Fregistro,fechaBaja=@Fbaja,estado=@estado WHERE idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);
             return (result.rowsAffected[0])
             
         
@@ -536,14 +553,14 @@ static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefo
     }
 }
 
-static async modifyEstadoPersonal(idTrabajador, idEmpresa) {
+static async obtenerdatosmodificar(idTrabajador, idEmpresa) {
     let estado = '';
     try {
         const pool = await connectDB(); // Conectar a la base de datos una vez
         const result = await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
             .input('idTrabajador', sql.Int, idTrabajador)
-            .query(`select idTrabajador,NIF,nombres,apellidos,email,telefono,fechaAlta=convert(date,fechaAlta,103),fechaBaja=convert(date,fechaBaja,103),idCentro,estado,idEmpresa,idPuesto FROM TrabajadorEmpresa WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
+            .query(`select idTrabajador,NIF,nombres,apellidos,email,telefono,fechaAlta=convert(date,fechaAlta,103),fechaBaja=convert(date,fechaBaja,103),FNac=convert(date,FNac,103),idCentro,estado,idEmpresa,idPuesto FROM TrabajadorEmpresa WHERE idEmpresa=@idEmpresa AND idTrabajador=@idTrabajador`);
         
         // Asegurarte de que se devuelva al menos un registro
         if (result.recordset.length > 0) {

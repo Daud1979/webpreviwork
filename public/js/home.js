@@ -30,14 +30,21 @@ btnModificarEmpresa.addEventListener('click',()=>{
                 body: JSON.stringify(data)
                 })
                 .then(response => response.json())
-                .then(data => {                  
-                    if(data.message){                    
-                         window.location.href = '/home';
-                     }
+                .then(data => {   
+                    if (data.error==1)
+                    {               
+                        if(data.message){                    
+                             window.location.href = '/home';
+                        }
+                        else{
+                            messagemodificar.classList.add("error"); 
+                            messagemodificar.innerHTML=data.message;
+                        }
+                    }
                     else{
                         messagemodificar.classList.add("error"); 
                         messagemodificar.innerHTML=data.message;
-                     }
+                    }
                 })
                 .catch((error) => {
                 console.error('Error:', error);

@@ -424,8 +424,15 @@ pointer-events:auto;
   
 }
 .datosGral{
-  padding: 1rem;
+  padding: 1rem;  
 }
+.datospersonalinformaciongral input {
+  pointer-events: none;  /* Evita clics y escritura */
+  background-color: #f0f0f0;  /* Color de fondo gris */
+  color: #292828;  /* Texto gris */
+  border: 1px solid #ccc;
+}
+
 .toggleButton{
   background: solid 1px #4058FB;
   padding: 0.5rem;
@@ -447,7 +454,9 @@ td {
   cursor: pointer;
 
 }
- 
+#tdbaja{
+  color: rgb(245, 79, 79);
+}
 
 
 /* Ajustar ancho solo a las columnas específicas dentro de esta tabla */
@@ -455,11 +464,13 @@ td {
 #tablapersona th:nth-child(7), 
 #tablapersona th:nth-child(8), 
 #tablapersona td:nth-child(9), 
-#tablapersona td:nth-child(10) {
+#tablapersona td:nth-child(10), 
+#tablapersona td:nth-child(11) {
   width: 90px; /* Ajusta según necesidad */
   text-align: center;
+
 }
-#tablapersona td:nth-child(11) {/*botoes */
+#tablapersona td:nth-child(12) {/*botoes */
   width: 80px; /* Ajusta según necesidad */
   background: rgb(247, 246, 246);
 

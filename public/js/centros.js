@@ -149,33 +149,41 @@ btncentromodal.addEventListener('click',()=>{
             })
             .then(response => response.json())
             .then(data => {
-               if(data[0].Resultado==1)
+               if(data.error==1)
                {
-                
-                message.classList.add('messageregisteradd');
-                    message.innerHTML="SE REGISTRO CORRECTAMENTE";
-                   
-                    centro.value='';
-                    encargado.value='';
-                    ciudad.value='';
-                    direccion.value='';
-                    telefono.value='';
-                    email.value='';
-                    personal.value='';
-                    location.reload();
+                    if(data.registrar[0].Resultado)
+                    {
+                        message.classList.add('messageregisteradd');
+                        message.innerHTML="SE REGISTRO CORRECTAMENTE";
+                        centro.value='';
+                        encargado.value='';
+                        ciudad.value='';
+                        direccion.value='';
+                        telefono.value='';
+                        email.value='';
+                        personal.value='';
+                        location.reload();
+                    }
+                    else
+                    {
+                        message.innerHTML="EL CENTRO YA SE ENCUENTRA REGISTRADO";
+                        message.classList.add('messageregisteralert');
+                    }
                }
                else
                {
-                    message.innerHTML="EL CENTRO YA SE ENCUENTRA REGISTRADO";
-                    message.classList.add('messageregisteralert');
+                    message.classList.add('messageregisteradd');
+                    message.innerHTML=data.message;
                }
+            //    if(data[0].Resultado==1)
+          
             })
             .catch((error) => {
             console.error('Error:', error);
             }); 
     }
     else{
-        message.innerHTML="SE REQUIERE DATOS O CORREO NO VALIDO";
+        message.innerHTML="SE REQUIERE DATOS";
         message.classList.add('messageregisteralert');
     }
 });

@@ -46,7 +46,8 @@
                                 <th>N.I.F.</th>
                                 <th>Nombres</th>
                                 <th>Apellidos</th>
-                                <th>Puesto</th>                             
+                                <th>Puesto</th>       
+                                <th>F. Nac.</th>                      
                                 <th>F. Alta</th>
                                 <th>F. Baja</th>
                                 <th>Estado</th>     
@@ -63,9 +64,9 @@
                                     <td class="align-left" id="tdnombres" data-id="<%= item.idTrabajador %>"><%= item.nombres %></td>
                                     <td class="align-left" id="tdapellidos" data-id="<%= item.idTrabajador %>"><%= item.apellidos %></td>
                                     <td class="align-left" id="tdpuesto" data-id="<%= item.idTrabajador %>"><%= item.Puesto %></td>                             
-
-                                    <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Registro %></td>
-                                    <td class="align-right" id="tdtelefono" data-id="<%= item.idTrabajador %>"><%= item.Baja %></td>
+                                    <td class="align-right" id="tdNac" data-id="<%= item.idTrabajador %>"><%= item.FNac %></td>
+                                    <td class="align-right" id="tdregistro" data-id="<%= item.idTrabajador %>"><%= item.Registro %></td>
+                                    <td class="align-right" id="tdbaja" data-id="<%= item.idTrabajador %>"><%= item.Baja %></td>
                                     <td class="align-left estado" id="tdestado" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>       
                                     <td>
                                         <input type="checkbox" class="rm-checkbox large-checkbox" data-id="<%= item.idTrabajador %>">
@@ -73,12 +74,10 @@
                                             <label ><%= item.fechaRM %></label>
                                         </div>
                                     </td>
-                                    <td class="insCurso">
-                                        <div class="inslabel">
-                                            <input type="checkbox"  class="curso-checkbox large-checkbox" data-id="<%= item.idTrabajador %>">
-                                        </div>                        
+                                    <td >                                       
+                                        <input type="checkbox" class="curso-checkbox large-checkbox" data-id="<%= item.idTrabajador %>">
                                         <div class="inscheckbox">
-                                            <label><%= item.Baja %></label>
+                                            <label ><%= item.fechaRM %></label>
                                         </div>
                                     </td>                         
                                     <td >
@@ -243,6 +242,12 @@
                     <input type="date" id="UFAlta"  class="form-control inputwhite" style="background: white;"  aria-label="FAlta"  aria-describedby="basic-addon1">
                 </div>
             </div>     
+            <div class="datosGral ms-0 me-0 p-0 col-7 col-sm-7">
+                <div class="input-group m-0 p-0 input-group-sm ">
+                    <span class="input-group-text" id="basic-addon1">F. Nacimento</span>
+                    <input type="date" id="UFNac"  class="form-control inputwhite" style="background: white;"  aria-label="FAlta"  aria-describedby="basic-addon1">
+                </div>
+            </div>
             <div class="datosGral ms-0 me-0 p-0 col-7 col-sm-7">
                 <div class="input-group m-0 p-0 input-group-sm ">
                     <span class="input-group-text" id="basic-addon1">F. de Baja</span>

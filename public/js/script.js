@@ -7,7 +7,7 @@ btnsendform.addEventListener("click", () => {
     const message = document.getElementById('message');
     if (!isValidEmail(email.value)) {
         message.classList.add("error"); 
-        message.innerHTML = "EL FORMATO DEL CORREO ELECTRÓNICO NO ES VÁLIDO";
+        message.innerHTML = "DATOS NO VALIDOS";
     } else
     {
         message.classList.remove("error"); // Remueve la clase sin '#'

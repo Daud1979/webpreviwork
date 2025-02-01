@@ -12,6 +12,19 @@ const xml2js = require("xml2js");
 const idTrabajador_=0;
 
 /*FUNCIONES EXTRAS*/
+function validarFecha(fecha) {
+  // Verifica que el formato sea YYYY-MM-DD usando una expresión regular
+  const regexFecha = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+  
+  if (!regexFecha.test(fecha)) {
+    return false; // Si no cumple el formato, no es válida
+  }
+
+  // Verifica si es una fecha real
+  const fechaObj = new Date(fecha);
+  return fechaObj instanceof Date && !isNaN(fechaObj);
+}
+
 exports.index =async (req, res) => {
   userData = await User.findByUsername(req.session.userId);
   gestionData = await User.findGestion();
@@ -668,9 +681,17 @@ exports.modifyEmpresa=async(req,res)=>{
   const idEmpresa = req.session.userId;  
   if (req.session.userId>0)
   {
+    const resul= isValidEmail(datos.email);
+    if (resul==false)
+    {
+      const mensaje =`CORREO NO VALIDO`;
+      res.json({message:mensaje, error:0});
+      return;
+    }  
+      
     updateData = await User.modifyEmpresa(datos.direccion,datos.encargado,datos.email,datos.telefono,idEmpresa)
     const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
-    res.json({message:mensaje});
+    res.json({message:mensaje, error:1});
   }
   else
   {
@@ -700,17 +721,15 @@ exports.modifyCentros=async(req,res)=>{
       }
     }
     else if (datos.indexColumna==8)
-    {
-      console.log('numero col: ',datos.nuevoValor);
-      if (typeof datos.nuevoValor != "number")
-      {
+    {      
+      if (isNaN(datos.nuevoValor)) {
         const mensaje =`NO ES UN NUMERO`;
         res.json({message:mensaje,estado:1,valorAnterior:req.body.originalValue});
         return;
       }
     }
     updateData = await User.modifyCentros(datos.id,datos.nuevoValor,datos.indexColumna,idEmpresa)
-    const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
+    const mensaje =(updateData>0)?1:`SE PRODUJO UN ERROR AL MODIFICAR`;
     res.json({message:mensaje,estado:0,valorAnterior:''});
   }
   else
@@ -722,11 +741,54 @@ exports.modifyCentros=async(req,res)=>{
 exports.modifyPersonal=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
+  baja=datos.Fbaja;
   if (req.session.userId>0)
   {
-    updateData = await User.modifyPersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.idpuesto,datos.telefono,datos.Fregistro,datos.Fbaja,datos.estado,datos.idTrabajador,idEmpresa)
-    const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
-    res.json({message:mensaje});
+    /**/
+    if(req.body.estado=="H")
+    {
+      baja=null;
+     
+    }
+    else if (req.body.estado=="D")
+    {  
+      const fecBa=validarFecha(req.body.Fbaja);  
+      
+      if(fecBa==false)
+      {
+        baja=new Date();
+      }      
+    }
+    else if (req.body.estado!='H' || req.body.estado!='D')
+    {
+      const mensaje =`ESTADO NO VALIDOS`;
+      res.json({message:mensaje, error:0});
+      return;
+    }
+    /**/
+    const resul= isValidEmail(datos.email);
+    if (resul==false)
+    {
+      const mensaje =`CORREO NO VALIDO`;
+      res.json({message:mensaje, error:0});
+      return;
+    }  
+    const fecN=validarFecha(datos.FNac);
+    if (fecN==false)
+      {
+        const mensaje =`FECHA DE NACIMIENTO NO VALIDO`;
+        res.json({message:mensaje, error:0});
+        return;
+    }  
+    registro=datos.Fregistro;
+    const fec=validarFecha(datos.Fregistro);
+    if (fec==false)
+    {
+      registro= new Date();
+    } 
+    updateData = await User.modifyPersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.idpuesto,datos.telefono,datos.Fregistro,baja,datos.estado,datos.idTrabajador,idEmpresa,datos.FNac)
+    const mensaje =(updateData>0)?1:`SE PRODUJO UN ERROR AL MODIFICAR`;
+    res.json({message:mensaje,error:1});
   }
   else
   {
@@ -748,12 +810,12 @@ exports.cargarPersonalCentro=async(req,res)=>{
   }
 }
 
-exports.modificarEstadoPersonal=async(req,res)=>{
+exports.obtenerdatosmodificar=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId; 
   if (req.session.userId>0)
   {
-    updateData = await User.modifyEstadoPersonal(datos.idTrabajador,idEmpresa)
+    updateData = await User.obtenerdatosmodificar(datos.idTrabajador,idEmpresa)
     res.json({updateData});
   }
   else{
@@ -768,8 +830,29 @@ exports.registerpersonal = async(req,res)=>{
   
   if (req.session.userId>0)
   {
-    registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,datos.idpuesto,datos.Fregistro,estado,idEmpresa,datos.fNac)
-    res.json(registrar);
+    const resul= isValidEmail(datos.email);
+    if (resul==false)
+    {
+      const mensaje =`CORREO NO VALIDO`;
+      res.json({message:mensaje, error:0});
+      return;
+    }  
+    const fecN=validarFecha(datos.fNac);
+    if (fecN==false)
+      {
+        const mensaje =`FECHA DE NACIMIENTO NO VALIDO`;
+        res.json({message:mensaje, error:0});
+        return;
+    }  
+    registro=datos.Fregistro;
+    const fec=validarFecha(datos.Fregistro);
+    if (fec==false)
+    {
+      registro= new Date();
+    } 
+  
+    registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,datos.idpuesto,registro,estado,idEmpresa,datos.fNac)
+    res.json({registrar,error:1});
   }
   else
   {
@@ -778,12 +861,27 @@ exports.registerpersonal = async(req,res)=>{
 }
 
 exports.registercenter = async(req,res)=>{
-  const {    centro, encargado, ciudad, direccion, telefono, email, personal,codigopostal } =req.body;
+  const {centro, encargado, ciudad, direccion, telefono, email, personal,codigopostal } =req.body;
   const idEmpresa = req.session.userId;
   if (req.session.userId>0)
   {
+    if (isNaN(codigopostal)) {
+      res.json({ message: "NO ES UN NÚMERO", error: 0 });
+      return;
+  }
+  if (isNaN(personal)) {
+    res.json({ message: "NO ES UN NÚMERO", error: 0 });
+    return;
+  }
+    const resul= isValidEmail(email);
+    if (resul==false)
+    {
+      const mensaje =`CORREO NO VALIDO`;
+      res.json({message:mensaje, error:0});
+      return;
+    }     
     registrar = await User.registrarcentro(centro,encargado,ciudad,direccion,codigopostal,telefono,email,personal,idEmpresa)
-    res.json(registrar);
+    res.json({registrar, error:1});
   }
   else
   {
@@ -804,7 +902,6 @@ exports.mostrarpdfempresa = async(req,res)=>{
     res.redirect('/');
   }
 }
-
 exports.downloadpdftrabajadorOnline = async (req, res) => {
   if (!req.session.userId || req.session.userId <= 0) {
     return res.redirect("/");

@@ -13,10 +13,6 @@ function validarObjeto(obj) {
     return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
 }
 
-closemodificarPersonal.addEventListener('click',()=>{
-    location.reload();
-});
-
 btnmodificarpersonal.addEventListener('click',()=>{
     const idcentro=document.querySelector('#Ucmbcentrospersonalmodificar');
     const nif=document.querySelector('#Unifpersonal');
@@ -26,35 +22,17 @@ btnmodificarpersonal.addEventListener('click',()=>{
     const telefono=document.querySelector('#Utelefonopersonal');
     const idpuesto = document.querySelector('#Ucmbpuestotrabajo');
     const Fregistro = document.querySelector('#UFAlta');
+    const FNac = document.querySelector('#UFNac');
     const Fbaja = document.querySelector('#UFBaja');
     const estado = document.querySelector('#Ucmbestado');
     const message = document.querySelector('#messagemodify');
     const idTrabajador = document.querySelector('#UidTrabajador');  
-   let est='H';
-   let baja=null;
+   
+
     if (validarFecha(Fregistro.value))
     {      
         message.innerHTML="";
-        message.classList.remove('messageregisteralert');
-       if(estado.value=="H")
-       {
-            est='H';
-            baja=null;
-       }
-       else//deshabilitado
-       {
-            if(validarFecha(Fbaja.value))
-            {
-                est='D';
-                baja=Fbaja.value;
-            }
-            else
-            {
-                message.innerHTML="FECHA DE BAJA NO VALIDO";
-                message.classList.add('messageregisteralert');
-                return;
-            }
-       }
+        message.classList.remove('messageregisteralert');      
        const data ={
             idCentro:idcentro.value,
             NIF:nif.value,
@@ -64,8 +42,9 @@ btnmodificarpersonal.addEventListener('click',()=>{
             idpuesto:idpuesto.value,
             telefono:telefono.value,
             Fregistro:Fregistro.value,
-            Fbaja:baja,
-            estado:est,
+            FNac:FNac.value,
+            Fbaja:Fbaja.value,
+            estado:estado.value,
             idTrabajador:idTrabajador.value
         }     
         fetch('/home/modificarPersonal', {
@@ -76,22 +55,28 @@ btnmodificarpersonal.addEventListener('click',()=>{
         body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => {
-          
-        if(data.message)
-        {
-            message.classList.add('messageregisteradd');
-            message.innerHTML="SE MODIFICO CORRECTAMENTE CORRECTAMENTE";
-
-        }
-        else
-        {
-            message.innerHTML="SE PRODUJO UN ERROR";
-            message.classList.add('messageregisteralert');
-        }
+        .then(data => {     
+            console.log(data.error);      
+            if (data.error==1)
+            {
+                console.log(data.message);
+                if(data.message==1){     
+                                   
+                    window.location.reload();
+                }
+                else{
+                    message.classList.add('messageregisteralert');
+                    message.innerHTML=data.message;
+                }
+            }
+            else{
+                message.classList.add('messageregisteralert');
+                message.innerHTML=data.message;
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
+            
         }); 
     }
     else
@@ -186,29 +171,35 @@ btnregistrarpersonal.addEventListener('click',()=>{
             })
             .then(response => response.json())
             .then(data => {
-               if(data[0].Resultado==1)
-               {
-                
-                message.classList.add('messageregisteradd');
-                    message.innerHTML="SE REGISTRO CORRECTAMENTE";                   
-                    nif.value="";
-                    nombre.value="";
-                    apellidos.value="";
-                    email.value="";
-                    telefono.value="";
-               }
-               else
+                if(data.error==1)
+                {
+                    if(data.registrar[0].Resultado)
+                    {
+                       message.classList.add('messageregisteradd');
+                       message.innerHTML="SE REGISTRO CORRECTAMENTE";                   
+                        nif.value="";
+                        nombre.value="";
+                        apellidos.value="";
+                        email.value="";
+                        telefono.value="";
+                    }
+                    else
                {
                     message.innerHTML="LA PERSONA YA SE ENCUENTRA REGISTRADO";
                     message.classList.add('messageregisteralert');
-               }
+                    }
+                }
+                else{
+                    messagemodificar.classList.add("error"); 
+                    messagemodificar.innerHTML=data.message;
+                }
             })
             .catch((error) => {
             console.error('Error:', error);
             }); 
     }
     else{
-        message.innerHTML="SE REQUIERE DATOS O CORREO NO VALIDO";
+        message.innerHTML="SE DATOS REQUERIDOS";
         message.classList.add('messageregisteralert');
     }
 });
@@ -310,14 +301,16 @@ botones.forEach((boton) => {
         Utelefonopersonal = document.querySelector('#Utelefonopersonal');
         Ucmbpuestotrabajo = document.querySelector('#Ucmbpuestotrabajo');
         UFAlta = document.querySelector('#UFAlta');
+        UFNac = document.querySelector('#UFNac');
         UFBaja = document.querySelector('#UFBaja');
         Ucmbestado = document.querySelector('#Ucmbestado');
         UidTrabajador =document.querySelector('#UidTrabajador');
         
         if (idBoton=='btnEstadoPersona')
         {            
+           
             const data={idTrabajador}           
-            fetch('/home/modificarEstadoPersonal', {
+            fetch('/home/obtenerdatosmodificar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -325,7 +318,8 @@ botones.forEach((boton) => {
                 body: JSON.stringify(data)
                 })
                 .then(response => response.json())
-                .then(data => {                   
+                .then(data => {       
+                    //carga el modal modificar            
                     Ucmbcentrospersonalmodificar.value=data.updateData[0].idCentro;
                     Unifpersonal.value=data.updateData[0].NIF;
                     Unombrepersonal.value = data.updateData[0].nombres;
@@ -335,10 +329,9 @@ botones.forEach((boton) => {
                     Ucmbpuestotrabajo.value = data.updateData[0].idPuesto;
                     Ucmbestado.value = data.updateData[0].estado;
                     UidTrabajador.value =idTrabajador;
-                    UFAlta.value = data.updateData[0].fechaAlta.split('T')[0];;
-                    UFBaja.value = data.updateData[0].fechaBaja.split('T')[0];;
-                
-                    
+                    UFAlta.value = data.updateData?.[0]?.fechaAlta ? data.updateData[0].fechaAlta.split('T')[0]  : '';
+                    UFBaja.value = data.updateData?.[0]?.fechaBaja ? data.updateData[0].fechaBaja.split('T')[0]  : '';
+                    UFNac.value = data.updateData?.[0]?.FNac ? data.updateData[0].FNac.split('T')[0]  : '';
                 })
                 .catch((error) => {
                 console.error('Error:', error);
@@ -385,6 +378,7 @@ $('#cmbcentrospersonal').on('change', function() {
                             <td class="align-left" data-id="${item.idTrabajador}">${item.nombres}</td>
                             <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
                             <td class="align-left" data-id="${item.idTrabajador}">${item.Puesto}</td>
+                            <td class="align-left" data-id="${item.idTrabajador}">${item.FNac}</td>
                             <td class="align-right" data-id="${item.idTrabajador}">${item.Registro}</td>
                             <td class="align-right" data-id="${item.idTrabajador}">${item.Baja}</td>
                             <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>                         
@@ -438,12 +432,13 @@ function agregarEventosABotones() {
                 Utelefonopersonal = document.querySelector('#Utelefonopersonal');
                 Ucmbpuestotrabajo = document.querySelector('#Ucmbpuestotrabajo');
                 UFAlta = document.querySelector('#UFAlta');
+                UFNac = document.querySelector('#UFNac');
                 UFBaja = document.querySelector('#UFBaja');
                 UidTrabajador =document.querySelector('#UidTrabajador');
                 Ucmbestado = document.querySelector('#Ucmbestado');
                 if (idBoton === 'btnEstadoPersona') {
                     const data={idTrabajador}           
-                    fetch('/home/modificarEstadoPersonal', {
+                    fetch('/home/obtenerdatosmodificar', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -463,8 +458,9 @@ function agregarEventosABotones() {
                             Ucmbpuestotrabajo.value = data.updateData[0].idPuesto;
                             Ucmbestado.value = data.updateData[0].estado;
                             UidTrabajador.value =idTrabajador;
-                            UFAlta.value = data.updateData[0].fechaAlta.split('T')[0];;
-                            UFBaja.value = data.updateData[0].fechaBaja.split('T')[0];;
+                            UFAlta.value = data.updateData?.[0]?.fechaAlta ? data.updateData[0].fechaAlta.split('T')[0]  : '';
+                            UFBaja.value = data.updateData?.[0]?.fechaBaja ? data.updateData[0].fechaBaja.split('T')[0]  : '';
+                            UFNac.value = data.updateData?.[0]?.FNac ? data.updateData[0].FNac.split('T')[0]  : '';
                                            
                         })
                         .catch((error) => {
