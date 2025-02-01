@@ -1,4 +1,11 @@
 
+let indexColumna=0;
+btncentromodal = document.querySelector('#btnregistrarcentro');
+
+function validarObjeto(obj) {
+    return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
+}
+
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -19,8 +26,8 @@ document.getElementById("buscadorCentro").addEventListener("input", function() {
         }
     });
 });
-let indexColumna=0;
-// Detecta el clic en una celda para habilitar la edición
+
+// deshabilita las columnas en el if
 $(document).on("click", "#tabla-centros td[data-id]", function() {
     // Verifica si la celda es de la columna `idCentro` o `ntrabajadorCentro`
     indexColumna = $(this).index();
@@ -42,12 +49,14 @@ $(document).on("click", "#tabla-centros td[data-id]", function() {
     }
 });
 
-// Detecta cuando se sale del campo de texto (focusout) para guardar el valor
+// modificar el centro r
 $(document).on("focusout", ".edit-input", function() {
     let nuevoValor = $(this).val().trim();
     let id = $(this).data("id");
-    let originalValue = $(this).parent().data("original-value"); // Obtiene el valor original
-    //     // Validación para evitar que el campo quede vacío
+    let parentTd = $(this).parent(); // Obtener la celda padre (td)
+    let originalValue = parentTd.data("original-value"); // Valor original almacenado
+
+    // Validación: Si el campo está vacío, mostrar error y no permitir salir
     if (nuevoValor === "") {
         if (!$(this).siblings(".error-message").length) {
             $(this).after("<span id='spanerror' class='error-message'>DATO REQUERIDO</span>");
@@ -55,29 +64,39 @@ $(document).on("focusout", ".edit-input", function() {
         $(this).focus();
         return;
     }
-    // Si el valor no está vacío, elimina el mensaje de error y vuelve a mostrar el valor como texto
+
+    // Eliminar mensaje de error si el campo tiene un valor
     $(this).siblings(".error-message").remove();
-    $(this).parent().text(nuevoValor);
-    const data ={indexColumna,id,nuevoValor}
+
+    // Enviar datos al servidor
+    const data = { indexColumna, id, nuevoValor, originalValue };
+
     fetch('/home/modificarCentros', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-           if (data.estado==1)
-           {
-            alert("CORREO NO VALIDO...");
-            $(this).parent().text(originalValue); // Restaura el valor original en la celda
-           }
-        })
-        .catch((error) => {
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.estado == 1) { // Si hay un error en el servidor
+            alert(data.message);
+
+            // Restaurar el valor anterior
+            parentTd.text(data.valorAnterior); // Cambia el texto visible en la celda
+            parentTd.data("original-value", data.valorAnterior); // Restablece el valor almacenado
+        } else {
+            // Si la actualización es exitosa, actualizar el valor en la celda
+            parentTd.text(nuevoValor);
+            parentTd.data("original-value", nuevoValor);
+        }
+    })
+    .catch(error => {
         console.error('Error:', error);
-        }); 
+        alert("Error de conexión. Restaurando el valor original.");
+        parentTd.text(originalValue); // Restaurar el valor original si hay error de red
+    });
 });
+
 
 // Elimina el mensaje de error cuando el usuario vuelve a editar
 $(document).on("input", ".edit-input", function() {
@@ -94,7 +113,6 @@ $(document).on("keydown", ".edit-input", function(event) {
     }
 });
 
-btncentromodal = document.querySelector('#btnregistrarcentro');
 btncentromodal.addEventListener('click',()=>{
    
     const centro=document.querySelector('#txtcentro');
@@ -162,6 +180,4 @@ btncentromodal.addEventListener('click',()=>{
     }
 });
 
-function validarObjeto(obj) {
-    return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
-}
+

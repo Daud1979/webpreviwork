@@ -181,6 +181,7 @@ exports.centrospersonal=async (req,res)=>{//enviar a centros
   listCentro = await User.listCentroEmpresa(idEmpresa);
   (req.session.userId>0)? res.render('centros',{listCentro,listTrabajadores}):res.redirect('/');
 }
+
 exports.personal=async (req,res)=>{//enviar a trabajadores
   const idEmpresa = req.session.userId;
   listCentro = await User.listCentroEmpresa(idEmpresa);
@@ -571,7 +572,6 @@ exports.uploadpdfepis = async (req, res) => {
   }
 };
 
-
 exports.uploadpdf = async (req, res) => {  
  
   if (req.session.userId > 0) {
@@ -644,9 +644,7 @@ exports.uploadpdf = async (req, res) => {
   }
 };
 
-  
-
-          /*MODIFICAR Y REGISTRAR AQUI, VERIFICAR SI HAY SESSION ACTIVA*/
+            /*MODIFICAR Y REGISTRAR AQUI, VERIFICAR SI HAY SESSION ACTIVA*/
 exports.registerRM=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;  
@@ -679,13 +677,16 @@ exports.modifyEmpresa=async(req,res)=>{
     res.redirect('/');
   }
 }
+
 function isValidEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
+
 exports.modifyCentros=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
+  
   if (req.session.userId>0)
   {
     if (datos.indexColumna==7)
@@ -694,13 +695,23 @@ exports.modifyCentros=async(req,res)=>{
       if (resul==false)
       {
         const mensaje =`CORREO NO VALIDO, NO SE GUARDARA EL CAMBIO`;
-        res.json({message:mensaje,estado:1});
+        res.json({message:mensaje,estado:1,valorAnterior:req.body.originalValue});
+        return;
+      }
+    }
+    else if (datos.indexColumna==8)
+    {
+      console.log('numero col: ',datos.nuevoValor);
+      if (typeof datos.nuevoValor != "number")
+      {
+        const mensaje =`NO ES UN NUMERO`;
+        res.json({message:mensaje,estado:1,valorAnterior:req.body.originalValue});
         return;
       }
     }
     updateData = await User.modifyCentros(datos.id,datos.nuevoValor,datos.indexColumna,idEmpresa)
     const mensaje =(updateData>0)?true:`SE PRODUJO UN ERROR AL MODIFICAR`;
-    res.json({message:mensaje,estado:0});
+    res.json({message:mensaje,estado:0,valorAnterior:''});
   }
   else
   {
@@ -793,14 +804,6 @@ exports.mostrarpdfempresa = async(req,res)=>{
     res.redirect('/');
   }
 }
-
-
-
-
-
-
-
-
 
 exports.downloadpdftrabajadorOnline = async (req, res) => {
   if (!req.session.userId || req.session.userId <= 0) {

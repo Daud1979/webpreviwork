@@ -487,15 +487,15 @@ static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
                     .query(`UPDATE CentrosEmpresa set emailCentro=@emailCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
                     return (result.rowsAffected[0])
                 } 
-                else if (indexColumna==8)
-                    {
-                        const result =await pool.request()
-                        .input('ntrabajadorCentro', sql.VarChar,nuevoValor)
-                        .input('idCentro', sql.Int, id)
-                        .input('idEmpresa', sql.Int, idEmpresa)
-                        .query(`UPDATE CentrosEmpresa set ntrabajadorCentro =@ntrabajadorCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
-                        return (result.rowsAffected[0])
-                    } 
+            else if (indexColumna==8)
+            {
+                const result =await pool.request()
+                    .input('ntrabajadorCentro', sql.VarChar,nuevoValor)
+                    .input('idCentro', sql.Int, id)
+                    .input('idEmpresa', sql.Int, idEmpresa)
+                    .query(`UPDATE CentrosEmpresa set ntrabajadorCentro =@ntrabajadorCentro WHERE idCentro=@idCentro and idEmpresa=@idEmpresa`);
+                    return (result.rowsAffected[0])
+                } 
         
     } 
     catch (error) 

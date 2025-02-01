@@ -45,6 +45,7 @@ btnModificarEmpresa.addEventListener('click',()=>{
         }
     }
 })
+
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -111,10 +112,10 @@ btnfolder2.addEventListener('click',()=>{
     mostrarpdf(btnfolder2);
 })
 btnfolder1 = document.querySelector('#btnformacion');//formacion
-btnfolder1.addEventListener('click',()=>{
-  
+btnfolder1.addEventListener('click',()=>{  
     mostrarpdf(btnfolder1);
 })
+
 btnfolder = document.querySelector('#btnmedicina');//medicina de trabajo
 btnfolder.addEventListener('click',()=>{
     mostrarpdf(btnfolder);

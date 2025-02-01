@@ -1,15 +1,22 @@
 
+const botones = document.querySelectorAll('.select-id-btn');
+const modificarpersonal = document.querySelector('#modalmodificarpersonal');
+btnregistrarpersonal = document.querySelector('#btnregistrarpersonal');
+let indexColumna=0;
+
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
-btnregistrarpersonal = document.querySelector('#btnregistrarpersonal');
+
 function validarObjeto(obj) {
     return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
 }
+
 closemodificarPersonal.addEventListener('click',()=>{
     location.reload();
 });
+
 btnmodificarpersonal.addEventListener('click',()=>{
     const idcentro=document.querySelector('#Ucmbcentrospersonalmodificar');
     const nif=document.querySelector('#Unifpersonal');
@@ -130,7 +137,6 @@ btnmodificarpersonal.addEventListener('click',()=>{
     // }
 });
 
-
 function validarFecha(fecha) {
     // Verifica que el formato sea YYYY-MM-DD usando una expresión regular
     const regexFecha = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
@@ -142,7 +148,7 @@ function validarFecha(fecha) {
     // Verifica si es una fecha real
     const fechaObj = new Date(fecha);
     return fechaObj instanceof Date && !isNaN(fechaObj);
-  }
+}
 
 btnregistrarpersonal.addEventListener('click',()=>{
     const idcentro=document.querySelector('#cmbcentrospersonalregistro');
@@ -224,7 +230,6 @@ document.getElementById("buscadorpersonal").addEventListener("input", function()
     });
 });
 
-let indexColumna=0;
 // Detecta el clic en una celda para habilitar la edición
 $(document).on("click", "#tabla-trabajador td[data-id]", function() {
     // Verifica si la celda es de la columna `idCentro` o `ntrabajadorCentro`
@@ -293,12 +298,6 @@ $(document).on("keydown", ".edit-input", function(event) {
     }
 });
 
-
-// Agrega un evento de clic a cada botón
-// Selecciona todos los botones con la clase "select-id-btn"
-const botones = document.querySelectorAll('.select-id-btn');
-const modificarpersonal = document.querySelector('#modalmodificarpersonal');
-// Agrega un evento de clic a cada botón
 botones.forEach((boton) => {
     boton.addEventListener('click', function() {       
         const idBoton = this.id;   
@@ -326,9 +325,7 @@ botones.forEach((boton) => {
                 body: JSON.stringify(data)
                 })
                 .then(response => response.json())
-                .then(data => {
-                    // let fila = $(this).closest("tr");   
-                    // fila.find("td.estado").text(data.message);
+                .then(data => {                   
                     Ucmbcentrospersonalmodificar.value=data.updateData[0].idCentro;
                     Unifpersonal.value=data.updateData[0].NIF;
                     Unombrepersonal.value = data.updateData[0].nombres;
@@ -354,12 +351,10 @@ botones.forEach((boton) => {
     });
 });
 
-$(document).ready(function() {
-    $('#cmbcentrospersonal').on('change', function() {
+$('#cmbcentrospersonal').on('change', function() {
         // Obtener el valor seleccionado
         let valorSeleccionado = $(this).val();
         const data = { valor: valorSeleccionado };
-const Unifpersonal =document.querySelector('#Unifpersonal');
         // Limpiar el tbody de la tabla
         $('#tabla-trabajador').empty();
 
@@ -394,9 +389,9 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
                             <td class="align-right" data-id="${item.idTrabajador}">${item.Baja}</td>
                             <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>                         
                                     <td>
-                                        <input type="checkbox" class="curso-checkbox large-checkbox" data-id="${item.idTrabajador}">
+                                        <input type="checkbox" class="rm-checkbox large-checkbox" data-id="${item.idTrabajador}">
                                         <div class="inscheckbox">
-                                            <label>${item.Baja}</label>
+                                            <label>${item.fechaRM}</label>
                                         </div>
                                     </td>
                                     <td class="insCurso">
@@ -424,13 +419,12 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
         .catch((error) => {
             console.error('Error:', error);
         });
-    });
+});
 
-    // Función para agregar eventos a los botones
-    function agregarEventosABotones() {
+// Función Modificar para agregar eventos a los botones de la tabla 
+function agregarEventosABotones() {
         // Selecciona todos los botones con la clase "select-id-btn"
         const botones = document.querySelectorAll('.select-id-btn');
-
         // Agrega un evento de clic a cada botón
         botones.forEach((boton) => {
             boton.addEventListener('click', function() {
@@ -483,9 +477,40 @@ const Unifpersonal =document.querySelector('#Unifpersonal');
                 }
             });
         });
-    }
-});
-
+        $(document).on('click', '.rm-checkbox', function() {
+            let idTrabajador = $(this).data('id');
+            const data={idTrabajador:idTrabajador};
+            const row = this.closest("tr");
+            fetch('/home/registrarRM', {
+                method: 'POST',
+                headers: {
+                   'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                        if (data !='NO') {
+                            console.log('aqui: ',data)
+                            // Encuentra el label dentro de la misma fila y actualiza su contenido
+                            const label = row.querySelector(".inscheckbox label");
+                            if (label) {
+                                label.textContent = data; // Inserta el valor devuelto
+                            }
+                        }       
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    
+        // Evento para el checkbox de curso-checkbox
+        $(document).on('click', '.curso-checkbox', function() {
+            let trabajadorId = $(this).data('id');
+            let estado = $(this).is(':checked') ? 'seleccionado' : 'deseleccionado';
+            alert(`Checkbox de curso del trabajador ID ${trabajadorId} está ${estado}`);
+        });
+}
 
 function cargarInformacion(idTrabajador){
     const data = { idTrabajador:idTrabajador };  
@@ -523,66 +548,38 @@ function redirigirConPost(url, data) {
     document.body.removeChild(form);
 }
 
-    // Evento para checkboxes de R.M.
-    // document.querySelectorAll(".2rm-checkbox").forEach(checkbox => {
-    //     checkbox.addEventListener("change", function() {
-    //       const idTrabajador= this.getAttribute("data-id");
-    //       /**/
-    //       console.log(idTrabajador);
-    //       const data={idTrabajador}           
-    //       fetch('/home/registrarRM', {
-    //           method: 'POST',
-    //           headers: {
-    //               'Content-Type': 'application/json'
-    //           },
-    //           body: JSON.stringify(data)
-    //           })
-    //           .then(response => response.json())
-    //           .then(data => {
-    //              alert(data) 
-                  
-    //           })
-    //           .catch((error) => {
-    //           console.error('Error:', error);
-    //           });
-
-
-    //       /**/
-    //     });
-    // });
- // Evento para checkboxes de Curso
+// Evento para checkboxes de Curso
  document.querySelectorAll(".rm-checkbox").forEach(checkbox => {
-    checkbox.addEventListener("click", function () {
+    checkbox.addEventListener("click", function () {        
         const idTrabajador=this.getAttribute("data-id");
         const data={idTrabajador:idTrabajador};
         const row = this.closest("tr");
-            fetch('/home/registrarRM', {
+        fetch('/home/registrarRM', {
             method: 'POST',
             headers: {
                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(data => {
+        })
+        .then(response => response.json())
+        .then(data => {                    
                     if (data !='NO') {
                         // Encuentra el label dentro de la misma fila y actualiza su contenido
                         const label = row.querySelector(".inscheckbox label");
                         if (label) {
                             label.textContent = data; // Inserta el valor devuelto
                         }
-                    } else {
-                        alert("YA SE REGISTRO HACE MENOS DE 15 DIAS");
-                    }          
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    });
-});
-    // Evento para checkboxes de Curso
-    document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
-        checkbox.addEventListener("click", function () {
-            alert("ID Trabajador: " + this.getAttribute("data-id"));
+                    }       
+        })
+        .catch((error) => {
+            console.error('Error:', error);
         });
     });
+});
+
+// Evento para checkboxes de Curso
+document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
+    checkbox.addEventListener("click", function () {
+        alert("ID Trabajador: " + this.getAttribute("data-id"));
+    });
+});
