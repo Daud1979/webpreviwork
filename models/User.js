@@ -818,6 +818,7 @@ static async obtenerdatosCourseOnline(idTrabajador,idEmpresa){
 }
 
 static async obtenerContrato(idEmpresa){
+    
     const pool= await connectDB();   
     const result =await pool.request()        
     .input('idEmpresa', sql.Int,idEmpresa)
@@ -825,6 +826,38 @@ static async obtenerContrato(idEmpresa){
     return result.recordset;
 }
 
+static async verificarTrabajadorCurso(idTrabajador,idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {   
+        const result = await pool.request()        
+      
+        .input('idTrabajador', sql.Int, idTrabajador)
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .output('retorno', sql.VarChar)  // Agregar el parámetro de salida
+        .execute('REGISTRO_CURSOONLINEWEB');
+        return result.output.retorno
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async registroOnline(idEmpresa, idContrato,idTrabajador,idCourse){
+    const pool= await connectDB();   
+    const result =await pool.request()        
+    .input('idEmpresa', sql.Int,idEmpresa)
+    .input('idContrato', sql.Int,idContrato)
+    .input('idTrabajador', sql.Int,idTrabajador)
+    .input('idCourse', sql.Int,idCourse)
+    .input('idCourse', sql.Int,idCourse)
+    .output('fecharegistro', sql.VarChar)  // Agregar el parámetro de salida
+    .execute('REGISTRO_CURSOONLINEWEB');
+    return result.output.retorno
+    
+}
 }//fin de la clase
 
 

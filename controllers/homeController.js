@@ -992,17 +992,35 @@ exports.registerCourseOnline=async (req,res)=>{
   
   const idEmpresa = req.session.userId;    
   if (req.session.userId>0)  {   
-    updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa)   
+    updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);  
     updateContrato = await User.obtenerContrato(idEmpresa);
+    verificarTrabajadorCurso = await User.verificarTrabajadorCurso(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse);
+    if(verificarTrabajadorCurso==false)
+    {
+    /*aqui verificar si el curso esta registrado */
      if (updateData.length>0 && updateContrato.length>0)
      {
-        const idStudent =registrarAlumnosCurso(updateData[0].nif,updateData[0].nombres,updateData[0].apellidos,updateData[0].correo,updateData[0].telefono,updateData[0].idempresa,updateData[0].empresa,updateData[0].puesto,updateData[0].idCourse,updateContrato[0].idContrato);
-        console.log(idStudent);        
+      try{
+        console.log(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);
+        //const idStudent =registrarAlumnosCurso(updateData[0].nif,updateData[0].nombres,updateData[0].apellidos,updateData[0].correo,updateData[0].telefono,updateData[0].idempresa,updateData[0].empresa,updateData[0].puesto,updateData[0].idCourse,updateContrato[0].idContrato);
+        fechadevolver = await User.registroOnline(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);
+        console.log(fechadevolver);
+        res.json({message:fechadevolver,error:1});           
+      }
+      catch{
+        res.json({message:'NO SE PUEDO REGISTRAR AL CURSO',error:0});
+      }
      }
      else
      {
       res.json({message:'FALTAN DATOS DEL TRABAJADOR',error:0});
      }     
+     /*fin */
+    }
+    else
+    {
+      res.json({message:'EL TRABAJADOR YA SE ENCUENTRA REGISTRADO',error:0});
+    }
   }
   else
   {
