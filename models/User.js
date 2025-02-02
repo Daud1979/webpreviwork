@@ -317,7 +317,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
                 WHEN fechaRM IS NULL THEN ''           
                 ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
         END,
-        fechaOn = CASE 
+        fechaCursoOnline = CASE 
                 WHEN fechaCursoOnline IS NULL THEN ''           
                 ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
         END,
@@ -372,7 +372,7 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
             WHEN fechaRM IS NULL THEN ''           
             ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
     END,
-    fechaOn = CASE 
+   fechaCursoOnline = CASE 
             WHEN fechaCursoOnline IS NULL THEN ''           
             ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
     END,
@@ -414,7 +414,7 @@ WHERE t.idEmpresa = @idEmpresa and idCentro=@idCentro`);
             WHEN fechaRM IS NULL THEN ''           
             ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
     END,
-    fechaOn = CASE 
+    fechaCursoOnline = CASE 
             WHEN fechaCursoOnline IS NULL THEN ''           
             ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
     END,
@@ -631,7 +631,7 @@ static async registrarSolicitudRM(idTrabajador,idEmpresa){
     const pool=await await connectDB();
     try 
     {   
-        const result =await pool.request()        
+        const result = await pool.request()        
       
         .input('idTrabajador', sql.Int, idTrabajador)
         .input('idEmpresa', sql.Int, idEmpresa)
@@ -667,7 +667,7 @@ static async descargarpdf(idDocumentoProyecto,idEmpresa){
 
 static async mostrarpdf(tipo,idEmpresa){
     let idCategoria=0;
-    const pool=await await connectDB();
+    const pool= await connectDB();
     if (tipo=='gestion_1')//plan prevencion
     {
         idCategoria=1;
@@ -803,6 +803,26 @@ static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,
         console.error('Error en el registro del documento:', error);
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
+}
+
+static async obtenerdatosCourseOnline(idTrabajador,idEmpresa){
+    const pool= await connectDB();   
+    const result =await pool.request()        
+    .input('idTrabajador', sql.Int, idTrabajador)
+    .query(`select correo=te.email,puesto=pte.Nombre,nif=te.NIF,nombres,apellidos,telefono=te.telefono,idempresa=cc.idEmpresa,empresa=cc.empresa,fechaAlta=GETDATE(),Course,idCourse
+                                    from TrabajadorEmpresa te inner join
+	                                     Contratos cc on (te.idEmpresa=cc.idEmpresa) inner join	 
+	                                     PuestoTrabajoEmpresa pte on (pte.idPuesto=te.idPuesto)
+                                         where idTrabajador=@idTrabajador`);          
+    return result.recordset;
+}
+
+static async obtenerContrato(idEmpresa){
+    const pool= await connectDB();   
+    const result =await pool.request()        
+    .input('idEmpresa', sql.Int,idEmpresa)
+    .query(`select top 1 idContrato=c.idContrato from ContratoConfirmados cc inner join Contratos c on (cc.idContrato=c.idContrato) where idEmpresa=@idEmpresa order by idcontratoconfirmado desc`);          
+    return result.recordset;
 }
 
 }//fin de la clase

@@ -32,4 +32,5 @@ router.post('/trabajador/epis',homeController.epis);
 router.post('/trabajador/formacion',homeController.formacion);
 router.post('/trabajador/reconocimiento',homeController.reconocimientomedico);
 router.post('/registrarRM',homeController.registerRM);
+router.post('/registrarCursoOnline',homeController.registerCourseOnline);
 module.exports = router;

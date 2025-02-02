@@ -9,8 +9,10 @@ const path = require('path');
 const os = require('os'); // Para obtener las carpetas de usuario
 const axios = require("axios");
 const xml2js = require("xml2js");
+const { Console } = require('console');
 const idTrabajador_=0;
-
+var https = require('follow-redirects').https;
+var { parseStringPromise } = require('xml2js');
 /*FUNCIONES EXTRAS*/
 function validarFecha(fecha) {
   // Verifica que el formato sea YYYY-MM-DD usando una expresión regular
@@ -658,22 +660,7 @@ exports.uploadpdf = async (req, res) => {
 };
 
             /*MODIFICAR Y REGISTRAR AQUI, VERIFICAR SI HAY SESSION ACTIVA*/
-exports.registerRM=async(req,res)=>{
-  const datos = req.body;
-  const idEmpresa = req.session.userId;  
-  
-  if (req.session.userId>0)
-  {
-    
-    updateData = await User.registrarSolicitudRM(req.body.idTrabajador,req.session.userId)   
-    res.json(updateData);
-  }
-  else
-  {
-    res.redirect('/');
-  }
-  //
-}
+
 
 exports.modifyEmpresa=async(req,res)=>{
   const datos = req.body;
@@ -984,129 +971,185 @@ exports.downloadpdftrabajadorOnline = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-// exports.downloadpdftrabajadorOnline = async (req, res) => {
-
-//   if (!req.session.userId || req.session.userId <= 0) {
-//     return res.redirect("/");
-//   }
-
-//   const idStudent = req.body.id;
-//   if (!idStudent) {
-//     return res.status(400).json({ error: "El ID del estudiante es requerido." });
-//   }
-
-//   try {
-//     const username = process.env.USERNAMEONLINE;
-//     const password = process.env.PASSWORDONLINE;
-//     const key = process.env.KEYONLINE;
-//     const soapUrl = process.env.SOAP_URL;
-
-//     const soapRequest = `
-//       <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-//                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-//                      xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-//         <soap:Header>
-//           <LoginInfo xmlns="http://prv.org/">
-//             <username>${username}</username>
-//             <password>${password}</password>
-//             <key>${key}</key>
-//           </LoginInfo>
-//         </soap:Header>
-//         <soap:Body>
-//           <getStudent xmlns="http://prv.org/">
-//             <idStudent>${idStudent}</idStudent>
-//             <certificate>1</certificate>
-//             <test>0</test>
-//           </getStudent>
-//         </soap:Body>
-//       </soap:Envelope>`;
-
-//     console.log("📢 Enviando solicitud SOAP...");
-
-//     const response = await axios.post(soapUrl, soapRequest, {
-//       headers: {
-//         "Content-Type": "text/xml",
-//         "SOAPAction": "http://prv.org/getStudent",
-//       },
-//       responseType: "text",
-//     });
-
-//     console.log("📢 Respuesta XML recibida:");
-//     console.log(response.data);
- 
-//   } catch (error) {
-//     console.error("❌ Error al obtener el PDF:", error);
-//     res.status(500).json({ error: "Error al descargar el certificado. Inténtalo nuevamente más tarde." });
-//   }
-// };
-
-
-
-
-
-
-
-//aqui la muestra
-// exports.downloadpdftrabajadorOnline = async (req, res) => {
-//   if (!req.session.userId || req.session.userId <= 0) {
-//     return res.redirect("/");
-//   }
-
-//   const idStudent = req.body.id;
-//   if (!idStudent) {
-//     return res.status(400).json({ error: "El ID del estudiante es requerido." });
-//   }
-//     const username = process.env.USERNAMEONLINE;
-//     const password = process.env.PASSWORDONLINE;
-//     const key = process.env.KEYONLINE;   
-//     var data = `<?xml version="1.0" encoding="utf-8"?>
-// <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-//   <soap:Header>
-//     <LoginInfo xmlns="http://prv.org/">
-//       <username>${username}</username>
-//       <password>${password}</password>
-//       <key>${key}</key>
-//     </LoginInfo>
-//   </soap:Header>
-//  <soap:Body>
-// 		<getStudent xmlns="http://prv.org/">
-//       <idStudent>${idStudent}</idStudent>
-//       <certificate>1</certificate>
-//       <test>0</test>
-//     </getStudent>
-//   </soap:Body>
-// </soap:Envelope>`
+exports.registerRM=async(req,res)=>{
+  const datos = req.body;
+  const idEmpresa = req.session.userId;    
+  if (req.session.userId>0)  {
     
-//     var config = {
-//       method: 'post',
-//       maxBodyLength: Infinity,
-//       url: 'https://ws2.curso-online.net/studentsmanagement2.asmx',
-//       headers: { 
-//         'Content-Type': 'text/xml'
-//       },
-//       data : data
-//     };
+    updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa)   
+    res.json(updateData);
+  }
+  else
+  {
+    res.redirect('/');
+  }
+  //
+}
+
+
+exports.registerCourseOnline=async (req,res)=>{
+  const datos = req.body;
+  
+  const idEmpresa = req.session.userId;    
+  if (req.session.userId>0)  {   
+    updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa)   
+    updateContrato = await User.obtenerContrato(idEmpresa);
+     if (updateData.length>0 && updateContrato.length>0)
+     {
+        const idStudent =registrarAlumnosCurso(updateData[0].nif,updateData[0].nombres,updateData[0].apellidos,updateData[0].correo,updateData[0].telefono,updateData[0].idempresa,updateData[0].empresa,updateData[0].puesto,updateData[0].idCourse,updateContrato[0].idContrato);
+        console.log(idStudent);        
+     }
+     else
+     {
+      res.json({message:'FALTAN DATOS DEL TRABAJADOR',error:0});
+     }     
+  }
+  else
+  {
+    res.redirect('/');
+  }
+
+
+}
+/*funcion de registro a preventor*/
+
+
+async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, idempresa, empresa, puesto, idCourse, idContrato) {
+  try {
+      const username = process.env.USERNAMEONLINE;
+      const password = process.env.PASSWORDONLINE;
+      const key = process.env.KEYONLINE;
+      const idOffice = process.env.OFFICE;
+      const soapUrl = 'ws2.curso-online.net';
+      const soapPath = '/studentsmanagement2.asmx';
     
-//     axios(config)
-//     .then(function (response) {
-//       console.log('si');
-//       console.log(JSON.stringify(response.data));
-//     })
-//     .catch(function (error) {
-//       console.log(error);
-//     });
-    
- 
- 
-// };
+
+      if (!nif || !nombres || !apellidos || !correo || !idempresa || !idCourse) {
+          throw new Error("Datos insuficientes para registrar al alumno.");
+      }
+
+      const soapRequest = `<?xml version="1.0" encoding="utf-8"?>
+      <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Header>
+              <LoginInfo xmlns="http://prv.org/">
+                  <username>${username}</username>
+                  <password>${password}</password>
+                  <key>${key}</key>
+              </LoginInfo>
+          </soap:Header>
+          <soap:Body>
+              <addStudent xmlns="http://prv.org/">
+                  <idOffice>${idOffice}</idOffice>
+                  <DNI>${nif}</DNI>
+                  <name>${nombres}</name>
+                  <surname>${apellidos}</surname>
+                  <email>${correo}</email>
+                  <phone>${telefono}</phone>
+                  <idCompany>${parseInt(idempresa)}</idCompany>
+                  <nameCompany>${empresa}</nameCompany>
+                  <idTechnical>0</idTechnical>
+                  <technical></technical>
+                  <employment>${puesto}</employment>
+                  <idCourse>
+                      <int>${idCourse}</int>
+                  </idCourse>
+                  <language>es</language>
+                  <sendEMail>true</sendEMail>
+                  <sendEMailCC></sendEMailCC>
+                  <AttachCertificate>true</AttachCertificate>
+                  <midterm>true</midterm>
+                  <removeStudent>0</removeStudent>
+                  <addicionalFields>
+                      <AddFieldsValue>
+                          <idField>443</idField>
+                          <value>${idContrato}</value>
+                          <namefield>Contrato</namefield>
+                      </AddFieldsValue>
+                      <AddFieldsValue>
+                          <idField>561</idField>
+                          <value>120</value>
+                          <namefield>DURACION</namefield>
+                      </AddFieldsValue> 
+                  </addicionalFields>
+                  <endLockDate></endLockDate>
+                  <jobStartDate></jobStartDate>
+                  <signature>true</signature>
+                  <sendPassword>true</sendPassword>
+                  <duplicate>false</duplicate>
+                  <urlCallback></urlCallback>
+              </addStudent>
+          </soap:Body>
+      </soap:Envelope>`;
+
+      const options = {
+          'method': 'POST',
+          'hostname': soapUrl,
+          'path': soapPath,
+          'headers': {
+              'Content-Type': 'text/xml',
+              'SOAPAction': 'http://prv.org/addStudent',
+          },
+          'maxRedirects': 20
+      };
+
+      const reqSOAP = https.request(options, function (res) {
+          let chunks = [];
+
+          res.on("data", function (chunk) {
+              chunks.push(chunk);
+          });
+
+          res.on("end", function () {
+              let body = Buffer.concat(chunks);
+              const responseBody = body.toString();
+              
+
+              // Parsear la respuesta SOAP
+              parseStringPromise(responseBody, { explicitArray: false }).then(parsedResult => {
+                // Verificar si hay un error en la respuesta SOAP
+                const faultCode = parsedResult['soap:Envelope']['soap:Body']['soap:Fault'];
+                if (faultCode) {
+                    // Si hay un fallo en la respuesta, mostrar el mensaje de error
+                    console.error("❌ Error SOAP:", faultCode['faultstring']);
+                    return null;
+                }
+            
+                // Acceder correctamente a idStudent dentro del nodo <Student>
+                const idStudent = parsedResult["soap:Envelope"]["soap:Body"]["addStudentResponse"]["addStudentResult"]["Student"]["idStudent"];
+                if (!idStudent) {
+                    console.error("❌ No se encontró el ID del estudiante en la respuesta.");
+                    return null;
+                }
+            
+                console.log(`✅ Estudiante registrado con ID: ${idStudent}`);
+                return idStudent;
+            }).catch(err => {
+                console.error("❌ Error al parsear la respuesta:", err.message);
+                return null;
+            });
+          });
+
+          res.on("error", function (error) {
+              console.error("❌ Error en la solicitud SOAP:", error.message);
+          });
+      });
+
+      reqSOAP.write(soapRequest);
+      reqSOAP.end();
+
+  } catch (error) {
+      console.error("❌ Error al registrar estudiante:", error.message);
+      return null;
+  }
+}
+
+
+
+
+
+
+
+/*fin preventor*/
+
+
+

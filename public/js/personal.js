@@ -393,7 +393,7 @@ $('#cmbcentrospersonal').on('change', function() {
                                             <input type="checkbox" class="curso-checkbox large-checkbox" data-id="${item.idTrabajador}">
                                         </div>                        
                                         <div class="inscheckbox">
-                                            <label>${item.Baja}</label>
+                                            <label>${item.fechaCursoOnline}</label>
                                         </div>
                                     </td>                         
                                     <td >
@@ -493,18 +493,49 @@ function agregarEventosABotones() {
                             if (label) {
                                 label.textContent = data; // Inserta el valor devuelto
                             }
-                        }       
+                        }  
+                        else
+                        {
+                            document.querySelector(".rm-checkbox").checked = false; 
+                        }            
             })
             .catch((error) => {
                 console.error('Error:', error);
+                document.querySelector(".rm-checkbox").checked = false; 
             });
         });
     
         // Evento para el checkbox de curso-checkbox
         $(document).on('click', '.curso-checkbox', function() {
-            let trabajadorId = $(this).data('id');
-            let estado = $(this).is(':checked') ? 'seleccionado' : 'deseleccionado';
-            alert(`Checkbox de curso del trabajador ID ${trabajadorId} está ${estado}`);
+            let idTrabajador = $(this).data('id');
+            const data={idTrabajador:idTrabajador};
+            const row = this.closest("tr");
+            fetch('/home/registrarCursoOnline', {
+                method: 'POST',
+                headers: {
+                   'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {                    
+                        if (data.error > 0) {
+                            // Encuentra el label dentro de la misma fila y actualiza su contenido
+                            const label = row.querySelector(".inscheckboxCurso label");
+                            if (label) {
+                                label.textContent = data.message; // Inserta el valor devuelto
+                            }
+                        } 
+                        else if (data.error==0)
+                        {                     
+                            document.querySelector(".curso-checkbox").checked = false;   
+                            alert(data.message);
+                        }      
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.querySelector(".curso-checkbox").checked = false; 
+            });
         });
 }
 
@@ -565,17 +596,50 @@ function redirigirConPost(url, data) {
                         if (label) {
                             label.textContent = data; // Inserta el valor devuelto
                         }
+                    }
+                    else
+                    {
+                        document.querySelector(".rm-checkbox").checked = false; 
                     }       
         })
         .catch((error) => {
             console.error('Error:', error);
+            document.querySelector(".rm-checkbox").checked = false; 
         });
     });
 });
 
 // Evento para checkboxes de Curso
 document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
-    checkbox.addEventListener("click", function () {
-        alert("ID Trabajador: " + this.getAttribute("data-id"));
+    checkbox.addEventListener("click", function () {        
+        const idTrabajador=this.getAttribute("data-id");
+        const data={idTrabajador:idTrabajador};
+        const row = this.closest("tr");
+        fetch('/home/registrarCursoOnline', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {                    
+                    if (data.error > 0) {
+                        // Encuentra el label dentro de la misma fila y actualiza su contenido
+                        const label = row.querySelector(".inscheckboxCurso label");
+                        if (label) {
+                            label.textContent = data.message; // Inserta el valor devuelto
+                        }
+                    } 
+                    else if (data.error==0)
+                    {                     
+                        document.querySelector(".curso-checkbox").checked = false;   
+                        alert(data.message);
+                    }      
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            document.querySelector(".curso-checkbox").checked = false; 
+        });
     });
 });
