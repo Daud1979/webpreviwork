@@ -345,75 +345,93 @@ botones.forEach((boton) => {
 });
 
 $('#cmbcentrospersonal').on('change', function() {
-        // Obtener el valor seleccionado
-        let valorSeleccionado = $(this).val();
-        const data = { valor: valorSeleccionado };
-        // Limpiar el tbody de la tabla
-        $('#tabla-trabajador').empty();
+    // Obtener el valor seleccionado
+    let valorSeleccionado = $(this).val();
+    const data = { valor: valorSeleccionado };
 
-        // Hacer la solicitud fetch para cargar nuevos datos
-        fetch('/home/cargarPersonalCentro', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            // Verificar que la respuesta sea exitosa
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la red');
-            }
-            return response.json();  // Convertir la respuesta a JSON
-        })
-        .then(data => {
-            // Comprobar que los datos sean un array
-            if (Array.isArray(data)) {
-                // Iterar sobre el nuevo conjunto de datos y agregar filas a la tabla
-                data.forEach(item => {
-                    $('#tabla-trabajador').append(`
-                        <tr>
-                            <td class="align-left" data-id="${item.idTrabajador}">${item.Centro}</td>
-                            <td class="align-right" data-id="${item.idTrabajador}">${item.NIF}</td>
-                            <td class="align-left" data-id="${item.idTrabajador}">${item.nombres}</td>
-                            <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
-                            <td class="align-left" data-id="${item.idTrabajador}">${item.Puesto}</td>
-                            <td class="align-left" data-id="${item.idTrabajador}">${item.FNac}</td>
-                            <td class="align-right" data-id="${item.idTrabajador}">${item.Registro}</td>
-                            <td class="align-right" data-id="${item.idTrabajador}">${item.Baja}</td>
-                            <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>                         
-                                    <td>
-                                        <input type="checkbox" class="rm-checkbox large-checkbox" data-id="${item.idTrabajador}">
-                                        <div class="inscheckbox">
-                                            <label>${item.fechaRM}</label>
-                                        </div>
-                                    </td>
-                                    <td class="insCurso">
-                                        <div class="inslabel">
-                                            <input type="checkbox" class="curso-checkbox large-checkbox" data-id="${item.idTrabajador}">
-                                        </div>                        
-                                        <div class="inscheckbox">
-                                            <label>${item.fechaCursoOnline}</label>
-                                        </div>
-                                    </td>                         
-                                    <td >
-                                        <button id="btnEstadoPersona"  data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}"> <i id="iapto"  class="material-icons">engineering</i><span class="tooltip-text">Modificar</span></button>
-                                        <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}"><i id="iinformacion"  class="material-icons">drive_file_move</i><span class="tooltip-text">Documentos</span></button>                                 
-                                    </td>
-                        </tr>
-                    `);
-                });
+    // Limpiar el tbody de la tabla
+    $('#tabla-trabajador').empty();
 
-                // Agregar evento a los botones generados
-                agregarEventosABotones();  // Llama a la función que añade eventos
-            } else {
-                console.error('La respuesta no es un array');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    // Hacer la solicitud fetch para cargar nuevos datos
+    fetch('/home/cargarPersonalCentro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        // Verificar que la respuesta sea exitosa
+        if (!response.ok) {
+            throw new Error('Error en la respuesta de la red');
+        }
+        return response.json();  // Convertir la respuesta a JSON
+    })
+    .then(data => {
+        // Comprobar que los datos sean un array
+        if (Array.isArray(data)) {
+            // Iterar sobre el nuevo conjunto de datos y agregar filas a la tabla
+            data.forEach(item => {
+                $('#tabla-trabajador').append(`
+                    <tr>
+                        <td class="align-left" data-id="${item.idTrabajador}">${item.Centro}</td>
+                        <td class="align-right" data-id="${item.idTrabajador}">${item.NIF}</td>
+                        <td class="align-left" data-id="${item.idTrabajador}">${item.nombres}</td>
+                        <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
+                        <td class="align-left" data-id="${item.idTrabajador}">${item.Puesto}</td>
+                        <td class="align-left" data-id="${item.idTrabajador}">${item.FNac}</td>
+                        <td class="align-right" data-id="${item.idTrabajador}">${item.Registro}</td>
+                        <td class="align-right" id="tdbaja" data-id="${item.idTrabajador}">${item.Baja}</td>
+                        <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>
+                        
+                        <!-- Primer Checkbox (fechaRM) -->
+                        <td>
+                            <input type="checkbox" class="rm-checkbox large-checkbox" 
+                                ${item.fechaRM ? 'checked' : ''} 
+                                data-id="${item.idTrabajador}">
+                            <div class="inscheckbox">
+                                <label>${item.fechaRM}</label>
+                            </div>
+                        </td>
+
+                        <!-- Segundo Checkbox (fechaCursoOnline) -->
+                        <td class="insCurso">
+                            <div class="inslabel">
+                                <input type="checkbox" class="curso-checkbox large-checkbox" 
+                                    ${item.fechaCursoOnline ? 'checked' : ''} 
+                                    data-id="${item.idTrabajador}">
+                            </div>                        
+                            <div class="inscheckboxCurso">
+                                <label>${item.fechaCursoOnline}</label>
+                            </div>
+                        </td>
+                        
+                        <!-- Botones -->
+                        <td >
+                            <button id="btnEstadoPersona" data-bs-toggle="modal" data-bs-target="#modalmodificarpersonal" 
+                                    class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="${item.idTrabajador}"> 
+                                <i id="iapto" class="material-icons">engineering</i><span class="tooltip-text">Modificar</span>
+                            </button>
+                            <button id="btnInformacion" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" 
+                                    data-id="${item.idTrabajador}">
+                                <i id="iinformacion" class="material-icons">drive_file_move</i><span class="tooltip-text">Documentos</span>
+                            </button>                                 
+                        </td>
+                    </tr>
+                `);
+            });
+
+            // Agregar evento a los botones generados
+            agregarEventosABotones();  // Llama a la función que añade eventos
+        } else {
+            console.error('La respuesta no es un array');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 });
+
 
 // Función Modificar para agregar eventos a los botones de la tabla 
 function agregarEventosABotones() {
@@ -487,7 +505,7 @@ function agregarEventosABotones() {
             .then(response => response.json())
             .then(data => {
                         if (data !='NO') {
-                            console.log('aqui: ',data)
+                       
                             // Encuentra el label dentro de la misma fila y actualiza su contenido
                             const label = row.querySelector(".inscheckbox label");
                             if (label) {
@@ -519,18 +537,19 @@ function agregarEventosABotones() {
             })
             .then(response => response.json())
             .then(data => {                    
-                        if (data.error > 0) {
-                            // Encuentra el label dentro de la misma fila y actualiza su contenido
-                            const label = row.querySelector(".inscheckboxCurso label");
-                            if (label) {
-                                label.textContent = data.message; // Inserta el valor devuelto
-                            }
-                        } 
-                        else if (data.error==0)
-                        {                     
-                            document.querySelector(".curso-checkbox").checked = false;   
-                            alert(data.message);
-                        }      
+                if (data.error > 0) {
+                         
+                    // Encuentra el label dentro de la misma fila y actualiza su contenido
+                    const label = row.querySelector(".inscheckboxCurso label");
+                    if (label) {
+                        label.textContent = data.message; // Inserta el valor devuelto
+                    }
+                } 
+                else if (data.error==0)
+                {                     
+                    document.querySelector(".curso-checkbox").checked = false;   
+                    alert(data.message);
+                }    
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -623,8 +642,10 @@ document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
             body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => {                    
+        .then(data => {    
+                               
                     if (data.error > 0) {
+                         
                         // Encuentra el label dentro de la misma fila y actualiza su contenido
                         const label = row.querySelector(".inscheckboxCurso label");
                         if (label) {

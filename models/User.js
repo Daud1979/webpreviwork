@@ -846,20 +846,25 @@ static async verificarTrabajadorCurso(idTrabajador,idEmpresa,idContrato,idCourse
     }
 }
 
-// static async registroOnline(idEmpresa, idContrato,idTrabajador,idCourse,idStudent,Course){
-//     const pool= await connectDB();   
-//     const result =await pool.request()        
-//     .input('idEmpresa', sql.Int,idEmpresa)
-//     .input('idContrato', sql.Int,idContrato)
-//     .input('idTrabajador', sql.Int,idTrabajador)
-//     .input('idCourse', sql.Int,idCourse)
-//     .input('idStudentOnline', sql.Int,idStudent)
-//     .input('CourseOnline', sql.VarChar,Course)
-//     .output('fecharegistro', sql.VarChar)  // Agregar el parámetro de salida
-//     .execute('REGISTRO_CURSOONLINEWEB');
-//     return result.output.retorno
-    
-// }
+static async registroOnline(idEmpresa, idContrato, idTrabajador, idCourse, idStudent, Course) {
+    try {
+        const pool = await connectDB();   
+        const result = await pool.request()        
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .input('idContrato', sql.Int, idContrato)
+            .input('idTrabajador', sql.Int, idTrabajador)
+            .input('idCourse', sql.Int, idCourse)
+            .input('idStudentOnline', sql.Int, idStudent)
+            .input('CourseOnline', sql.VarChar, Course)
+            .output('registro', sql.VarChar)  // Definir parámetro de salida
+            .execute('REGISTRO_CURSOONLINEWEB');
+            return result.output.registro; // Usar el nombre correcto del parámetro de salida
+    } catch (error) {
+        console.error('Error en registro Online:', error);
+        throw error;
+    }
+}
+
 }//fin de la clase
 
 

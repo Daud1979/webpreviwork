@@ -888,6 +888,7 @@ exports.mostrarpdfempresa = async(req,res)=>{
     res.redirect('/');
   }
 }
+
 exports.downloadpdftrabajadorOnline = async (req, res) => {
   if (!req.session.userId || req.session.userId <= 0) {
     return res.redirect("/");
@@ -986,38 +987,27 @@ exports.registerRM=async(req,res)=>{
   //
 }
 
-
 exports.registerCourseOnline=async (req,res)=>{
   const datos = req.body;
   
   const idEmpresa = req.session.userId;    
   if (req.session.userId>0)  {   
     updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);  
-    updateContrato = await User.obtenerContrato(idEmpresa);
+    updateContrato = await User.obtenerContrato(idEmpresa);    
     verificarTrabajadorCurso = await User.verificarTrabajadorCurso(datos.idTrabajador,idEmpresa,updateContrato[0].idContrato,updateData[0].idCourse);
-    console.log(verificarTrabajadorCurso);
-    if(verificarTrabajadorCurso==false)
-    {
-    /*aqui verificar si el curso esta registrado */
-     if (updateData.length>0 && updateContrato.length>0)
-     {
-      
-      try{
-        console.log(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);  
-        //const idStudent =registrarAlumnosCurso(updateData[0].nif,updateData[0].nombres,updateData[0].apellidos,updateData[0].correo,updateData[0].telefono,updateData[0].idempresa,updateData[0].empresa,updateData[0].puesto,updateData[0].idCourse,updateContrato[0].idContrato);
-        //fechadevolver = await User.registroOnline(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);
-        
-       // res.json({message:fechadevolver,error:1});           
-      }
-      catch{
-        res.json({message:'NO SE PUEDO REGISTRAR AL CURSO',error:0});
-      }
-     }
-     else
-     {
-      res.json({message:'FALTAN DATOS DEL TRABAJADOR',error:0});
-     }     
-     /*fin */
+    
+    if(Array.isArray( verificarTrabajadorCurso) &&  verificarTrabajadorCurso.length == 0)
+    { 
+      /*cargar */
+        try{
+          const idStudent =await registrarAlumnosCurso(updateData[0].nif,updateData[0].nombres,updateData[0].apellidos,updateData[0].correo,updateData[0].telefono,updateData[0].idempresa,updateData[0].empresa,updateData[0].puesto,updateData[0].idCourse,updateContrato[0].idContrato);
+          fechadevolver=await User.registroOnline(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateData[0].Course);
+          res.json({message:fechadevolver,error:1});     
+        }
+        catch{
+          res.json({message:'PROBLEMA AL REGISTRAR EL CURSO',error:0});     
+        }
+        /*fin */
     }
     else
     {
@@ -1034,6 +1024,7 @@ exports.registerCourseOnline=async (req,res)=>{
 /*funcion de registro a preventor*/
 
 
+
 async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, idempresa, empresa, puesto, idCourse, idContrato) {
   try {
       const username = process.env.USERNAMEONLINE;
@@ -1043,7 +1034,6 @@ async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, 
       const soapUrl = 'ws2.curso-online.net';
       const soapPath = '/studentsmanagement2.asmx';
     
-
       if (!nif || !nombres || !apellidos || !correo || !idempresa || !idCourse) {
           throw new Error("Datos insuficientes para registrar al alumno.");
       }
@@ -1112,50 +1102,51 @@ async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, 
           'maxRedirects': 20
       };
 
-      const reqSOAP = https.request(options, function (res) {
-          let chunks = [];
+      // Promesa para manejar la respuesta de la solicitud SOAP
+      return new Promise((resolve, reject) => {
+          const reqSOAP = https.request(options, function (res) {
+              let chunks = [];
 
-          res.on("data", function (chunk) {
-              chunks.push(chunk);
+              res.on("data", function (chunk) {
+                  chunks.push(chunk);
+              });
+
+              res.on("end", function () {
+                  let body = Buffer.concat(chunks);
+                  const responseBody = body.toString();
+
+                  parseStringPromise(responseBody, { explicitArray: false }).then(parsedResult => {
+                      // Verificar si hay un error en la respuesta SOAP
+                      const faultCode = parsedResult['soap:Envelope']['soap:Body']['soap:Fault'];
+                      if (faultCode) {
+                          console.error("❌ Error SOAP:", faultCode['faultstring']);
+                          reject("Error SOAP");
+                      }
+
+                      // Obtener el idStudent
+                      const idStudent = parsedResult["soap:Envelope"]["soap:Body"]["addStudentResponse"]["addStudentResult"]["Student"]["idStudent"];
+                      if (!idStudent) {
+                          console.error("❌ No se encontró el ID del estudiante en la respuesta.");
+                          reject("ID de estudiante no encontrado");
+                      }
+
+                      console.log(`✅ Estudiante registrado con ID: ${idStudent}`);
+                      resolve(idStudent); // Retornar el idStudent
+                  }).catch(err => {
+                      console.error("❌ Error al parsear la respuesta:", err.message);
+                      reject("Error al parsear la respuesta");
+                  });
+              });
+
+              res.on("error", function (error) {
+                  console.error("❌ Error en la solicitud SOAP:", error.message);
+                  reject("Error en la solicitud SOAP");
+              });
           });
 
-          res.on("end", function () {
-              let body = Buffer.concat(chunks);
-              const responseBody = body.toString();
-              
-
-              // Parsear la respuesta SOAP
-              parseStringPromise(responseBody, { explicitArray: false }).then(parsedResult => {
-                // Verificar si hay un error en la respuesta SOAP
-                const faultCode = parsedResult['soap:Envelope']['soap:Body']['soap:Fault'];
-                if (faultCode) {
-                    // Si hay un fallo en la respuesta, mostrar el mensaje de error
-                    console.error("❌ Error SOAP:", faultCode['faultstring']);
-                    return null;
-                }
-            
-                // Acceder correctamente a idStudent dentro del nodo <Student>
-                const idStudent = parsedResult["soap:Envelope"]["soap:Body"]["addStudentResponse"]["addStudentResult"]["Student"]["idStudent"];
-                if (!idStudent) {
-                    console.error("❌ No se encontró el ID del estudiante en la respuesta.");
-                    return null;
-                }
-            
-                console.log(`✅ Estudiante registrado con ID: ${idStudent}`);
-                return idStudent;
-            }).catch(err => {
-                console.error("❌ Error al parsear la respuesta:", err.message);
-                return null;
-            });
-          });
-
-          res.on("error", function (error) {
-              console.error("❌ Error en la solicitud SOAP:", error.message);
-          });
+          reqSOAP.write(soapRequest);
+          reqSOAP.end();
       });
-
-      reqSOAP.write(soapRequest);
-      reqSOAP.end();
 
   } catch (error) {
       console.error("❌ Error al registrar estudiante:", error.message);
