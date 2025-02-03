@@ -994,18 +994,20 @@ exports.registerCourseOnline=async (req,res)=>{
   if (req.session.userId>0)  {   
     updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);  
     updateContrato = await User.obtenerContrato(idEmpresa);
-    verificarTrabajadorCurso = await User.verificarTrabajadorCurso(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse);
+    verificarTrabajadorCurso = await User.verificarTrabajadorCurso(datos.idTrabajador,idEmpresa,updateContrato[0].idContrato,updateData[0].idCourse);
+    console.log(verificarTrabajadorCurso);
     if(verificarTrabajadorCurso==false)
     {
     /*aqui verificar si el curso esta registrado */
      if (updateData.length>0 && updateContrato.length>0)
      {
+      
       try{
-        console.log(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);
+        console.log(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);  
         //const idStudent =registrarAlumnosCurso(updateData[0].nif,updateData[0].nombres,updateData[0].apellidos,updateData[0].correo,updateData[0].telefono,updateData[0].idempresa,updateData[0].empresa,updateData[0].puesto,updateData[0].idCourse,updateContrato[0].idContrato);
-        fechadevolver = await User.registroOnline(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);
-        console.log(fechadevolver);
-        res.json({message:fechadevolver,error:1});           
+        //fechadevolver = await User.registroOnline(idEmpresa, updateContrato[0].idContrato,datos.idTrabajador,updateData[0].idCourse,idStudent,updateContrato[0].Course);
+        
+       // res.json({message:fechadevolver,error:1});           
       }
       catch{
         res.json({message:'NO SE PUEDO REGISTRAR AL CURSO',error:0});

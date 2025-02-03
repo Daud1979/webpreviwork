@@ -826,7 +826,7 @@ static async obtenerContrato(idEmpresa){
     return result.recordset;
 }
 
-static async verificarTrabajadorCurso(idTrabajador,idEmpresa){
+static async verificarTrabajadorCurso(idTrabajador,idEmpresa,idContrato,idCourse){
     const pool=await await connectDB();
     try 
     {   
@@ -834,9 +834,10 @@ static async verificarTrabajadorCurso(idTrabajador,idEmpresa){
       
         .input('idTrabajador', sql.Int, idTrabajador)
         .input('idEmpresa', sql.Int, idEmpresa)
-        .output('retorno', sql.VarChar)  // Agregar el parámetro de salida
-        .execute('REGISTRO_CURSOONLINEWEB');
-        return result.output.retorno
+        .input('idContrato', sql.Int, idContrato)
+        .input('idCourse', sql.Int,idCourse)
+        .query(`select * from cursosonlineControl  where idEmpresa=@idEmpresa and idContrato=@idContrato and idTrabajador=@idTrabajador and idCourse=@idCourse`);          
+        return result.recordset;
     } 
     catch (error) 
     {
@@ -845,19 +846,20 @@ static async verificarTrabajadorCurso(idTrabajador,idEmpresa){
     }
 }
 
-static async registroOnline(idEmpresa, idContrato,idTrabajador,idCourse){
-    const pool= await connectDB();   
-    const result =await pool.request()        
-    .input('idEmpresa', sql.Int,idEmpresa)
-    .input('idContrato', sql.Int,idContrato)
-    .input('idTrabajador', sql.Int,idTrabajador)
-    .input('idCourse', sql.Int,idCourse)
-    .input('idCourse', sql.Int,idCourse)
-    .output('fecharegistro', sql.VarChar)  // Agregar el parámetro de salida
-    .execute('REGISTRO_CURSOONLINEWEB');
-    return result.output.retorno
+// static async registroOnline(idEmpresa, idContrato,idTrabajador,idCourse,idStudent,Course){
+//     const pool= await connectDB();   
+//     const result =await pool.request()        
+//     .input('idEmpresa', sql.Int,idEmpresa)
+//     .input('idContrato', sql.Int,idContrato)
+//     .input('idTrabajador', sql.Int,idTrabajador)
+//     .input('idCourse', sql.Int,idCourse)
+//     .input('idStudentOnline', sql.Int,idStudent)
+//     .input('CourseOnline', sql.VarChar,Course)
+//     .output('fecharegistro', sql.VarChar)  // Agregar el parámetro de salida
+//     .execute('REGISTRO_CURSOONLINEWEB');
+//     return result.output.retorno
     
-}
+// }
 }//fin de la clase
 
 
