@@ -27,8 +27,6 @@ btnmodificarpersonal.addEventListener('click',()=>{
     const estado = document.querySelector('#Ucmbestado');
     const message = document.querySelector('#messagemodify');
     const idTrabajador = document.querySelector('#UidTrabajador');  
-   
-
     if (validarFecha(Fregistro.value))
     {      
         message.innerHTML="";
@@ -608,8 +606,9 @@ function redirigirConPost(url, data) {
             body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => {                    
-                    if (data !='NO') {
+        .then(data => {    
+                    console.log(data);                
+                    if (data.updateData !='NO') {
                         // Encuentra el label dentro de la misma fila y actualiza su contenido
                         const label = row.querySelector(".inscheckbox label");
                         if (label) {
@@ -618,7 +617,8 @@ function redirigirConPost(url, data) {
                     }
                     else
                     {
-                        document.querySelector(".rm-checkbox").checked = false; 
+                        document.querySelector(".rm-checkbox").checked = true; 
+                        alert(data.message);
                     }       
         })
         .catch((error) => {
@@ -654,7 +654,7 @@ document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
                     } 
                     else if (data.error==0)
                     {                     
-                        document.querySelector(".curso-checkbox").checked = false;   
+                        document.querySelector(".curso-checkbox").checked = true;   
                         alert(data.message);
                     }      
         })

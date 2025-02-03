@@ -975,10 +975,9 @@ exports.downloadpdftrabajadorOnline = async (req, res) => {
 exports.registerRM=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;    
-  if (req.session.userId>0)  {
-    
-    updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa)   
-    res.json(updateData);
+  if (req.session.userId>0)  {    
+    updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa)      
+    res.json({updateData,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
   }
   else
   {

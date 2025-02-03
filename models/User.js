@@ -631,8 +631,7 @@ static async registrarSolicitudRM(idTrabajador,idEmpresa){
     const pool=await await connectDB();
     try 
     {   
-        const result = await pool.request()        
-      
+        const result = await pool.request()       
         .input('idTrabajador', sql.Int, idTrabajador)
         .input('idEmpresa', sql.Int, idEmpresa)
         .output('retorno', sql.VarChar)  // Agregar el parámetro de salida
