@@ -61,7 +61,7 @@ async function descargarPDF(endpoint, documentId, button, columnIndex) {
 
       icon.style.color = 'Green'; // Éxito
   } catch (error) {
-      console.error('Error en la descarga:', error);
+      Notiflix.Notify.warning( error);  
       icon.style.color = 'Red'; // Error
   }
 }

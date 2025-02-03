@@ -54,10 +54,10 @@ btnmodificarpersonal.addEventListener('click',()=>{
         })
         .then(response => response.json())
         .then(data => {     
-            console.log(data.error);      
+              
             if (data.error==1)
             {
-                console.log(data.message);
+                
                 if(data.message==1){     
                                    
                     window.location.reload();
@@ -73,7 +73,7 @@ btnmodificarpersonal.addEventListener('click',()=>{
             }
         })
         .catch((error) => {
-            console.error('Error:', error);
+            Notiflix.Notify.warning( error);
             
         }); 
     }
@@ -193,7 +193,7 @@ btnregistrarpersonal.addEventListener('click',()=>{
                 }
             })
             .catch((error) => {
-            console.error('Error:', error);
+                Notiflix.Notify.warning( error);
             }); 
     }
     else{
@@ -267,10 +267,10 @@ $(document).on("focusout", ".edit-input", function() {
         })
         .then(response => response.json())
         .then(data => {
-           console.log(data);
+           
         })
         .catch((error) => {
-        console.error('Error:', error);
+            Notiflix.Notify.warning( error);
         }); 
 });
 
@@ -332,7 +332,7 @@ botones.forEach((boton) => {
                     UFNac.value = data.updateData?.[0]?.FNac ? data.updateData[0].FNac.split('T')[0]  : '';
                 })
                 .catch((error) => {
-                console.error('Error:', error);
+                    Notiflix.Notify.warning( error);
                 });
         }
         else if (idBoton == 'btnInformacion'){
@@ -422,11 +422,11 @@ $('#cmbcentrospersonal').on('change', function() {
             // Agregar evento a los botones generados
             agregarEventosABotones();  // Llama a la función que añade eventos
         } else {
-            console.error('La respuesta no es un array');
+            Notiflix.Notify.failure('La respuesta no es un array');
         }
     })
     .catch((error) => {
-        console.error('Error:', error);
+        Notiflix.Notify.warning( error);
     });
 });
 
@@ -480,7 +480,7 @@ function agregarEventosABotones() {
                                            
                         })
                         .catch((error) => {
-                        console.error('Error:', error);
+                            Notiflix.Notify.warning( error);
                         });
                 }
                 else if (idBoton === 'btnInformacion'){
@@ -502,21 +502,21 @@ function agregarEventosABotones() {
             })
             .then(response => response.json())
             .then(data => {
-                        if (data !='NO') {
-                       
-                            // Encuentra el label dentro de la misma fila y actualiza su contenido
-                            const label = row.querySelector(".inscheckbox label");
-                            if (label) {
-                                label.textContent = data; // Inserta el valor devuelto
-                            }
-                        }  
-                        else
-                        {
-                            document.querySelector(".rm-checkbox").checked = false; 
-                        }            
+                if (data.updateData !='NO') {
+                    // Encuentra el label dentro de la misma fila y actualiza su contenido
+                    const label = row.querySelector(".inscheckbox label");
+                    if (label) {
+                        label.textContent = data; // Inserta el valor devuelto
+                    }
+                }
+                else
+                {
+                    document.querySelector(".rm-checkbox").checked = true; 
+                    Notiflix.Notify.failure(data.message);
+                }       
             })
             .catch((error) => {
-                console.error('Error:', error);
+                Notiflix.Notify.warning( error);
                 document.querySelector(".rm-checkbox").checked = false; 
             });
         });
@@ -546,11 +546,11 @@ function agregarEventosABotones() {
                 else if (data.error==0)
                 {                     
                     document.querySelector(".curso-checkbox").checked = false;   
-                    alert(data.message);
+                    Notiflix.Notify.failure(data.message);
                 }    
             })
             .catch((error) => {
-                console.error('Error:', error);
+                Notiflix.Notify.warning( error);
                 document.querySelector(".curso-checkbox").checked = false; 
             });
         });
@@ -565,7 +565,7 @@ function cargarInformacion(idTrabajador){
         },
         body: JSON.stringify(data)
     }).catch((error) => {
-        console.error('Error al enviar los datos:', error);
+        Notiflix.Notify.warning( error);
     });
 }
 
@@ -607,7 +607,7 @@ function redirigirConPost(url, data) {
         })
         .then(response => response.json())
         .then(data => {    
-                    console.log(data);                
+                         
                     if (data.updateData !='NO') {
                         // Encuentra el label dentro de la misma fila y actualiza su contenido
                         const label = row.querySelector(".inscheckbox label");
@@ -618,11 +618,11 @@ function redirigirConPost(url, data) {
                     else
                     {
                         document.querySelector(".rm-checkbox").checked = true; 
-                        alert(data.message);
+                        Notiflix.Notify.failure(data.message);
                     }       
         })
         .catch((error) => {
-            console.error('Error:', error);
+            Notiflix.Notify.warning( error);
             document.querySelector(".rm-checkbox").checked = false; 
         });
     });
@@ -655,11 +655,11 @@ document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
                     else if (data.error==0)
                     {                     
                         document.querySelector(".curso-checkbox").checked = true;   
-                        alert(data.message);
+                        Notiflix.Notify.failure(data.message);
                     }      
         })
         .catch((error) => {
-            console.error('Error:', error);
+            Notiflix.Notify.warning( error);
             document.querySelector(".curso-checkbox").checked = false; 
         });
     });

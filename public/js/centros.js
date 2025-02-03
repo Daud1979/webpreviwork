@@ -79,7 +79,7 @@ $(document).on("focusout", ".edit-input", function() {
     .then(response => response.json())
     .then(data => {
         if (data.estado == 1) { // Si hay un error en el servidor
-            alert(data.message);
+            Notiflix.Notify.warning(data.message);
 
             // Restaurar el valor anterior
             parentTd.text(data.valorAnterior); // Cambia el texto visible en la celda
@@ -91,8 +91,8 @@ $(document).on("focusout", ".edit-input", function() {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert("Error de conexión. Restaurando el valor original.");
+        Notiflix.Notify.warning( "Error de conexión. Restaurando el valor original.");
+       
         parentTd.text(originalValue); // Restaurar el valor original si hay error de red
     });
 });
@@ -179,7 +179,7 @@ btncentromodal.addEventListener('click',()=>{
           
             })
             .catch((error) => {
-            console.error('Error:', error);
+                Notiflix.Notify.warning( error);
             }); 
     }
     else{

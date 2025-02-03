@@ -69,10 +69,10 @@ $(document).on("focusout", ".edit-input", function() {
         })
         .then(response => response.json())
         .then(data => {
-           console.log(data);
+           
         })
         .catch((error) => {
-        console.error('Error:', error);
+            Notiflix.Notify.warning( error);
         }); 
 });
 
@@ -133,7 +133,7 @@ async function descargarpdf(documentId, button) {
 
         icon.style.color = 'Green'; // Cambiar color a verde si la descarga fue exitosa
     } catch (error) {
-        console.error('Error en la descarga:', error);
+        Notiflix.Notify.warning(error);
         icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
     }
 }

@@ -38,7 +38,7 @@ btnsendform.addEventListener("click", () => {
                 }
             })
             .catch((error) => {
-            console.error('Error:', error);
+                Notiflix.Notify.warning(error);
             }); 
     }
 });

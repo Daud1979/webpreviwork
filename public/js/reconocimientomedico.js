@@ -74,7 +74,7 @@ async function descargarpdfTrabajador(documentId, button) {
   
         icon.style.color = 'Green'; // Cambiar color a verde si la descarga fue exitosa
     } catch (error) {
-        console.error('Error en la descarga:', error);
+        Notiflix.Notify.warning( error);
         icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
     }
   }

@@ -47,7 +47,7 @@ btnModificarEmpresa.addEventListener('click',()=>{
                     }
                 })
                 .catch((error) => {
-                console.error('Error:', error);
+                    Notiflix.Notify.warning( error);
                 }); 
         }
     }
@@ -145,11 +145,11 @@ function mostrarpdf(btnclick){
           }
           else
           {
-            alert(data.message);
+            Notiflix.Notify.warning(data.message);
           }
         })
         .catch((error) => {
-        console.error('Error:', error);
+            Notiflix.Notify.warning( error);
         });
 }
 
