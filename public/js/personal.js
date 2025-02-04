@@ -608,11 +608,12 @@ function redirigirConPost(url, data) {
         .then(response => response.json())
         .then(data => {    
                          
-                    if (data.updateData !='NO') {
+                    if (data.updateData != 'NO') {
                         // Encuentra el label dentro de la misma fila y actualiza su contenido
                         const label = row.querySelector(".inscheckbox label");
                         if (label) {
-                            label.textContent = data; // Inserta el valor devuelto
+                            label.textContent =data.updateData; // Inserta el valor devuelto
+                            document.querySelector(".rm-checkbox").checked = true; 
                         }
                     }
                     else
@@ -650,6 +651,7 @@ document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
                         const label = row.querySelector(".inscheckboxCurso label");
                         if (label) {
                             label.textContent = data.message; // Inserta el valor devuelto
+                            document.querySelector(".curso-checkbox").checked = true;   
                         }
                     } 
                     else if (data.error==0)

@@ -976,7 +976,8 @@ exports.registerRM=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;    
   if (req.session.userId>0)  {    
-    updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa)      
+    objidContrato= await User.obtenerContrato(idEmpresa);        
+    updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa,objidContrato[0].idContrato);    
     res.json({updateData,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
   }
   else

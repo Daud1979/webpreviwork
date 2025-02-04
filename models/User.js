@@ -627,13 +627,14 @@ static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,tele
     }
 }
 
-static async registrarSolicitudRM(idTrabajador,idEmpresa){
+static async registrarSolicitudRM(idTrabajador,idEmpresa,idContrato){
     const pool=await await connectDB();
     try 
     {   
         const result = await pool.request()       
         .input('idTrabajador', sql.Int, idTrabajador)
         .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idContrato', sql.Int, idContrato)
         .output('retorno', sql.VarChar)  // Agregar el parámetro de salida
         .execute('REGISTRAR_SOLICITUDRM');
         return result.output.retorno
