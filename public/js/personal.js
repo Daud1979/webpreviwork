@@ -377,7 +377,7 @@ $('#cmbcentrospersonal').on('change', function() {
                         <td class="align-left" data-id="${item.idTrabajador}">${item.nombres}</td>
                         <td class="align-left" data-id="${item.idTrabajador}">${item.apellidos}</td>
                         <td class="align-left" data-id="${item.idTrabajador}">${item.Puesto}</td>
-                        <td class="align-left" data-id="${item.idTrabajador}">${item.FNac}</td>
+                       
                         <td class="align-right" data-id="${item.idTrabajador}">${item.Registro}</td>
                         <td class="align-right" id="tdbaja" data-id="${item.idTrabajador}">${item.Baja}</td>
                         <td class="align-center estado" data-id="${item.idTrabajador}">${item.Estado}</td>
@@ -485,7 +485,7 @@ function agregarEventosABotones() {
                 }
                 else if (idBoton === 'btnInformacion'){
                     
-                    redirigirConPost('/home/trabajador/informacion',{idTrabajador});
+                    redirigirConPost('/home/trabajador/formacion',{idTrabajador});
                 }
             });
         });
