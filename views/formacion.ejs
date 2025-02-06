@@ -75,60 +75,48 @@
             <li class="nav-item" role="presentation"><!--formacion-->
                 <form method="POST" action="/home/trabajador/formacion">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
-                        <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden"      id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
-                        <% }) %>
-                    <% } %>
+                        <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>     
                     <button type="submit" class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Formación</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--informacion-->
                 <form method="POST" action="/home/trabajador/informacion">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
-                        <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden"     id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
-                        <% }) %>
-                    <% } %>
+                        <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>     
                     <button type="submit" class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--reconocimiento-->
                 <form method="POST" action="/home/trabajador/reconocimiento">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
-                        <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden"    id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
-                        <% }) %>
-                    <% } %>
+                        <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>     
                     <button type="submit" class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Reconocimiento Médico R.M.</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--consentimiento renuncia-->
                 <form method="POST" action="/home/trabajador/concentimientorenuncia">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
-                        <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden"   id="idTrabajador1" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
-                        <% }) %>
-                    <% } %>
-                    <button type="submit" class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Consentimiento, Renuncia R.M.</button>
+                        <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>     
+                    <button type="submit" class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Aceptación, Renuncia R.M.</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--autorizacion-->
                 <form method="POST" action="/home/trabajador/autorizacion">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
-                        <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden"  id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
-                        <% }) %>
-                    <% } %>
+                        <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>     
                     <button type="submit" class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" role="tab" aria-controls="tab5" aria-selected="false">Autorización</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--epis-->
                 <form method="POST" action="/home/trabajador/epis">
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
-                        <% listTrabajador.forEach(trabajador => { %>
-                            <input type="hidden" id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
-                        <% }) %>
-                    <% } %>
+                        <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>     
                     <button type="submit" class="nav-link" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Epis</button>
                 </form>
             </li>

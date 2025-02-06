@@ -110,7 +110,7 @@
                             <input type="hidden"   id="idTrabajador1" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Consentimiento, Renuncia R.M.</button>
+                    <button type="submit" class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Aceptación, Renuncia R.M.</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--autorizacion-->
@@ -145,12 +145,15 @@
                     </div>
                     <div class="datospersonalinformacion ">
                        <div id="tablaContainer" class="table-responsive ">                            
-                            <div class="datosGral ms-0 me-0 p-0 pt-1 pb-1 col-12 col-xl-6">
-                                <div class="input-group m-0 p-0 input-group-sm">
-                                    <span class="input-group-text" id="basic-addon1">Buscar</span>
-                                    <input type="text" id="buscadorinformacionglobal" class="form-control " style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
-                                </div>
-                            </div>  
+                        <div class="datosGraluploda  ms-0 me-0 p-0 pt-1 pb-1 col-12 col-xl-6">
+                            <div class="input-group m-0 p-0 input-group-sm">
+                                <span class="input-group-text" id="basic-addon1">Buscar</span>
+                                <input type="text" id="buscadorinformacionglobal" class="form-control " style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
+                                <button id="btncargarTrabajador" data-bs-toggle="modal" onclick="carga()" data-bs-target="#modalsubirpdf" class="btn btn-sm m-0 p-0" > 
+                                    Subir Documento PDF                                    
+                                </button>
+                            </div>                           
+                        </div>     
                             <div class="table-wrapper overflow-auto" style="max-height: 400px;">
                                 <table class="table table-bordered table-striped table-sm shadow">
                                     <thead  class="shadow ">
@@ -161,7 +164,7 @@
                                             <th>Documentos</th>                            
                                             <th>Observacion</th>
                                             <th>Registro</th>                            
-                                            <th id="tdbotonesdescarga">Subir </th>                   
+                                                     
                                             <th id="tdbotonesdescarga">Descargar</th>                                                
                                         </tr>
                                     </thead>
@@ -173,13 +176,7 @@
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Categoria %></td>
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
-                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>
-                                            <td>                                 
-                                                <button id="btncargarTrabajador" data-bs-toggle="modal" onclick="carga(<%=item.idDocumentoProyecto%>)" data-bs-target="#modalsubirpdf" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idDocumentoProyecto %>"> 
-                                                    <i id="idsubir" class="material-icons"><%= "cloud_upload" %></i>
-                                                    <span class="tooltip-text">Subir Documento</span>
-                                                </button>
-                                            </td>
+                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>                                           
                                             <td>
                                                 <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
                                                     <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
@@ -260,10 +257,10 @@
                     <div class="datosGral ms-0 me-0 p-0 mb-1">
                         <label class="form-label">Seleccione un Archivo PDF</label>
                         <div class="input-group m-0 p-0 input-group-sm">                          
-                            <label id="lblpdffile" for="pdfFile" class="btn"><i id="idiconssubir" class="material-icons">search</i>                     </label>                        
+                            <label id="lblpdffile" for="pdfFile" class=""><i id="idiconssubir" class="material-icons">search</i>                     </label>                        
                             <input type="file" class="custom-file-input" id="pdfFile" name="pdfFile" accept="application/pdf" required>
                             <input type="text" class="form-control" id="fileName" placeholder="Ningún archivo seleccionado" readonly>
-                            <input type="hidden" id="pdfFileName" name="pdfFileName">
+                            <input type="hidden" id="pdfFileName" class="form-control"name="pdfFileName">
                         </div>                        
                     </div>
                     <div class="datosGral ms-0 me-0 p-0">
@@ -280,11 +277,16 @@
                     </div>      
                 </div>
                 <div class="modal-footer">
-                   
-                    <input id="idTrabajadorupload" name="idTrabajadorupload" type="text">                  
-                    <input type="text" id="idDocumentoupload" name="idDocumentoupload">
+                    <% if (listDocumento.length > 0) { %>
+                        <% let item = listDocumento[0]; %>                                    
+                        <input type="text" hidden id="idDocumentoupload" name="idDocumentoupload" value="<%=item.idDocumentoProyecto%>">
+                    <% } %>      
+                    <% if (listTrabajador && listTrabajador.length > 0) { %>
+                        <input type="text" hidden id="idTrabajadorupload" name="idTrabajadorupload" value="<%= listTrabajador[0].idTrabajador %>">
+                    <% } %>              
+                 
                     <div id="errorMessage" class="text-danger d-none">Por favor, seleccione un archivo PDF antes de enviar.</div>
-                    <button type="submit" id="btnregistrarpdf" class="shadow btn text-white btn-sm">Subir</button>                   
+                    <button type="button" id="btnregistrarpdf" class="shadow btn text-white btn-sm">Subir</button>                   
                     <button type="button" id="closeRegistrarPersonal" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>        
                 </div>
             </div>

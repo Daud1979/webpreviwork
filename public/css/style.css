@@ -3,7 +3,7 @@ body {
 }
 .navbar {
   margin-top: 0;
-  background: #4058FB;
+  background: #3a5fd6;
   border-bottom: .15rem solid rgb(24, 24, 24); 
 }
 a{
@@ -12,7 +12,7 @@ a{
   text-decoration: none;
 }
 .material-icons {
-  color:#509aee; /* Cambiar el color */
+  color:#27a708; /* Cambiar el color */
   font-size: 70px; /* Cambiar el tamaño */
   vertical-align: middle; /* Alinear con el texto */
   margin: 5px; /* Espacio alrededor */
@@ -53,7 +53,7 @@ margin: 0;
 padding: 0;
 }
 #iaddtrabajador:hover{
-color: #4058FB;
+color: #3a5fd6;
 }
 #addtrabajador{
  margin: 0; 
@@ -141,27 +141,27 @@ text-align: center;
 /* Fondo de pantalla completa para el modal */
 .boot{
 color: white;
-background: #4058FB;
+background: #3a5fd6;
 box-shadow: 2px 1px rgb(175, 175, 175);
 }
 #btnModificarEmpresa{
-background: #4058FB;
+background: #3a5fd6;
 }
 #btnregistrarpersonalmodal{
-background:#4058FB;
+background:#3a5fd6;
 color:#fdfdfd;
 box-shadow: 2px 1px rgb(175, 175, 175);
 }
 #btnregistrarpersonal{
-background:#4058FB;
+background:#3a5fd6;
 color:#fdfdfd;
 }
 #btnmodificarpersonal{
-background:#4058FB;
+background:#3a5fd6;
 color:#fdfdfd;
 }
 #btnregistrarcentro{
-background:#4058FB;;
+background:#3a5fd6;
 color:#fdfdfd;
 }
 #btnregistrarcentro:hover{
@@ -173,7 +173,7 @@ background:#8e8e8f;
 color:#0a0a0a;
 }
 .btnidpersonalfila{
-color:#4058FB;
+color:#3a5fd6;
 }
 .btnidpersonalfilasubir{
 color:#046c8b;
@@ -184,7 +184,7 @@ text-shadow:5px 2px rgb(116, 114, 114,0.3);
 
 }
 .modal-header{
-background:  #4058FB;
+background:  #3a5fd6;
 
 }
 #spanerror{
@@ -249,7 +249,7 @@ font-size: 1.4rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color: rgb(19, 59, 235);
+color: #3a5fd6;
 }
 #iautorizaciones{
 text-shadow: none; 
@@ -372,11 +372,7 @@ pointer-events:auto;
   position: absolute;
   z-index: -1;
 }
-#lblpdffile{
-  font-size: 0.9rem;
-  background:#057294;
-  color: white;
-}
+
 #pdfFile{
   font-size: 1rem;
 }
@@ -396,10 +392,7 @@ pointer-events:auto;
   color: white;
   text-shadow: none;
 }
-#btnregistrarpdf{
-  background:#057294;
-  color:#fdfdfd;
-  }
+
   table th{
     position: sticky; top: 0; background: white; z-index: 2;
   }
@@ -425,6 +418,11 @@ pointer-events:auto;
 }
 .datosGral{
   padding: 1rem;  
+ 
+}
+.datosGraluploda{
+  padding: 1rem;  
+  display: flex;
 }
 .datospersonalinformaciongral input {
   pointer-events: none;  /* Evita clics y escritura */
@@ -434,7 +432,7 @@ pointer-events:auto;
 }
 
 .toggleButton{
-  background: solid 1px #4058FB;
+  background: solid 1px #3a5fd6;
   padding: 0.5rem;
 }
 
@@ -502,3 +500,18 @@ td {
   padding: 0;
   margin: 0;
 }
+#btncargarTrabajador{
+  background: #3a5fd6;
+  color: white;
+}
+#lblpdffile{
+  font-size: 0.5rem;
+  background:#3a5fd6;
+  color: white;
+  border-radius:  0.5rem 0 0 0.5rem ;
+}
+#btnregistrarpdf{
+  background:#3a5fd6;
+  color:#fdfdfd;
+  
+  }

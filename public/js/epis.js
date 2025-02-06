@@ -7,9 +7,52 @@ const fileNameDisplay = document.getElementById('fileName');
 const errorMessage = document.getElementById('errorMessage');
 const  closeRegistrarPersonal = document.querySelector('#closeRegistrarPersonal');
 
+document.getElementById("btnregistrarpdf").addEventListener("click", function () {
+  const form = document.getElementById("uploadForm");
+  const formData = new FormData(form);
+  const fileInput = document.getElementById("pdfFile");
+  const errorMessage = document.getElementById("errorMessage");
+  const submitButton = document.getElementById("btnregistrarpdf");
 
+  // Validar que se haya seleccionado un archivo
+  if (fileInput.files.length === 0) {
+      errorMessage.classList.remove("d-none");
+      Notiflix.Notify.failure("Por favor, seleccione un archivo PDF.");
+      return;
+  }
 
-function carga(documentId){
+  errorMessage.classList.add("d-none"); // Ocultar mensaje de error si el archivo es válido
+
+  // ✅ Mostrar mensaje de "Enviando documento..."
+  Notiflix.Notify.info("Enviando el documento, por favor espere...");
+
+  // Deshabilitar el botón mientras se envía
+  submitButton.disabled = true;
+
+  // Enviar datos al servidor con fetch
+  fetch("/home/uploadpdf", {
+      method: "POST",
+      body: formData
+  })
+  .then(response => response.json()) // Convertir respuesta a JSON
+  .then(data => {
+      if (data.success) {
+          Notiflix.Notify.success("Documento subido correctamente.");
+          setTimeout(() => window.location.reload(), 2000); // Recargar tras éxito con delay
+      } else {
+          Notiflix.Notify.failure("Error en el servidor: " + data.message);
+      }
+  })
+  .catch(error => {
+      console.error("Error en la petición:", error);
+      Notiflix.Notify.failure("Hubo un error al subir el archivo.");
+  })
+  .finally(() => {
+      submitButton.disabled = false; // Habilitar el botón nuevamente
+  });
+});
+
+function carga(){
   const idDocumentoupload = document.querySelector('#idDocumentoupload');
   idDocumentoupload.value=documentId;
   const idTrabajadorupload = document.querySelector('#idTrabajadorupload');

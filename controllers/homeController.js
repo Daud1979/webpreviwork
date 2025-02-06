@@ -588,76 +588,62 @@ exports.uploadpdfepis = async (req, res) => {
 };
 
 exports.uploadpdf = async (req, res) => {  
- 
   if (req.session.userId > 0) {
     const idTrabajador = req.body.idTrabajadorupload.split('-');
     const bucketName = process.env.S3_BUCKET_NAME;
 
     try {
-      // Verifica que el archivo haya sido cargado
       if (!req.file) {
-        return res.status(400).json({ error: 'No se ha seleccionado ningún archivo' });
+        return res.status(400).json({ success: false, message: "No se ha seleccionado ningún archivo" });
       }
-      // Generar el nombre del archivo para AWS
-      const docAWS = `${getFormattedDate()}.pdf`; // Nombre del archivo en S3
+
+      const docAWS = `${getFormattedDate()}.pdf`;
       const idEmpresa = req.session.userId;
       const observacion = req.body.Observacion;
-      let fechaAlta = req.body.FAlta;
+      let fechaAlta = req.body.FAlta || new Date();
       const idDocumento = req.body.idDocumentoupload;
       const nombrepdf = req.body.pdfFileName;
       const archivo = req.file;
 
-      // Si no se proporciona `fechaAlta`, usar la fecha actual
-      if (!fechaAlta || fechaAlta.trim() === '') {
-        fechaAlta = new Date();
-      } else {
-        fechaAlta = new Date(fechaAlta); // Asegurarse de que sea una instancia de Date
-      }
-      // Subir los datos al sistema (guardar la información en la base de datos)
+      fechaAlta = new Date(fechaAlta);
+
       const datosAWS = await User.cargarpdfTrabajador(
-        idTrabajador[1],
-        idDocumento,
-        idEmpresa,
-        nombrepdf,
-        docAWS,
-        observacion,
-        fechaAlta
+        idTrabajador[1], idDocumento, idEmpresa, nombrepdf, docAWS, observacion, fechaAlta
       );
 
-      // Mover el archivo cargado a la ubicación deseada en el servidor (carpeta uploads)
       const nuevaRuta = path.join(__dirname, '../uploads', archivo.originalname);
       fs.renameSync(archivo.path, nuevaRuta);
 
-      // Preparar los parámetros para subir el archivo a S3
       const params = {
         Bucket: bucketName,
-        Key: datosAWS.documentoAWS, // Nombre que tendrá el archivo en S3
-        Body: fs.createReadStream(nuevaRuta), // Usamos un stream para enviar el archivo a S3
-        ContentType: archivo.mimetype, // Tipo MIME del archivo
+        Key: datosAWS.documentoAWS,
+        Body: fs.createReadStream(nuevaRuta),
+        ContentType: archivo.mimetype,
       };
 
-      // Subir el archivo a S3
       await s3.send(new PutObjectCommand(params));
 
-      // Eliminar el archivo del servidor después de subirlo a S3
       fs.unlinkSync(nuevaRuta);
 
-      // Consultar listas relacionadas
       const listTrabajador = await User.seleccTrabajador(idEmpresa, idTrabajador[1]);
-      const listDocumento = await User.listInformacion(idEmpresa, datosAWS.idDocumento, idTrabajador_);
+      const listDocumento = await User.listInformacion(idEmpresa, datosAWS.idDocumento, idTrabajador[1]);
       const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa, datosAWS.idDocumento, idTrabajador[1]);
 
-      // Renderizar la vista o redirigir según el estado de la sesión
-      res.render('informacion', { listTrabajador, listDocumento, listDocumentoTrabajador });
+      // ✅ Enviar JSON en lugar de renderizar vista
+      res.json({
+        success: true      
+      
+      });
 
     } catch (error) {
-      console.error('Error al procesar la carga del archivo:', error.message);
-      res.render('errorupload', { idTrabajador }); // Pasar el mensaje de error a la vista
+      console.error("Error al procesar la carga del archivo:", error.message);
+      res.status(500).json({ success: false, message: error.message });
     }
   } else {
-    res.redirect('/');
+    res.status(401).json({ success: false, message: "Sesión no válida" });
   }
 };
+
 
             /*MODIFICAR Y REGISTRAR AQUI, VERIFICAR SI HAY SESSION ACTIVA*/
 
