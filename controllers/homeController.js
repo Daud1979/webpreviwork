@@ -1108,7 +1108,7 @@ async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, 
                   <technical></technical>
                   <employment>${puesto}</employment>
                   <idCourse>
-                      <int>${idCourse}</int>
+                      <int>${parseInt(idCourse)}</int>
                   </idCourse>
                   <language>es</language>
                   <sendEMail>true</sendEMail>
@@ -1119,7 +1119,7 @@ async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, 
                   <addicionalFields>
                       <AddFieldsValue>
                           <idField>443</idField>
-                          <value>${idContrato}</value>
+                          <value>${parseInt(idContrato)}</value>
                           <namefield>Contrato</namefield>
                       </AddFieldsValue>
                       <AddFieldsValue>
