@@ -1071,7 +1071,7 @@ exports.registerCourseOnline = async (req, res) => {
     res.json({ message: 'Error interno en el servidor', error: 0, details: error.message });
   }
 };
-
+/*ese mensaje de donde sale*/
 
 
 async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, idempresa, empresa, puesto, idCourse, idContrato) {
