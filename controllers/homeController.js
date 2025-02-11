@@ -1008,69 +1008,67 @@ exports.registerRM=async(req,res)=>{
 
 
 // }
-/*funcion de registro a preventor*/
 exports.registerCourseOnline = async (req, res) => {
-  try {
-    const datos = req.body;
-    const idEmpresa = req.session.userId;
+  const datos = req.body;
+  const idEmpresa = req.session.userId;
 
-    if (!idEmpresa || idEmpresa <= 0) {
-      return res.redirect('/');
-    }
-
-    const updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador, idEmpresa);
-    const updateContrato = await User.obtenerContrato(idEmpresa);
-    
-    // Validamos que los arreglos no estén vacíos antes de acceder a sus elementos
-    if (!updateData.length || !updateContrato.length) {
-      return res.json({ message: 'No se encontraron datos para el trabajador o contrato.', error: 0 });
-    }
-
-    const verificarTrabajadorCurso = await User.verificarTrabajadorCurso(
-      datos.idTrabajador,
-      idEmpresa,
-      updateContrato[0].idContrato,
-      updateData[0].idCourse
-    );
-
-    if (Array.isArray(verificarTrabajadorCurso) && verificarTrabajadorCurso.length > 0) {
-      return res.json({ message: 'EL TRABAJADOR YA SE ENCUENTRA REGISTRADO', error: 0 });
-    }
-
-    // Intentamos registrar al alumno
+  if (req.session.userId > 0) {
     try {
-      const idStudent = await registrarAlumnosCurso(
-        updateData[0].nif,
-        updateData[0].nombres,
-        updateData[0].apellidos,
-        updateData[0].correo,
-        updateData[0].telefono,
-        updateData[0].idempresa,
-        updateData[0].empresa,
-        updateData[0].puesto,
-        updateData[0].idCourse,
-        updateContrato[0].idContrato
-      );
-
-      const fechadevolver = await User.registroOnline(
+      // Obtener los datos necesarios
+      const updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador, idEmpresa);
+      const updateContrato = await User.obtenerContrato(idEmpresa);
+      const verificarTrabajadorCurso = await User.verificarTrabajadorCurso(
+        datos.idTrabajador,
         idEmpresa,
         updateContrato[0].idContrato,
-        datos.idTrabajador,
-        updateData[0].idCourse,
-        idStudent,
-        updateData[0].Course
+        updateData[0].idCourse
       );
 
-      res.json({ message: fechadevolver, error: 1 });
+      if (Array.isArray(verificarTrabajadorCurso) && verificarTrabajadorCurso.length === 0) {
+        // Si el trabajador no está registrado en el curso, proceder con el registro
+
+        // Esperamos a obtener el idStudent antes de continuar
+        const idStudent = await registrarAlumnosCurso(
+          updateData[0].nif,
+          updateData[0].nombres,
+          updateData[0].apellidos,
+          updateData[0].correo,
+          updateData[0].telefono,
+          updateData[0].idempresa,
+          updateData[0].empresa,
+          updateData[0].puesto,
+          updateData[0].idCourse,
+          updateContrato[0].idContrato
+        );
+
+        // Verificamos si idStudent es válido antes de continuar
+        if (!idStudent || idStudent.trim() === '') {
+          return res.json({ message: 'El idStudent no se obtuvo correctamente', error: 0 });
+        }
+
+        // Ahora que idStudent es válido, continuar con el registro
+        const fechadevolver = await User.registroOnline(
+          idEmpresa,
+          updateContrato[0].idContrato,
+          datos.idTrabajador,
+          updateData[0].idCourse,
+          idStudent,
+          updateData[0].Course
+        );
+
+        res.json({ message: fechadevolver, error: 1 });
+      } else {
+        res.json({ message: 'EL TRABAJADOR YA SE ENCUENTRA REGISTRADO', error: 0 });
+      }
     } catch (error) {
-      console.error('Error al registrar el alumno en el curso:', error);
-      res.json({ message: 'PROBLEMA AL REGISTRAR EL CURSO', error: 0, details: error.message });
+      console.error(error);
+      res.json({ message: 'PROBLEMA AL REGISTRAR EL CURSO', error: 0 });
     }
-  } catch (error) {
-    console.error('Error en registerCourseOnline:', error);
-    res.json({ message: 'Error interno en el servidor', error: 0, details: error.message });
+  } else {
+    res.redirect('/');
   }
 };
+
 /*ese mensaje de donde sale*/
 
 
