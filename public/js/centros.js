@@ -32,7 +32,7 @@ $(document).on("click", "#tabla-centros td[data-id]", function() {
     // Verifica si la celda es de la columna `idCentro` o `ntrabajadorCentro`
     indexColumna = $(this).index();
     
-    if (indexColumna === 0 || indexColumna === 3 || indexColumna === 4 || indexColumna === 9) {
+    if (indexColumna === 0 || indexColumna === 3 ||indexColumna===5 || indexColumna === 4 || indexColumna === 9) {
         // No permitir edición en la columna de `idCentro` (index 0) ni en `ntrabajadorCentro` (index 8)
         return;
     }

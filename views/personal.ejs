@@ -69,14 +69,14 @@
                                     <td class="align-right" id="tdbaja" data-id="<%= item.idTrabajador %>"><%= item.Baja %></td>
                                     <td class="align-left estado" id="tdestado" data-id="<%= item.idTrabajador %>"><%= item.Estado %></td>       
                                     <td>
-                                        <input type="checkbox" class="rm-checkbox large-checkbox" <%= item.fechaRM ? 'checked' : '' %>  data-id="<%= item.idTrabajador %>">
+                                        <input type="checkbox" class="rm-checkbox large-checkbox" <%= item.fechaRM ? 'checked' : '' %>  <%=  item.Estado == 'Baja' ? 'disabled' : '' %>      data-id="<%= item.idTrabajador %>">
                                         <div class="inscheckbox">
                                             <label ><%= item.fechaRM %></label>
                                             
                                         </div>
                                     </td>
                                     <td >                                       
-                                        <input type="checkbox" class="curso-checkbox large-checkbox" <%= item.fechaCursoOnline ? 'checked' : '' %> data-id="<%= item.idTrabajador %>">
+                                        <input type="checkbox" class="curso-checkbox large-checkbox" <%= item.fechaCursoOnline ? 'checked' : '' %> <%=  item.Estado == 'Baja' ? 'disabled' : '' %> data-id="<%= item.idTrabajador %>"> 
                                         <div class="inscheckboxCurso">
                                             <label ><%= item.fechaCursoOnline %></label>
                                         </div>

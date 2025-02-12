@@ -385,7 +385,7 @@ $('#cmbcentrospersonal').on('change', function() {
                         <!-- Primer Checkbox (fechaRM) -->
                         <td>
                             <input type="checkbox" class="rm-checkbox large-checkbox" 
-                                ${item.fechaRM ? 'checked' : ''} 
+                                ${item.fechaRM ? 'checked' : ''} ${item.Estado == 'Baja' ? 'disabled' : ''} 
                                 data-id="${item.idTrabajador}">
                             <div class="inscheckbox">
                                 <label>${item.fechaRM}</label>
@@ -396,7 +396,7 @@ $('#cmbcentrospersonal').on('change', function() {
                         <td class="insCurso">
                             <div class="inslabel">
                                 <input type="checkbox" class="curso-checkbox large-checkbox" 
-                                    ${item.fechaCursoOnline ? 'checked' : ''} 
+                                    ${item.fechaCursoOnline ? 'checked' : ''}   ${item.Estado == 'Baja' ? 'disabled' : ''}
                                     data-id="${item.idTrabajador}">
                             </div>                        
                             <div class="inscheckboxCurso">
@@ -426,7 +426,7 @@ $('#cmbcentrospersonal').on('change', function() {
         }
     })
     .catch((error) => {
-        Notiflix.Notify.warning( error);
+        Notiflix.Notify.warning( "quepaso");
     });
 });
 

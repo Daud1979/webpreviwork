@@ -87,13 +87,12 @@ static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEm
     try 
     {
         const result =await pool.request()
-        .input('direccionEmpresa', sql.VarChar, direccionEmpresa)
+      
         .input('encargadoEmpresa', sql.VarChar, encargadoEmpresa)
         .input('email', sql.VarChar, email)
         .input('telefono', sql.VarChar, telefono)
         .input('idEmpresa', sql.Int, idEmpresa)
-        .query(`UPDATE ClienteEmpresa SET direccionEmpresa=@direccionEmpresa, email=@email, encargadoEmpresa=@encargadoEmpresa, telefono=@telefono WHERE idEmpresa=@idEmpresa`);
-          
+        .query(`UPDATE ClienteEmpresa SET email=@email, encargadoEmpresa=@encargadoEmpresa, telefono=@telefono WHERE idEmpresa=@idEmpresa`);          
         return (result.rowsAffected[0])
     } 
     catch (error) 
@@ -809,7 +808,7 @@ static async obtenerdatosCourseOnline(idTrabajador,idEmpresa){
     const pool= await connectDB();   
     const result =await pool.request()        
     .input('idTrabajador', sql.Int, idTrabajador)
-    .query(`select correo=te.email,puesto=pte.Nombre,nif=te.NIF,nombres,apellidos,telefono=te.telefono,idempresa=cc.idEmpresa,empresa=cc.empresa,fechaAlta=GETDATE(),Course,idCourse
+    .query(`select correo=te.email,puesto=pte.Nombre,nif=te.NIF,nombres,apellidos,telefono=te.telefono,idempresa=cc.idEmpresa,empresa=cc.empresa,fechaAlta=GETDATE(),Course,idCourse,estado=te.estado
                                     from TrabajadorEmpresa te inner join
 	                                     Contratos cc on (te.idEmpresa=cc.idEmpresa) inner join	 
 	                                     PuestoTrabajoEmpresa pte on (pte.idPuesto=te.idPuesto)

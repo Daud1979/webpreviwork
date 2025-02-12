@@ -5,10 +5,8 @@ btnCenterAll = document.querySelector('#btnCenterAll');
 btnModificarEmpresa.addEventListener('click',()=>{
     email =document.querySelector('#emailempresa').value;
     encargado=document.querySelector('#encargadoempresa').value;
-    telefono=document.querySelector('#telefonoempresa').value;
-    direccion=document.querySelector('#direccionempresa').value;
-    
-    const data={email,encargado,telefono,direccion}
+    telefono=document.querySelector('#telefonoempresa').value;   
+    const data={email,encargado,telefono}
     if (!isValidEmail(email)) {
         messagemodificar.classList.add("error"); 
         messagemodificar.innerHTML = "EL FORMATO DEL CORREO ELECTRÓNICO NO ES VÁLIDO";

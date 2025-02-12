@@ -962,9 +962,18 @@ exports.registerRM=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;    
   if (req.session.userId>0)  {    
-    objidContrato= await User.obtenerContrato(idEmpresa);        
-    updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa,objidContrato[0].idContrato);    
-    res.json({updateData,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
+    updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);  
+    objidContrato= await User.obtenerContrato(idEmpresa); 
+        
+    if (updateData[0].estado=='H')
+    {
+      updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa,objidContrato[0].idContrato);    
+      res.json({updateData,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
+    }
+    else
+    {
+      res.json({updateData,message:'EL TRABAJADOR ESTA DE BAJA'});
+    }
   }
   else
   {
@@ -981,8 +990,9 @@ exports.registerCourseOnline=async (req,res)=>{
     updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);  
     updateContrato = await User.obtenerContrato(idEmpresa);    
     verificarTrabajadorCurso = await User.verificarTrabajadorCurso(datos.idTrabajador,idEmpresa,updateContrato[0].idContrato,updateData[0].idCourse);
-    
-    if(Array.isArray( verificarTrabajadorCurso) &&  verificarTrabajadorCurso.length == 0)
+    if (updateData[0].estado=='H')
+    {
+      if(Array.isArray( verificarTrabajadorCurso) &&  verificarTrabajadorCurso.length == 0 )
     { 
       /*cargar */           
        
@@ -991,10 +1001,15 @@ exports.registerCourseOnline=async (req,res)=>{
           res.json({message:fechadevolver,error:1});     
       
         /*fin */
+      }
+      else
+      {
+        res.json({message:'EL TRABAJADOR YA SE ENCUENTRA REGISTRADO',error:0});
+      }
     }
     else
     {
-      res.json({message:'EL TRABAJADOR YA SE ENCUENTRA REGISTRADO',error:0});
+      res.json({message:'EL TRABAJADOR ESTA DE BAJA',error:0});
     }
   }
   else
