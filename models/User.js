@@ -159,7 +159,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
             .input('idEmpresa', sql.Int, idEmpresa)
             .query(`
                 SELECT 
-                    idTrabajador,
+                idTrabajador,
                     idCentro,
                     Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
                     NIF,
@@ -184,7 +184,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
                     END
                 FROM TrabajadorEmpresa t
                 INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
-                WHERE t.idEmpresa = @idEmpresa
+                WHERE t.idEmpresa = @idEmpresa    
             `);
         return result.recordset;
     } catch (error) {
@@ -201,7 +201,33 @@ static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idDocumento', sql.Int, idDocumento)
         .input('idTrabajador', sql.Int, idTrabajador)   
-        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumento ASC) AS n,NIF,nombres=case when nombre =null then '' else nombre end+' '+case when apellidos =null then '' else apellidos end,[PuestoTrabajo]=pte.Nombre,[Registro]=convert(varchar(10),clc.registro,103),[Certificado]=clc.CategoriaDocumentoFuera,Observacion=observacion,clc.documento,idDocumentoProyecto,clc.documentoAWS from TrabajadorEmpresa te inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) inner join DocumentosProyectos clc on (te.idTrabajador=clc.idTrabajador) inner join CentroContratos cc on (cc.idCentro=te.idCentro) where idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa`);          
+        .query(`SELECT 
+    ROW_NUMBER() OVER(ORDER BY clc.idDocumento ASC) AS n,
+    te.NIF,
+    nombres = COALESCE(te.nombres, '') + ' ' + COALESCE(te.apellidos, ''),
+    [PuestoTrabajo] = MAX(pte.Nombre), -- Agregamos MAX para evitar duplicados en esta columna
+    [Registro] = MAX(CONVERT(VARCHAR(10), clc.registro, 103)), -- Lo mismo aquí
+    [Certificado] = MAX(clc.CategoriaDocumentoFuera),
+    Observacion = MAX(clc.observacion),
+    clc.documento,
+    clc.idDocumentoProyecto,
+    clc.documentoAWS
+FROM 
+    TrabajadorEmpresa te
+INNER JOIN 
+    PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
+INNER JOIN 
+    DocumentosProyectos clc ON te.idTrabajador = clc.idTrabajador
+INNER JOIN 
+    CentroContratos cc ON cc.idCentro = te.idCentro
+WHERE 
+  idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa
+GROUP BY
+
+    te.NIF, te.nombres, te.apellidos, clc.documento, clc.idDocumentoProyecto, clc.documentoAWS, clc.idDocumento
+ORDER BY 
+    clc.idDocumento ASC;
+`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -220,7 +246,33 @@ static async listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idL
         .input('idDocumento', sql.Int, idDocumento)
         .input('idListaDocumento', sql.Int, idListaDocumento)
         .input('idTrabajador', sql.Int, idTrabajador)   
-        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumento ASC) AS n,NIF,nombres=case when nombre =null then '' else nombre end+' '+case when apellidos =null then '' else apellidos end,[PuestoTrabajo]=pte.Nombre,[Registro]=convert(varchar(10),clc.registro,103),[Certificado]=clc.CategoriaDocumentoFuera,Observacion=observacion,clc.documento,idDocumentoProyecto,clc.documentoAWS from TrabajadorEmpresa te inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) inner join DocumentosProyectos clc on (te.idTrabajador=clc.idTrabajador) inner join CentroContratos cc on (cc.idCentro=te.idCentro) where idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa and idListaDocumento=@idListaDocumento`);          
+        .query(`SELECT 
+    ROW_NUMBER() OVER(ORDER BY clc.idDocumento ASC) AS n,
+    te.NIF,
+    nombres = COALESCE(te.nombres, '') + ' ' + COALESCE(te.apellidos, ''),
+    [PuestoTrabajo] = MAX(pte.Nombre), -- Agregamos MAX para evitar duplicados en esta columna
+    [Registro] = MAX(CONVERT(VARCHAR(10), clc.registro, 103)), -- Lo mismo aquí
+    [Certificado] = MAX(clc.CategoriaDocumentoFuera),
+    Observacion = MAX(clc.observacion),
+    clc.documento,
+    clc.idDocumentoProyecto,
+    clc.documentoAWS
+FROM 
+    TrabajadorEmpresa te
+INNER JOIN 
+    PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
+INNER JOIN 
+    DocumentosProyectos clc ON te.idTrabajador = clc.idTrabajador
+INNER JOIN 
+    CentroContratos cc ON cc.idCentro = te.idCentro
+WHERE 
+  idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa
+GROUP BY
+
+    te.NIF, te.nombres, te.apellidos, clc.documento, clc.idDocumentoProyecto, clc.documentoAWS, clc.idDocumento
+ORDER BY 
+    clc.idDocumento ASC;
+`);          
         return (result.recordset)
     } 
     catch (error) 

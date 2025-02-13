@@ -120,8 +120,7 @@ exports.informationpersonal=async(req,res)=>{
   else
   {
     idTrabajador=req.body.idTrabajador;
-  }
-  
+  }  
   const idEmpresa = req.session.userId;  
   const idDocumento=15;//esto hay que verpa los otros doc    
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
