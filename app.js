@@ -26,5 +26,5 @@ app.use('/home', homeRoutes);
 app.use((req, res) => {
   res.status(404).render('error', { message: 'Página no encontrada' });
 });
-
-app.listen(3000, () => console.log('Servidor corriendo en http://localhost:3000'));
+PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log('Servidor corriendo en http://localhost: ', PORT));
