@@ -16,6 +16,13 @@ fs.readdir(jsDirectory, (err, files) => {
   files.filter(file => file.endsWith('.js')).forEach(file => {
     const filePath = path.join(jsDirectory, file);
     
+    // Verificar si ya existe un archivo .min.js, y eliminarlo si es necesario
+    const minifiedFilePath = path.join(jsDirectory, file.replace('.js', '.min.js'));
+    if (fs.existsSync(minifiedFilePath)) {
+      fs.unlinkSync(minifiedFilePath);  // Elimina el archivo existente
+      console.log(`Archivo duplicado eliminado: ${minifiedFilePath}`);
+    }
+
     // Lee el contenido del archivo JS
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
@@ -30,7 +37,6 @@ fs.readdir(jsDirectory, (err, files) => {
       }).getObfuscatedCode();
 
       // Escribe el código ofuscado en un nuevo archivo (con .min.js)
-      const minifiedFilePath = path.join(jsDirectory, file.replace('.js', '.min.js'));
       fs.writeFile(minifiedFilePath, obfuscatedCode, (err) => {
         if (err) {
           console.error(`Error al escribir el archivo ofuscado ${file}:`, err);
