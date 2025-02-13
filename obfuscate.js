@@ -20,13 +20,13 @@ fs.readdir(jsDirectory, (err, files) => {
     const minifiedFilePath = path.join(jsDirectory, file.replace('.js', '.min.js'));
     if (fs.existsSync(minifiedFilePath)) {
       fs.unlinkSync(minifiedFilePath);  // Elimina el archivo existente
-      console.log(`Archivo duplicado eliminado: ${minifiedFilePath}`);
+      
     }
 
     // Lee el contenido del archivo JS
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
-        console.error(`Error al leer el archivo ${file}:`, err);
+        //console.error(`Error al leer el archivo ${file}:`, err);
         return;
       }
 
@@ -40,9 +40,7 @@ fs.readdir(jsDirectory, (err, files) => {
       fs.writeFile(minifiedFilePath, obfuscatedCode, (err) => {
         if (err) {
           console.error(`Error al escribir el archivo ofuscado ${file}:`, err);
-        } else {
-          console.log(`Archivo ofuscado y guardado: ${minifiedFilePath}`);
-        }
+        } 
       });
     });
   });

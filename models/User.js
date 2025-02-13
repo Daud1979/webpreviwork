@@ -266,7 +266,7 @@ INNER JOIN
 INNER JOIN 
     CentroContratos cc ON cc.idCentro = te.idCentro
 WHERE 
-  idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa
+  idDocumento=@idDocumento and clc.idTrabajador=@idTrabajador and cc.idEmpresa=@idEmpresa and idListaDocumento=@idListaDocumento
 GROUP BY
 
     te.NIF, te.nombres, te.apellidos, clc.documento, clc.idDocumentoProyecto, clc.documentoAWS, clc.idDocumento
