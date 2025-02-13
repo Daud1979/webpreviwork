@@ -2,10 +2,11 @@
   "name": "proyecto-login",
   "version": "1.0.0",
   "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
-  },
+ "scripts": {
+  "dev": "npm run build:js && nodemon app.js",
+  "build:js": "node obfuscate.js",
+  "start": "NODE_ENV=production node app.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -31,5 +32,8 @@
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.16.0",
     "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1"
   }
 }
