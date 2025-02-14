@@ -476,6 +476,9 @@ td {
   background: rgb(247, 246, 246);
 
 }
+#logout{
+  cursor: pointer;
+}
 /* Centrar y hacer más grandes los checkboxes dentro de la tabla */
 #tablapersona td:nth-child(9) input,
 #tablapersona td:nth-child(10) input {
@@ -518,3 +521,52 @@ td {
   color:#fdfdfd;
   
   }
+  /*carga imagen*/
+  
+/* Loader (pantalla de carga) */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  visibility: hidden;
+  opacity: 2;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  z-index: 1000; 
+}
+
+.loader {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #ddd;
+  border-top: 8px solid #1067d8;
+  border-radius: 50%;
+  animation: spin 3s linear infinite;
+}
+
+.loader-text {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Activa la pantalla de carga */
+.loading .container {
+  filter: blur(5px);
+}
+
+.loading .loader-overlay {
+  visibility: visible;
+  opacity: 1;
+}

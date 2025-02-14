@@ -2,6 +2,32 @@ btnModificarEmpresa=document.querySelector('#btnModificarEmpresa');
 btncloseModificarEmpresa=document.querySelector('#closeModificarEmpresa');
 btnCenterAll = document.querySelector('#btnCenterAll');
 
+
+document.getElementById('logout').addEventListener('click', (event) => {
+    //event.preventDefault(); // Evita el comportamiento por defecto del enlace
+    textp=document.querySelector('.loader-text');
+    textp.innerHTML="CERRANDO SESION...";
+
+    // Mostrar la pantalla de carga
+    showLoading();
+
+    // Genera un tiempo de espera aleatorio entre 2 y 3 segundos
+    const waitTime = Math.random() * (3000 - 2000) + 1000;
+
+    setTimeout(() => {
+        // Redirige a la ruta de cerrar sesión
+        window.location.href = '/logout';
+    }, waitTime); // Espera de 2 a 3 segundos antes de redirigir
+});
+function showLoading() {
+    document.body.classList.add("loading");
+}
+
+function hideLoading() {
+    document.body.classList.remove("loading");
+}
+
+
 btnModificarEmpresa.addEventListener('click',()=>{
     email =document.querySelector('#emailempresa').value;
     encargado=document.querySelector('#encargadoempresa').value;

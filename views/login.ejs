@@ -11,6 +11,7 @@
 <meta name='robots' content='max-image-preview:large' />
 <link rel='dns-prefetch' href='//fonts.googleapis.com' />
 <link rel="stylesheet" href="/css/style.min.css">
+
 <link rel="alternate" type="application/rss+xml" title="Love Nature &raquo; Feed" href="https://www.previwork.es/feed/" />
 <link rel="alternate" type="application/rss+xml" title="Love Nature &raquo; Feed de los comentarios" href="https://www.previwork.es/comments/feed/" />
 <script>
@@ -55,7 +56,15 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15
 <style id='elementor-frontend-inline-css'>
 .elementor-kit-1316{--e-global-color-primary:#6EC1E4;--e-global-color-secondary:#54595F;--e-global-color-text:#7A7A7A;--e-global-color-2e6c5c0:#9FCE00;--e-global-typography-primary-font-family:"Roboto";--e-global-typography-primary-font-weight:600;--e-global-typography-secondary-font-family:"Roboto Slab";--e-global-typography-secondary-font-weight:400;--e-global-typography-text-font-family:"Roboto";--e-global-typography-text-font-weight:400;--e-global-typography-accent-font-family:"Roboto";--e-global-typography-accent-font-weight:500;}.elementor-section.elementor-section-boxed > .elementor-container{max-width:1140px;}.e-con{--container-max-width:1140px;}.elementor-widget:not(:last-child){margin-block-end:20px;}.elementor-element{--widgets-spacing:20px 20px;}{}h1.entry-title{display:var(--page-title-display);}@media(max-width:1024px){.elementor-section.elementor-section-boxed > .elementor-container{max-width:1024px;}.e-con{--container-max-width:1024px;}}@media(max-width:767px){.elementor-section.elementor-section-boxed > .elementor-container{max-width:767px;}.e-con{--container-max-width:767px;}}
 .elementor-2055 .elementor-element.elementor-element-48812f8{--display:flex;--background-transition:0.3s;}.elementor-2055 .elementor-element.elementor-element-bf99b92{--display:flex;--background-transition:0.3s;}.elementor-2055 .elementor-element.elementor-element-f89769b{--display:flex;--background-transition:0.3s;}
+
+
+
+
+
+
 </style>
+
+
 <link rel='stylesheet' id='swiper-css' href='https://www.previwork.es/wp-content/plugins/elementor/assets/lib/swiper/v8/css/swiper.min.css?ver=8.4.5' media='all' />
 <link rel='stylesheet' id='font-awesome-5-all-css' href='https://www.previwork.es/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.23.1' media='all' />
 <link rel='stylesheet' id='font-awesome-4-shim-css' href='https://www.previwork.es/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.23.1' media='all' />
@@ -467,6 +476,11 @@ class="site-footer" id="colophon" itemtype="https://schema.org/WPFooter" itemsco
 
 		<svg style="width:0;height:0;position:absolute"><defs><clipPath id="joinchat__peak_l"><path d="M17 25V0C17 12.877 6.082 14.9 1.031 15.91c-1.559.31-1.179 2.272.004 2.272C9.609 18.182 17 18.088 17 25z"/></clipPath><clipPath id="joinchat__peak_r"><path d="M0 25.68V0c0 13.23 10.92 15.3 15.97 16.34 1.56.32 1.18 2.34 0 2.34-8.58 0-15.97-.1-15.97 7Z"/></clipPath></defs></svg>
 	</div>
+	<div class="loader-overlay" id="loading">
+        <div class="loader"></div>
+        <p class="loader-text"></p>
+    </div>
+
 			<script type='text/javascript'>
 				const lazyloadRunObserver = () => {
 					const lazyloadBackgrounds = document.querySelectorAll( `.e-con.e-parent:not(.e-lazyloaded)` );
@@ -540,9 +554,16 @@ var wpformsElementorVars = {"captcha_provider":"recaptcha","recaptcha_type":"v2"
 			/(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",function(){var t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())},!1);
 			</script>
 			<script type='text/javascript'>
+
+
 /* <![CDATA[ */
 var wpforms_settings = {"val_required":"Este campo es obligatorio.","val_email":"Por favor, introduce una direcci\u00f3n de correo electr\u00f3nico v\u00e1lida.","val_email_suggestion":"\u00bfQuieres decir {suggestion}?","val_email_suggestion_title":"Haz clic para aceptar esta sugerencia.","val_email_restricted":"Esta direcci\u00f3n de correo electr\u00f3nico no est\u00e1 permitida.","val_number":"Por favor, introduce un n\u00famero v\u00e1lido.","val_number_positive":"Por favor, introduce un n\u00famero de tel\u00e9fono v\u00e1lido.","val_minimum_price":"La cantidad introducida es menor del m\u00ednimo requerido.","val_confirm":"Los valores del campo no coinciden.","val_checklimit":"Has excedido el n\u00famero de selecciones permitidas: {#}.","val_limit_characters":"{count} de {limit} caracteres m\u00e1ximos.","val_limit_words":"{count} de {limit} palabras m\u00e1ximas.","val_recaptcha_fail_msg":"Ha fallado la verificaci\u00f3n de Google reCAPTCHA, por favor, int\u00e9ntalo de nuevo m\u00e1s tarde.","val_turnstile_fail_msg":"Ha fallado la verificaci\u00f3n de Cloudflare Turnstile, por favor, int\u00e9ntalo de nuevo m\u00e1s tarde.","val_inputmask_incomplete":"Por favor, rellena el campo en el formato requerido.","uuid_cookie":"","locale":"es","wpforms_plugin_url":"https:\/\/www.previwork.es\/wp-content\/plugins\/wpforms-lite\/","gdpr":"1","ajaxurl":"https:\/\/www.previwork.es\/wp-admin\/admin-ajax.php","mailcheck_enabled":"1","mailcheck_domains":[],"mailcheck_toplevel_domains":["dev"],"is_ssl":"1","currency_code":"USD","currency_thousands":",","currency_decimals":"2","currency_decimal":".","currency_symbol":"$","currency_symbol_pos":"left","val_requiredpayment":"Pago obligatorio.","val_creditcard":"Por favor introduce un n\u00famero de tarjeta de cr\u00e9dito v\u00e1lido.","error_updating_token":"Error al actualizar el token. Por favor, int\u00e9ntalo de nuevo o ponte en contacto con soporte si el problema persiste.","network_error":"Error de red o no se puede acceder al servidor. Comprueba tu conexi\u00f3n o int\u00e9ntalo de nuevo m\u00e1s tarde.","token_cache_lifetime":"86400"}
 /* ]]> */
+
 </script>
-	</body>
+
+
+</body>
+
+
 </html>

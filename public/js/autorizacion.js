@@ -12,7 +12,29 @@ const elements = {
   buscadorGlobal: document.getElementById("buscadorinformacionglobal"),
   buscadorTrabajador: document.getElementById("buscadorinformaciontrabajador"),
 };
+document.getElementById('logout').addEventListener('click', (event) => {
+  //event.preventDefault(); // Evita el comportamiento por defecto del enlace
+  textp=document.querySelector('.loader-text');
+  textp.innerHTML="CERRANDO SESION...";
 
+  // Mostrar la pantalla de carga
+  showLoading();
+
+  // Genera un tiempo de espera aleatorio entre 2 y 3 segundos
+  const waitTime = Math.random() * (3000 - 2000) + 1000;
+
+  setTimeout(() => {
+      // Redirige a la ruta de cerrar sesión
+      window.location.href = '/logout';
+  }, waitTime); // Espera de 2 a 3 segundos antes de redirigir
+});
+function showLoading() {
+  document.body.classList.add("loading");
+}
+
+function hideLoading() {
+  document.body.classList.remove("loading");
+}
 // Función para alternar visibilidad de una tabla
 function toggleTable(button, table) {
   const isHidden = table.classList.contains('d-none');
