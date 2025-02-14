@@ -14,7 +14,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'iceidaud',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 1600000 },
+  cookie: { maxAge: 14400000 },
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
