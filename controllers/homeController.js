@@ -276,7 +276,8 @@ exports.downloadpdf = async (req, res) => {
         if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
                 console.error("Archivo no encontrado o clave de S3 no válida");
                 return res.status(404).send('Archivo no encontrado');
-        }         
+        }     
+        console.log(datos[0].documentoAWS);    
         const bucketName = process.env.S3_BUCKET_NAME;
         const s3Key = datos[0].documentoAWS;
         const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
@@ -909,9 +910,7 @@ exports.downloadpdftrabajadorOnline = async (req, res) => {
           </getStudent>
         </soap:Body>
       </soap:Envelope>`;
-
-    console.log("📢 Enviando solicitud SOAP...");
-
+   
     const response = await axios.post(soapUrl, soapRequest, {
       headers: {
         "Content-Type": "text/xml",
@@ -919,9 +918,6 @@ exports.downloadpdftrabajadorOnline = async (req, res) => {
       },
       responseType: "text",
     });
-
-    console.log("📢 Respuesta XML recibida:");
-    console.log(response.data);
 
     // Usar xml2js para analizar la respuesta
     const parser = new xml2js.Parser();
