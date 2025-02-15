@@ -1,7 +1,4 @@
-envio = document.querySelector('#envio');
-envio.addEventListener('click',()=>{
-    console.log("hola");
-});
+
 const btnsendform = document.querySelector("#sendform");
 
 function showLoading() {
@@ -30,8 +27,9 @@ btnsendform.addEventListener("click", () => {
         // Mostrar la pantalla de carga
         showLoading();
 
-        // Genera un tiempo de espera aleatorio entre 2 y 3 segundos
-        const waitTime = Math.random() * (3000 - 2000) + 2000;
+        // Genera un tiempo de espera aleatorio entre 1 y 2 segundos
+        const waitTime = Math.random() * (2000 - 1000) + 1000;
+
 
         setTimeout(() => {
             /* Envío del JSON */

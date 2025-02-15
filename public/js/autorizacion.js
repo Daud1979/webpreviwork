@@ -21,7 +21,8 @@ document.getElementById('logout').addEventListener('click', (event) => {
   showLoading();
 
   // Genera un tiempo de espera aleatorio entre 2 y 3 segundos
-  const waitTime = Math.random() * (3000 - 2000) + 1000;
+  const waitTime = Math.random() * (2000 - 1000) + 1000;
+
 
   setTimeout(() => {
       // Redirige a la ruta de cerrar sesión
