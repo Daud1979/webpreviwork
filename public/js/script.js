@@ -1,3 +1,7 @@
+envio = document.querySelector('#envio');
+envio.addEventListener('click',()=>{
+    console.log("hola");
+});
 const btnsendform = document.querySelector("#sendform");
 
 function showLoading() {
