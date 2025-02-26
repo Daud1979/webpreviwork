@@ -55,9 +55,6 @@ document.getElementById("buscadorinformaciontrabajador").addEventListener("input
     });
   });
 
-
-
-
 async function descargarpdfTrabajador(documentId, button) {
     const icon = button.querySelector('.material-icons');
   

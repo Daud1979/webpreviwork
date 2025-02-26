@@ -12,6 +12,7 @@ const elements = {
   buscadorGlobal: document.getElementById("buscadorinformacionglobal"),
   buscadorTrabajador: document.getElementById("buscadorinformaciontrabajador"),
 };
+
 document.getElementById('logout').addEventListener('click', (event) => {
   //event.preventDefault(); // Evita el comportamiento por defecto del enlace
   textp=document.querySelector('.loader-text');
@@ -29,6 +30,7 @@ document.getElementById('logout').addEventListener('click', (event) => {
       window.location.href = '/logout';
   }, waitTime); // Espera de 2 a 3 segundos antes de redirigir
 });
+
 function showLoading() {
   document.body.classList.add("loading");
 }
@@ -42,6 +44,7 @@ function toggleTable(button, table) {
   table.classList.toggle('d-none');
   button.textContent = isHidden ? '-' : '+';
 }
+
 document.getElementById("btnregistrarpdf").addEventListener("click", function () {
   const form = document.getElementById("uploadForm");
   const formData = new FormData(form);
@@ -86,6 +89,7 @@ document.getElementById("btnregistrarpdf").addEventListener("click", function ()
       submitButton.disabled = false; // Habilitar el botón nuevamente
   });
 });
+
 // Evento para alternar tablas
 elements.toggleButton.addEventListener('click', () => toggleTable(elements.toggleButton, elements.tablaContainer));
 elements.toggleButtonPersonal.addEventListener('click', () => toggleTable(elements.toggleButtonPersonal, elements.tablaContainerPersonal));
@@ -104,12 +108,15 @@ async function descargarPDF(endpoint, documentId, button, columnIndex) {
   const row = button.closest('tr');
   const documentCell = row.cells[columnIndex];
   const documentName = documentCell.textContent.trim();
+  const nif= document.querySelector('#NIF');
+  const nombre = document.querySelector('#nombre');
+  const apellidos= document.querySelector('#apellidos');
 
   try {
       const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: documentId })
+          body: JSON.stringify({ id: documentId,nif:nif.value,nombre:nombre.value,apellidos:apellidos.value })
       });
 
       if (!response.ok) throw new Error('Error al descargar el archivo');
