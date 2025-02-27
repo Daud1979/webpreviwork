@@ -14,7 +14,7 @@ a{
 
 
 .material-icons {
-  color:#27a708; /* Cambiar el color */
+  color:#0368bb; /* Cambiar el color */
   font-size: 70px; /* Cambiar el tamaño */
   vertical-align: middle; /* Alinear con el texto */
   margin: 5px; /* Espacio alrededor */
@@ -228,7 +228,7 @@ font-size: 1.8rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color:rgb(244, 248, 26);
+color:rgb(236, 240, 6);
 text-shadow: 2px 2px rgb(24, 23, 23);
 }
 .clmodificar{
@@ -594,7 +594,7 @@ td {
 .titulo{
   text-align: center;
   margin: 0;
-  padding: 0;
+  padding: 0;  
 }
 .titulo h3{
   padding: 0;
@@ -605,8 +605,86 @@ td {
 
 }
 .volver a{
-  padding: 0 1rem 0 0;
+  padding:  0.5rem;
   margin: 0;
   color :#3a5fd6;
+  background: rgb(204, 202, 202);
+  border-radius: 7px;
+}
+#ivisilidad{
+  color: rgb(4, 181, 252);
+}
+@media (max-width: 480px) {
+  .titulo{
+    text-align: center;
+    padding: 1.5rem;
+  }
+  .volver{
+    text-align: center;
+    padding: 1.5rem;
+  }
+  .volver a{
+    padding:  0.5rem;
+    margin: 0;
+    color :#3a5fd6;
+    background: rgb(204, 202, 202);
+    border-radius: 7px;
+  }
+}
+
+/* Teléfonos grandes y tablets en vertical */
+@media (min-width: 481px) and (max-width: 768px) {
+  .titulo{
+    text-align: center;
+    padding: 1.5rem;
+  }
+  .volver{
+    text-align: center;
+    padding: 1.5rem;
+  }
+  .volver a{
+    padding:  0.5rem;
+    margin: 0;
+    color :#3a5fd6;
+    background: rgb(204, 202, 202);
+    border-radius: 7px;
+  }
+}
+
+/* Tablets en horizontal y laptops pequeñas */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .titulo{
+    text-align: center;
+    padding: 1rem;
+  }
+  .volver{
+    text-align: end;
   
+  }
+  .volver a{
+    padding:  0.5rem;
+    margin: 0;
+    color :#3a5fd6;
+    background: rgb(204, 202, 202);
+    border-radius: 7px;
+  }
+}
+
+/* Laptops y monitores estándar */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .titulo{
+    text-align: center;
+    padding: 1rem;
+  }
+  .volver{
+    text-align: end;
+  
+  }
+  .volver a{
+    padding:  0.5rem;
+    margin: 0;
+    color :#3a5fd6;
+    background: rgb(204, 202, 202);
+    border-radius: 7px;
+  }
 }

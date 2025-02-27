@@ -13,6 +13,7 @@ const { Console } = require('console');
 const idTrabajador_=0;
 var https = require('follow-redirects').https;
 var { parseStringPromise } = require('xml2js');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 /*FUNCIONES EXTRAS*/
 function validarFecha(fecha) {
   // Verifica que el formato sea YYYY-MM-DD usando una expresión regular
@@ -1208,8 +1209,125 @@ async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, 
 }
 
 
+/*ver*/
 
 
+
+exports.viewPdfTrabajador = async (req, res) => {
+  const id = req.body.id;
+  const idEmpresa = req.session.userId;
+  const datos = await User.descargarpdf(id, idEmpresa);
+
+  // Validar si `datos` es un arreglo y tiene contenido
+  if (req.session.userId>0)
+  {
+    if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
+    console.error("Archivo no encontrado o clave de S3 no válida");
+    return res.status(404).send('Archivo no encontrado');
+    }
+    
+    const bucketName = process.env.S3_BUCKET_NAME; 
+    const s3Key = datos[0].documentoAWS;
+    const sanitizedFileName = encodeURIComponent(datos[0].documento || 'sinnombrepdf.pdf');
+    const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+    });
+    try {
+      // Generar URL firmada para visualizar el PDF
+      const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 300 }); // Expira en 5 min
+      // Renderizar la vista con la URL firmada
+      res.render("visualiazpdf", { pdfUrl: signedUrl, filename: datos[0].documento || "Documento.pdf" });
+    } catch (error) {
+      console.error('Error al visualizar el archivo desde S3:', error);
+      res.status(500).json({ error: 'Error al descargar el archivo' });
+    }
+  }
+  else{
+    res.redirect('/');
+  }
+};
+
+exports.viewPdfTrabajadorOnline = async (req, res) => {
+  if (!req.session.userId || req.session.userId <= 0) {
+    return res.redirect("/");
+  }
+
+  const idStudent = req.body.id;
+  if (!idStudent) {
+    return res.status(400).json({ error: "El ID del estudiante es requerido." });
+  }
+
+  try {
+    const username = process.env.USERNAMEONLINE;
+    const password = process.env.PASSWORDONLINE;
+    const key = process.env.KEYONLINE;
+    const soapUrl = process.env.SOAP_URL;
+
+    const soapRequest = `
+      <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                     xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Header>
+          <LoginInfo xmlns="http://prv.org/">
+            <username>${username}</username>
+            <password>${password}</password>
+            <key>${key}</key>
+          </LoginInfo>
+        </soap:Header>
+        <soap:Body>
+          <getStudent xmlns="http://prv.org/">
+            <idStudent>${idStudent}</idStudent>
+            <certificate>1</certificate>
+            <test>0</test>
+          </getStudent>
+        </soap:Body>
+      </soap:Envelope>`;
+   
+    const response = await axios.post(soapUrl, soapRequest, {
+      headers: {
+        "Content-Type": "text/xml",
+        "SOAPAction": "http://prv.org/getStudent",
+      },
+      responseType: "text",
+    });
+
+    // Usar xml2js para analizar la respuesta
+    const parser = new xml2js.Parser();
+    parser.parseString(response.data, (err, result) => {
+      if (err) {
+        console.error("❌ Error al parsear XML:", err);
+        return res.status(500).json({ error: "Error al procesar el certificado." });
+      }
+
+      try {
+        // Extraer el base64 del certificado desde la respuesta
+        const base64PDF = result["soap:Envelope"]["soap:Body"][0]["getStudentResponse"][0]["getStudentResult"][0]["Student"][0]["listCertificates"][0]["certificates"][0]["certificates"][0];
+
+        if (!base64PDF) {
+          return res.status(404).json({ error: "Certificado no encontrado." });
+        }
+
+        const pdfUrl = `data:application/pdf;base64,${base64PDF}`;
+
+        // Redirigir a la página visualiazpdf.ejs con la URL del PDF
+        res.render("visualiazpdf", { pdfUrl, filename: `Certificado de Estudiante ${idStudent}` });
+
+      } catch (error) {
+        console.error("❌ Error al procesar el PDF:", error);
+        return res.status(500).json({ error: "Error al procesar el certificado." });
+      }
+    });
+
+  } catch (error) {
+    console.error("❌ Error al obtener el PDF:", error);
+    res.status(500).json({ error: "Error al descargar el certificado. Inténtalo nuevamente más tarde." });
+  }
+};
 
 
 

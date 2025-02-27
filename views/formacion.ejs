@@ -151,7 +151,7 @@
                                             <th>Puesto Trabajado</th>
                                             <th>Registro</th>                            
                                             <th>Curso Online</th>
-                                            <th id="tdbotonesdescarga">Descargar</th>                                                   
+                                            <th id="tdbotonesdescarga">Opciones</th>                                                   
                                         </tr>
                                     </thead>
                                     <tbody id="tablainformaciontrabajadorOnline">
@@ -162,6 +162,11 @@
                                             <td class="text-end" data-id="<%= item.idStudentOnline %>"><%= item.registro %></td>
                                             <td class="text-start" data-id="<%= item.idStudentOnline %>"><%= item.CursoOnline %></td>                                   
                                             <td>
+                                                <button id="btnverTrabajador" onclick="verpdfTrabajadorOnline('/home/verpdftrabajadorOnline',<%=item.idStudentOnline%>)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                                    <i id="ivisilidad" class="material-icons"><%= "visibility" %></i>
+                                                    <span class="tooltip-text">Ver</span>
+                                                </button>
+                                           
                                                 <button id="btndescargarTrabajador" onclick="descargarpdfTrabajadorOnline(<%=item.idStudentOnline%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idStudentOnline %>"> 
                                                     <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
                                                     <span class="tooltip-text">Descargar Documento</span>
@@ -198,8 +203,9 @@
                                             <th>Certificados</th>
                                             <th>Observacion</th>          
                                             <th>Documentos</th>                                                        
-                                            <th>Registro</th>                            
-                                            <th id="tdbotonesdescarga">Descargar</th>                                                   
+                                            <th>Registro</th>               
+                                                                                  
+                                            <th id="tdbotonesdescarga">Opciones</th>                                                   
                                         </tr>
                                     </thead>
                                     <tbody id="tablainformaciontrabajador">
@@ -212,9 +218,14 @@
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>                                
                                             <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.Registro %></td>
                                             <td>
+                                                <button id="btnverTrabajador" onclick="verpdfTrabajador('/home/verpdftrabajador',<%=item.idDocumentoProyecto%>)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                                    <i id="ivisilidad" class="material-icons"><%= "visibility" %></i>
+                                                    <span class="tooltip-text">Ver</span>
+                                                </button>
+                                           
                                                 <button id="btndescargarTrabajador" onclick="descargarpdfTrabajador(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
                                                     <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
-                                                    <span class="tooltip-text">Descargar Documento</span>
+                                                    <span class="tooltip-text">Descargar</span>
                                                 </button>
                                             </td>
                                         </tr>

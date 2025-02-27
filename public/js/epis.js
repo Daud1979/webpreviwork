@@ -265,3 +265,27 @@ pdfInput.addEventListener('change', function () {
         hiddenFileNameField.value = fileName; // Asigna el nombre al campo oculto
     }
 });
+
+function verpdfTrabajador(url, data) {
+  // Crear un formulario temporal
+  const datos={id:data};
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = url;
+  form.target = "_blank"; 
+  // Agregar los datos como campos ocultos
+  for (const key in datos) {
+      if (datos.hasOwnProperty(key)) {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key;
+          input.value = datos[key];
+          form.appendChild(input);
+      }
+  }
+
+  // Añadir el formulario al documento, enviarlo y luego eliminarlo
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+}
