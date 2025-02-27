@@ -2,7 +2,12 @@
 
 <div class="container-fluid mt-4 pt-5 text-center">
     <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
-        <h3 class="mt-1">DOCUMENTO ACEPTACIÓN, RENUNCIA R.M.</h3>
+        <div class="titulo">
+            <h3 >DOCUMENTO ACEPTACIÓN, RENUNCIA R.M.</h3>
+            <div class="volver">
+                <a href="/home/personalempresa">Ir a Trabajador</a>
+            </div>
+        </div>
         <div class="datospersonalinformaciongral row g-3">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
                 <% listTrabajador.forEach(trabajador => { %>
@@ -102,7 +107,7 @@
                     <% if (listTrabajador && listTrabajador.length > 0) { %>
                         <input type="text" hidden id="idTrabajador" name="idTrabajador" value="<%= listTrabajador[0].idTrabajador %>">
                     <% } %>     
-                    <button type="submit" class="nav-link active" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Aceptación, Renuncia R.M.</button>
+                    <button type="submit" class="nav-link active" id="activo" data-bs-toggle="tab" data-bs-target="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Aceptación, Renuncia R.M.</button>
                 </form>
             </li>
             <li class="nav-item" role="presentation"><!--autorizacion-->

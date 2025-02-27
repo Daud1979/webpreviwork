@@ -11,9 +11,8 @@ a{
   color: black;
   text-decoration: none;
 }
-#userpassword{
-  
-}
+
+
 .material-icons {
   color:#27a708; /* Cambiar el color */
   font-size: 70px; /* Cambiar el tamaño */
@@ -569,4 +568,45 @@ td {
 .loading .loader-overlay {
   visibility: visible;
   opacity: 1;
+}
+/**/
+#tab1-tab,#tab2-tab,#tab3-tab,#tab4-tab,#tab5-tab,#tab6-tab{
+  color: #c7c6c6;
+  
+} 
+
+#tab1-tab:hover,#tab2-tab:hover,#tab3-tab:hover,#tab4-tab:hover,#tab5-tab:hover,#tab6-tab:hover{
+  color: #7b96ec;
+} 
+
+#activo{
+  background: #f3f2f2;
+  color:black;
+  border: 1px solid rgb(204, 202, 202);
+  border-bottom: none;
+  box-shadow: 2.5px 0px rgb(175, 175, 175);
+}
+
+#myTabContent{
+  background: #f3f2f2;
+  padding-bottom: 2rem;
+}
+.titulo{
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.titulo h3{
+  padding: 0;
+  margin: 0;
+}
+.volver{
+  text-align: end;
+
+}
+.volver a{
+  padding: 0 1rem 0 0;
+  margin: 0;
+  color :#3a5fd6;
+  
 }

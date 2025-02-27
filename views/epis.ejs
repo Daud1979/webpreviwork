@@ -1,8 +1,13 @@
 <%- include('./partials/head') %>
 
 <div class="container-fluid mt-4 pt-5 text-center">
-    <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->
-        <h3 class="mt-1">DOCUMENTO EPIS</h3>
+    <div class="row justify-content-center filacontenedor "><!--inicio cabeza-->       
+        <div class="titulo">
+            <h3 >DOCUMENTO EPIS</h3>
+            <div class="volver">
+                <a href="/home/personalempresa">Ir a Trabajador</a>
+            </div>
+        </div>
         <div class="datospersonalinformaciongral row g-3">
             <% if (listTrabajador && listTrabajador.length > 0) { %>
                 <% listTrabajador.forEach(trabajador => { %>
@@ -130,7 +135,7 @@
                             <input type="hidden" id="idTrabajador" name="idTrabajador" value="<%= trabajador.idTrabajador %>">
                         <% }) %>
                     <% } %>
-                    <button type="submit" class="nav-link active" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Epis</button>
+                    <button type="submit" class="nav-link active" id="activo" data-bs-toggle="tab" data-bs-target="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Epis</button>
                 </form>
             </li>
         </ul>
