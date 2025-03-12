@@ -629,8 +629,7 @@ static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idp
     const pool=await await connectDB();
     try 
     {   
-
-         const result =await pool.request()
+        const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
         .input('idPuesto', sql.Int, idpuesto)
@@ -644,8 +643,7 @@ static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idp
         .input('apellidos', sql.VarChar, apellidos)
         .input('NIF', sql.VarChar, NIF)
         .execute('REGISTRAR_TRABAJADOR');
-       return result.recordset
-       
+        return result.recordset;       
     } 
     catch (error) 
     {

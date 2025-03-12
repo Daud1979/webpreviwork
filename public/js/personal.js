@@ -35,6 +35,7 @@ function showLoading() {
 function hideLoading() {
     document.body.classList.remove("loading");
 }
+
 btnmodificarpersonal.addEventListener('click',()=>{
     const idcentro=document.querySelector('#Ucmbcentrospersonalmodificar');
     const nif=document.querySelector('#Unifpersonal');
@@ -85,13 +86,11 @@ btnmodificarpersonal.addEventListener('click',()=>{
                     window.location.reload();
                 }
                 else{
-                    message.classList.add('messageregisteralert');
-                    message.innerHTML=data.message;
+                    Notiflix.Notify.failure(data.message);            
                 }
             }
             else{
-                message.classList.add('messageregisteralert');
-                message.innerHTML=data.message;
+                Notiflix.Notify.failure(data.message);
             }
         })
         .catch((error) => {
@@ -101,8 +100,7 @@ btnmodificarpersonal.addEventListener('click',()=>{
     }
     else
     {
-        message.innerHTML="FECHA DE REGISTRO NO VALIDO";
-        message.classList.add('messageregisteralert');
+        Notiflix.Notify.failure("FECHA DE REGISTRO NO VALIDO");
     }
     // if (isValidEmail(email.value) && (Fregistro!=""))
     //     {
@@ -179,6 +177,7 @@ btnregistrarpersonal.addEventListener('click',()=>{
     }
     if (isValidEmail(email.value) && validarObjeto(data) && (Fregistro!=""))
     {
+        btnregistrarpersonal.disabled = true;
         message.innerHTML="";
         message.classList.remove('messageregisteralert');
        
@@ -191,36 +190,35 @@ btnregistrarpersonal.addEventListener('click',()=>{
             })
             .then(response => response.json())
             .then(data => {
+                
                 if(data.error==1)
-                {
-                    if(data.registrar[0].Resultado)
+                {                    
+                    if(data.resultadoRegistro[0].Resultado>0)
                     {
-                       message.classList.add('messageregisteradd');
-                       message.innerHTML="SE REGISTRO CORRECTAMENTE";                   
+                        Notiflix.Notify.success("SE REGISTRO CORRECTAMENTE");                            
                         nif.value="";
                         nombre.value="";
                         apellidos.value="";
                         email.value="";
                         telefono.value="";
+                        btnregistrarpersonal.disabled = false;
                     }
                     else
-               {
-                    message.innerHTML="LA PERSONA YA SE ENCUENTRA REGISTRADO";
-                    message.classList.add('messageregisteralert');
+                    {
+                        Notiflix.Notify.failure("LA PERSONA YA SE ENCUENTRA REGISTRADO"); 
+                   
                     }
                 }
-                else{
-                    messagemodificar.classList.add("error"); 
-                    messagemodificar.innerHTML=data.message;
+                else{                    
+                    Notiflix.Notify.failure(data.message);  
                 }
             })
             .catch((error) => {
-                Notiflix.Notify.warning( error);
+                Notiflix.Notify.warning(error);
             }); 
     }
     else{
-        message.innerHTML="SE DATOS REQUERIDOS";
-        message.classList.add('messageregisteralert');
+        Notiflix.Notify.failure("SE DATOS REQUERIDOS");  
     }
 });
 

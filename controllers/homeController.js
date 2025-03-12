@@ -797,42 +797,50 @@ exports.obtenerdatosmodificar=async(req,res)=>{
   }
 }
 
-exports.registerpersonal = async(req,res)=>{
-  const datos =req.body;
-  const idEmpresa = req.session.userId;  
-  const estado='H'; 
-  
-  if (req.session.userId>0)
-  {
-    const resul= isValidEmail(datos.email);
-    if (resul==false)
-    {
-      const mensaje =`CORREO NO VALIDO`;
-      res.json({message:mensaje, error:0});
-      return;
-    }  
-    const fecN=validarFecha(datos.fNac);
-    if (fecN==false)
-      {
-        const mensaje =`FECHA DE NACIMIENTO NO VALIDO`;
-        res.json({message:mensaje, error:0});
-        return;
-    }  
-    registro=datos.Fregistro;
-    const fec=validarFecha(datos.Fregistro);
-    if (fec==false)
-    {
-      registro= new Date();
-    } 
-  
-    registrar = await User.registrarpersonal(datos.idCentro,datos.NIF,datos.nombres,datos.apellidos,datos.email,datos.telefono,datos.idpuesto,registro,estado,idEmpresa,datos.fNac)
-    res.json({registrar,error:1});
+exports.registerpersonal = async (req, res) => {
+  try {
+    const datos = req.body;
+    const idEmpresa = req.session.userId;
+    const estado = 'H';
+
+    if (!idEmpresa || idEmpresa <= 0) {
+      return res.redirect('/');
+    }
+
+    // Validar el correo electrónico
+    if (!isValidEmail(datos.email)) {
+      return res.json({ message: 'CORREO NO VÁLIDO', error: 0 });
+    }
+
+    // Validar la fecha de nacimiento
+    if (!validarFecha(datos.fNac)) {
+      return res.json({ message: 'FECHA DE NACIMIENTO NO VÁLIDA', error: 0 });
+    }
+
+    // Validar la fecha de registro (si no es válida, usar la fecha actual)
+    let registro = validarFecha(datos.Fregistro) ? datos.Fregistro : new Date();
+    // Intentar registrar en la base de datos
+    const resultadoRegistro = await User.registrarpersonal(
+      datos.idCentro,
+      datos.NIF,
+      datos.nombres,
+      datos.apellidos,
+      datos.email,
+      datos.telefono,
+      datos.idpuesto,
+      registro,
+      estado,
+      idEmpresa,
+      datos.fNac
+    );
+    res.json({ resultadoRegistro, error: 1 });
+
+  } catch (error) {
+    console.error('Error en registerpersonal:', error);
+    res.status(500).json({ message: 'Error interno del servidor', error: 0 });
   }
-  else
-  {
-    res.redirect('/');
-  }
-}
+};
+
 
 exports.registercenter = async(req,res)=>{
   const {centro, encargado, ciudad, direccion, telefono, email, personal,codigopostal } =req.body;
