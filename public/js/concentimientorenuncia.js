@@ -289,3 +289,66 @@ function verpdfTrabajador(url, data) {
   form.submit();
   document.body.removeChild(form);
 }
+
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+async function enviaremailpdf(documentId, button) {
+  const icon = button.querySelector('.material-icons');
+  icon.style.color = 'Grey';
+  const row = button.closest('tr');
+  // Obtener el contenido de la celda de la cuarta columna (índice 3)
+  const documentCell = row.cells[3]; // Índice 3 para la cuarta columna (cero indexado)
+  const documentName = documentCell.textContent.trim();
+  const nif= document.querySelector('#NIF');
+  const nombre = document.querySelector('#nombre');
+  const apellidos= document.querySelector('#apellidos');
+  const email =document.querySelector('#email');
+ if (isValidEmail(email.value))
+ {
+  const data={
+    tipo:'Documento de Concentimiento o Renuncia',
+    id: documentId,
+    nif:nif.value,
+    nombre:nombre.value,
+    apellidos:apellidos.value,
+    email:email.value
+  };
+  try {
+    fetch('/home/enviarmailpdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {    
+      if (data.valor>0)
+      {  
+        Notiflix.Notify.success(data.message);
+     
+      }
+      else
+      {
+          Notiflix.Notify.warning(data.message);
+          
+      }
+    })
+    .catch((error) => {
+      Notiflix.Notify.warning(error);
+     
+    }); 
+    // Cambiar color a verde si la descarga fue exitosa
+  } catch (error) {
+    Notiflix.Notify.warning( error);
+   
+  }
+ }
+ else{
+  Notiflix.Notify.warning("EMAIL NO VALIDO");
+ }
+  
+}

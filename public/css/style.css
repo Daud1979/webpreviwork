@@ -612,7 +612,10 @@ td {
   border-radius: 7px;
 }
 #ivisilidad{
-  color: rgb(4, 181, 252);
+  color: rgb(133, 216, 248);
+}
+#imail{
+  color: rgb(4, 176, 219);
 }
 @media (max-width: 480px) {
   .titulo{

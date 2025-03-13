@@ -1,6 +1,7 @@
 require('dotenv').config();
 const User = require('../models/User');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 const { S3Client, GetObjectCommand,PutObjectCommand } = require('@aws-sdk/client-s3');
 const upload = multer({ dest: 'uploads/' }); 
 const { PDFDocument, rgb } = require('pdf-lib');
@@ -14,6 +15,13 @@ const idTrabajador_=0;
 var https = require('follow-redirects').https;
 var { parseStringPromise } = require('xml2js');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+
+
+
+
+
+
 /*FUNCIONES EXTRAS*/
 function validarFecha(fecha) {
   // Verifica que el formato sea YYYY-MM-DD usando una expresión regular
@@ -1340,6 +1348,108 @@ exports.viewPdfTrabajadorOnline = async (req, res) => {
 
 
 /*fin preventor*/
+
+exports.enviarmailpdf = async (req, res) => {
+  const id = req.body.id;
+  const idEmpresa = req.session.userId;
+  const trabajador = `Nombre: ${req.body.nombre} ${req.body.apellidos}`;
+  const nie = `DNI: ${req.body.nif}`;
+  const email = req.body.email;
+  const tipo =req.body.tipo;
+  const fechaActual = new Date();
+  const fechaFormateada = fechaActual.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  const fechas = `Fecha: ${fechaFormateada}`;
+ 
+  if (req.session.userId > 0) {
+    try {
+      const datos = await User.descargarpdf(id, idEmpresa);
+      if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
+       
+        return res.status(404).json({ error: 'Archivo no encontrado' });
+      }
+      const datosemail =await User.datosenvioemail();
+      
+      const bucketName = process.env.S3_BUCKET_NAME;
+      const s3Key = datos[0].documentoAWS;
+      const sanitizedFileName = datos[0].documento.replace(/ /g, " ") || 'documentoenviado.pdf';
+
+      const s3 = new S3Client({
+        region: process.env.AWS_REGION,
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        },
+      });
+
+      // Descargar el archivo desde S3
+      const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
+      const response = await s3.send(command);
+      const pdfBuffer = await streamToBuffer(response.Body);
+
+      if (!pdfBuffer || pdfBuffer.length === 0) {
+        throw new Error('El archivo PDF descargado está vacío o es inválido.');
+      }
+
+      // Modificar el PDF con pdf-lib
+      const pdfDoc = await PDFDocument.load(pdfBuffer);
+      const font = await pdfDoc.embedFont('Helvetica-Oblique');
+      const pages = pdfDoc.getPages();
+      const lastPage = pages[pages.length - 1];
+
+      lastPage.drawText('Recibido por el trabajador', { x: 200, y: 60, size: 10, font, color: rgb(0, 0, 0) });
+      lastPage.drawText(trabajador, { x: 200, y: 45, size: 10, font, color: rgb(0, 0, 0) });
+      lastPage.drawText(nie, { x: 200, y: 30, size: 10, font, color: rgb(0, 0, 0) });
+      lastPage.drawText(fechas, { x: 200, y: 15, size: 10, font, color: rgb(0, 0, 0) });
+
+      const modifiedPdfBytes = await pdfDoc.save();
+
+      // Crear archivo temporal
+      const tempDir = os.tmpdir();
+      const tempFilePath = path.join(tempDir, 'modified-pdf.pdf');
+      fs.writeFileSync(tempFilePath, modifiedPdfBytes);    
+      // Configurar el transporte de nodemailer con DonDominio
+      const transporter = nodemailer.createTransport({
+        host: datosemail[0].smtpsend,
+        port: Number(datosemail[0].puertosend), // Asegura que es un número
+        secure: datosemail[0].puertosend === 465, // true solo si es 465
+        auth: {
+          user: datosemail[0].emailEmpresasend,
+          pass: datosemail[0].passsend,
+        },
+        tls: {
+          rejectUnauthorized: false, // Deshabilita verificación estricta de SSL (solo si es necesario)
+        },
+      });
+
+      // Configurar el correo
+      const mailOptions = {
+        from: datosemail[0].emailEmpresasend,
+        to: email,
+        subject: datosemail[0].Asunto,
+        text:tipo + ", " + datosemail[0].Body,
+        attachments: [
+          {
+            filename: sanitizedFileName,
+            path: tempFilePath,
+            contentType: 'application/pdf',
+          },
+        ],
+      };
+
+      // Enviar el correo
+      await transporter.sendMail(mailOptions);
+
+      // Responder al frontend
+      res.json({ message: 'Correo enviado correctamente',valor:1 });
+
+    } catch (error) {
+   
+      res.status(500).json({ message: 'Se produjo un error al enviar el email' ,valor:0});
+    }
+  } else {
+    res.redirect('/');
+  }
+};
 
 
 

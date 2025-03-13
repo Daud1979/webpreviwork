@@ -6,6 +6,7 @@ const pdfInput = document.getElementById('pdfFile');
 const fileNameDisplay = document.getElementById('fileName');
 const errorMessage = document.getElementById('errorMessage');
 const  closeRegistrarPersonal = document.querySelector('#closeRegistrarPersonal');
+
 document.getElementById('logout').addEventListener('click', (event) => {
   //event.preventDefault(); // Evita el comportamiento por defecto del enlace
   textp=document.querySelector('.loader-text');
@@ -22,6 +23,7 @@ document.getElementById('logout').addEventListener('click', (event) => {
       window.location.href = '/logout';
   }, waitTime); // Espera de 2 a 3 segundos antes de redirigir
 });
+
 function showLoading() {
   document.body.classList.add("loading");
 }
@@ -29,6 +31,7 @@ function showLoading() {
 function hideLoading() {
   document.body.classList.remove("loading");
 }
+
 document.getElementById("btnregistrarpdf").addEventListener("click", function () {
   const form = document.getElementById("uploadForm");
   const formData = new FormData(form);
@@ -74,16 +77,13 @@ document.getElementById("btnregistrarpdf").addEventListener("click", function ()
   });
 });
 
-
-
 function carga(){
   const idDocumentoupload = document.querySelector('#idDocumentoupload');
   idDocumentoupload.value=documentId;
   const idTrabajadorupload = document.querySelector('#idTrabajadorupload');
   const idTrabajador = document.querySelector('#idTrabajador');
 idTrabajadorupload.value=idTrabajador.value;
- }
-
+}
  
 async function descargarpdf(documentId, button) {
     const icon = button.querySelector('.material-icons');
@@ -127,6 +127,7 @@ async function descargarpdf(documentId, button) {
         icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
     }
 }
+
 async function descargarpdfTrabajador(documentId, button) {
   const icon = button.querySelector('.material-icons');
 
@@ -169,6 +170,7 @@ async function descargarpdfTrabajador(documentId, button) {
       icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
   }
 }
+
 // Agregar evento click al botón
 toggleButton.addEventListener('click', () => {
   if (tablaContainer.classList.contains('d-none')) {
@@ -244,10 +246,10 @@ pdfInput.addEventListener('change', function () {
       errorMessage.classList.add('d-none');
      
     }
-  });
+});
 
   //Validación del formulario
-  document.getElementById('uploadForm').addEventListener('submit', function (e) {  
+document.getElementById('uploadForm').addEventListener('submit', function (e) {  
     if (!pdfInput.files.length || pdfInput.files[0].type !== 'application/pdf') {
       e.preventDefault(); // Detener el envío del formulario
       errorMessage.classList.remove('d-none');
@@ -256,9 +258,9 @@ pdfInput.addEventListener('change', function () {
       errorMessage.classList.add('d-none');
       pdfInput.classList.remove('is-invalid');
     }
-  });
+});
 
-  document.getElementById("pdfFile").addEventListener("change", function () {
+document.getElementById("pdfFile").addEventListener("change", function () {
     const fileInput = this;
     const fileNameField = document.getElementById("fileName");
     const hiddenFileNameField = document.getElementById("pdfFileName");
@@ -269,6 +271,7 @@ pdfInput.addEventListener('change', function () {
         hiddenFileNameField.value = fileName; // Asigna el nombre al campo oculto
     }
 });
+
 function verpdfTrabajador(url, data) {
   // Crear un formulario temporal
   const datos={id:data};
@@ -291,4 +294,66 @@ function verpdfTrabajador(url, data) {
   document.body.appendChild(form);
   form.submit();
   document.body.removeChild(form);
+}
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+async function enviaremailpdf(documentId, button) {
+  const icon = button.querySelector('.material-icons');
+  icon.style.color = 'Grey';
+  const row = button.closest('tr');
+  // Obtener el contenido de la celda de la cuarta columna (índice 3)
+  const documentCell = row.cells[3]; // Índice 3 para la cuarta columna (cero indexado)
+  const documentName = documentCell.textContent.trim();
+  const nif= document.querySelector('#NIF');
+  const nombre = document.querySelector('#nombre');
+  const apellidos= document.querySelector('#apellidos');
+  const email =document.querySelector('#email');
+ if (isValidEmail(email.value))
+ {
+  const data={
+    tipo:'Documento de Informacion',
+    id: documentId,
+    nif:nif.value,
+    nombre:nombre.value,
+    apellidos:apellidos.value,
+    email:email.value
+  };
+  try {
+    fetch('/home/enviarmailpdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {    
+      if (data.valor>0)
+      {  
+        Notiflix.Notify.success(data.message);
+     
+      }
+      else
+      {
+          Notiflix.Notify.warning(data.message);
+          
+      }
+    })
+    .catch((error) => {
+      Notiflix.Notify.warning(error);
+     
+    }); 
+    // Cambiar color a verde si la descarga fue exitosa
+  } catch (error) {
+    Notiflix.Notify.warning( error);
+   
+  }
+ }
+ else{
+  Notiflix.Notify.warning("EMAIL NO VALIDO");
+ }
+  
 }

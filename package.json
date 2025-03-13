@@ -2,12 +2,12 @@
   "name": "proyecto-login",
   "version": "1.0.0",
   "main": "app.js",
-"scripts": {
-  "dev": "npm run build:js && npm run build:css && nodemon app.js",
-  "build:js": "node obfuscate.js",
-  "build:css": "cleancss -o public/css/style.min.css public/css/style.css",
-  "start": "NODE_ENV=production node app.js"
-},
+  "scripts": {
+    "dev": "npm run build:js && npm run build:css && nodemon app.js",
+    "build:js": "node obfuscate.js",
+    "build:css": "cleancss -o public/css/style.min.css public/css/style.css",
+    "start": "NODE_ENV=production node app.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -27,6 +27,7 @@
     "hummus": "^1.0.117",
     "mssql": "^11.0.1",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.7",
     "notifly": "^0.0.1",
     "path": "^0.12.7",

@@ -157,7 +157,7 @@
                                             <th>Observacion</th>
                                             <th>Registro</th>                            
                                                       
-                                            <th id="tdbotonesdescarga">Descargar</th>                                                
+                                            <th id="tdbotonesdescarga">Opciones</th>                                                
                                         </tr>
                                     </thead>
                                     <tbody id="tabla-documentos">
@@ -170,9 +170,13 @@
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
                                             <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>                                           
                                             <td>
+                                                <button id="btnverTrabajador" onclick="enviaremailpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
+                                                    <i id="imail" class="material-icons"><%= "mail" %></i>
+                                                    <span class="tooltip-text">Email</span>
+                                                </button>
                                                 <button id="btnEstadoPersona" onclick="descargarpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
                                                     <i id="idescarga" class="material-icons"><%= "cloud_download" %></i>
-                                                    <span class="tooltip-text">Descargar Documento</span>
+                                                    <span class="tooltip-text">Descargar</span>
                                                 </button>
                                             </td>
                                         </tr>

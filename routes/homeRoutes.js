@@ -35,4 +35,5 @@ router.post('/registrarRM',homeController.registerRM);
 router.post('/registrarCursoOnline',homeController.registerCourseOnline);
 router.post('/verpdftrabajador',homeController.viewPdfTrabajador);
 router.post('/verpdftrabajadorOnline', homeController.viewPdfTrabajadorOnline);
+router.post('/enviarmailpdf',homeController.enviarmailpdf);
 module.exports = router;

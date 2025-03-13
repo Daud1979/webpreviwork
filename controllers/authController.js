@@ -31,15 +31,15 @@ exports.authenticate = async (req, res) => {
     // Valida el nombre de usuario y la contraseña
     const validationData = await User.validatePassword(username, password, email);   
     // Verifica si se encontraron datos y si la propiedad idEmpresa existe y es válida
-    if (validationData && validationData[0] && validationData[0].idEmpresa > 0) {
+      if (validationData && validationData[0] && validationData[0].idEmpresa > 0) {
       req.session.userId = validationData[0].idEmpresa;
       // Busca la información del usuario por ID de la empresa
       userData = await User.findByUsername(validationData[0].idEmpresa);
       return res.json({ success: true, "userData":userData });
-    } else {
+      } else {
       // Responde con error si la validación falló
-      return res.json({ success: false, message: 'Usuario o contraseña incorrectos' });
-    }
+        return res.json({ success: false, message: 'Usuario o contraseña incorrectos' });
+      }
     }
     else
     {

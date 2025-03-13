@@ -695,7 +695,20 @@ static async registrarSolicitudRM(idTrabajador,idEmpresa,idContrato){
     }
 }
 
-
+static async datosenvioemail(){    
+    const pool=await await connectDB();
+    try 
+    {           
+        const result =await pool.request()        
+        .query(`select top 1 smtpsend,puertosend,emailEmpresasend,passsend,Body,Asunto from empresaemail`);
+        return result.recordset
+    } 
+    catch (error) 
+    {
+        console.error('Error en la obtener los datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
 static async descargarpdf(idDocumentoProyecto,idEmpresa){    
     const pool=await await connectDB();
     try 
