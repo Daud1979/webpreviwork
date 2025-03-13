@@ -12,6 +12,7 @@ function isValidEmail(email) {
 function validarObjeto(obj) {
     return Object.values(obj).every(value => value !== null && value !== undefined && value !== '');
 }
+
 document.getElementById('logout').addEventListener('click', (event) => {
     //event.preventDefault(); // Evita el comportamiento por defecto del enlace
     textp=document.querySelector('.loader-text');
@@ -28,6 +29,7 @@ document.getElementById('logout').addEventListener('click', (event) => {
         window.location.href = '/logout';
     }, waitTime); // Espera de 2 a 3 segundos antes de redirigir
 });
+
 function showLoading() {
     document.body.classList.add("loading");
 }
@@ -362,11 +364,17 @@ botones.forEach((boton) => {
     });
 });
 
-$('#cmbcentrospersonal').on('change', function() {
-    // Obtener el valor seleccionado
-    let valorSeleccionado = $(this).val();
-    const data = { valor: valorSeleccionado };
 
+
+$('#cmbcentrospersonal').on('change', function(){
+    cargardatos();
+});
+
+function cargardatos() {
+    // Obtener el valor seleccionado
+    let valorSeleccionado = document.querySelector('#cmbcentrospersonal').value;
+    const data = { valor: valorSeleccionado,isOn:isOn };
+    
     // Limpiar el tbody de la tabla
     $('#tabla-trabajador').empty();
 
@@ -448,7 +456,7 @@ $('#cmbcentrospersonal').on('change', function() {
     .catch((error) => {
         Notiflix.Notify.warning( "quepaso");
     });
-});
+};
 
 
 // Función Modificar para agregar eventos a los botones de la tabla 
@@ -686,3 +694,16 @@ document.querySelectorAll(".curso-checkbox").forEach(checkbox => {
         });
     });
 });
+//delboton deslizable
+let isOn = true;
+function toggleSwitch() {
+    const slider = document.getElementById('slider');
+    isOn = !isOn;
+    if (isOn) {
+        slider.textContent = 'Alta';
+    } else {
+        slider.textContent = 'Baja';
+    }
+    cargardatos();
+    slider.parentElement.classList.toggle('on');
+}

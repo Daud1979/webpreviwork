@@ -781,9 +781,13 @@ exports.modifyPersonal=async(req,res)=>{
 exports.cargarPersonalCentro=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
+  const isOn = datos.isOn;
+  let estado='H';
+  (isOn)? estado='H': estado='D';
+  
   if (req.session.userId>0)
   {
-    Data = await User.listTodosTrabajadorCentro(datos.valor,idEmpresa)
+    Data = await User.listTodosTrabajadorCentro(datos.valor,idEmpresa,estado)
     res.json(Data);
   }
   else

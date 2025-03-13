@@ -378,7 +378,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa){
              END
 FROM TrabajadorEmpresa t
 INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
-WHERE t.idEmpresa = @idEmpresa
+WHERE t.idEmpresa = @idEmpresa and estado='H'
     ;
 `);          
         return (result.recordset)
@@ -390,7 +390,7 @@ WHERE t.idEmpresa = @idEmpresa
     }
 }
 
-static async listTodosTrabajadorCentro(idCentro,idEmpresa){
+static async listTodosTrabajadorCentro(idCentro,idEmpresa,estado){
     const pool=await await connectDB();
     try 
     {
@@ -399,6 +399,7 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
+        .input('estado', sql.VarChar,estado )
         .query(`SELECT 
     idTrabajador,
     idCentro,
@@ -433,14 +434,14 @@ static async listTodosTrabajadorCentro(idCentro,idEmpresa){
              END
 FROM TrabajadorEmpresa t
 INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
-WHERE t.idEmpresa = @idEmpresa and idCentro=@idCentro`);          
+WHERE t.idEmpresa = @idEmpresa and idCentro=@idCentro and estado=@estado`);          
         return (result.recordset)
         }
         else
         {
             const result =await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
-           
+            .input('estado', sql.VarChar,estado )
             .query(`SELECT 
     idTrabajador,
     idCentro,
@@ -475,8 +476,7 @@ WHERE t.idEmpresa = @idEmpresa and idCentro=@idCentro`);
              END
 FROM TrabajadorEmpresa t
 INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
-WHERE t.idEmpresa = @idEmpresa;
-`);          
+WHERE t.idEmpresa = @idEmpresa and estado=@estado;`);          
             return (result.recordset)
         }
     } 
