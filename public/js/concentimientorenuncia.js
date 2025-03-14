@@ -309,7 +309,7 @@ async function enviaremailpdf(documentId, button) {
  if (isValidEmail(email.value))
  {
   const data={
-    tipo:'Documento de Concentimiento o Renuncia',
+    tipo:'Documento de Autorización o Renuncia',
     id: documentId,
     nif:nif.value,
     nombre:nombre.value,

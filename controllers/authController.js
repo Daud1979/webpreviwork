@@ -33,6 +33,7 @@ exports.authenticate = async (req, res) => {
     // Verifica si se encontraron datos y si la propiedad idEmpresa existe y es válida
       if (validationData && validationData[0] && validationData[0].idEmpresa > 0) {
       req.session.userId = validationData[0].idEmpresa;
+      req.session.email = validationData[0].email;
       // Busca la información del usuario por ID de la empresa
       userData = await User.findByUsername(validationData[0].idEmpresa);
       return res.json({ success: true, "userData":userData });

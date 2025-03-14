@@ -1356,6 +1356,7 @@ exports.viewPdfTrabajadorOnline = async (req, res) => {
 exports.enviarmailpdf = async (req, res) => {
   const id = req.body.id;
   const idEmpresa = req.session.userId;
+  const emailempresa =req.session.email;
   const trabajador = `Nombre: ${req.body.nombre} ${req.body.apellidos}`;
   const nie = `DNI: ${req.body.nif}`;
   const email = req.body.email;
@@ -1430,7 +1431,7 @@ exports.enviarmailpdf = async (req, res) => {
         from: datosemail[0].emailEmpresasend,
         to: email,
         subject: datosemail[0].Asunto,
-        text:tipo + ", " + datosemail[0].Body,
+        text:tipo + ", enviar al email: "+emailempresa+" "+ datosemail[0].Body,
         attachments: [
           {
             filename: sanitizedFileName,

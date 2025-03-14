@@ -709,6 +709,7 @@ static async datosenvioemail(){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 static async descargarpdf(idDocumentoProyecto,idEmpresa){    
     const pool=await await connectDB();
     try 
