@@ -147,9 +147,9 @@ exports.reconocimientomedico=async(req,res)=>{
   const idDocumento=14;//esto hay que verpa los otros doc  
   const idListaDocumento=63
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
-  //const listDocumentoTrabajadorOnline= await User.listFormacion(idEmpresa,idTrabajador);  
+  const listDocumentoRM= await User.listRMTrabajador(idEmpresa,idTrabajador);
   const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);  
-  (req.session.userId>0)? res.render('reconocimientomedico',{listTrabajador,listDocumentoTrabajador}):res.redirect('/');
+  (req.session.userId>0)? res.render('reconocimientomedico',{listTrabajador,listDocumentoTrabajador,listDocumentoRM}):res.redirect('/');
 }
           
 exports.centros=async (req,res)=>{//enviar a centros
@@ -1416,6 +1416,17 @@ exports.viewPdfTrabajador = async (req, res) => {
     res.redirect('/');
   }
 };
+exports.verpdfRMOnline= async (req, res) => {
+  if (!req.session.userId || req.session.userId <= 0) {
+    return res.redirect("/");
+  }
+  const datos = req.body.id;
+    const nombre = req.body.nombre;
+  res.render("visualiazpdfRM", { datos, filename: `Certificado de Reconocimiento Medicos ${nombre}` });
+}
+
+
+
 
 exports.viewPdfTrabajadorOnline = async (req, res) => {
   if (!req.session.userId || req.session.userId <= 0) {

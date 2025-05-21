@@ -282,6 +282,24 @@ ORDER BY
     } 
 }
 
+static async listRMTrabajador(idEmpresa,idTrabajador){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)        
+        .input('idTrabajador', sql.Int, idTrabajador)   
+        .query(`select url,ROW_NUMBER() OVER(ORDER BY idSolRM) AS n,nombre=te.nombres+' '+te.apellidos,registro=convert(varchar(10),fecha,103),estado=case when rm.estado='P' then 'Solicitud Pendiente' else 'Certificado Entregado' end, entrega=case when TipoApto=1 then convert(varchar(10),fechaEntrega,103) else '' end, apto=case when TipoApto=1 then 'Apto' when TipoApto=0 then 'No Apto' else '' end, idSolRM from SolicitudRM rm inner join TrabajadorEmpresa te on (rm.idTrabajador=te.idTrabajador) where rm.idEmpresa=@idEmpresa and rm.idTrabajador=@idTrabajador;`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    } 
+}
+
+
 static async listFormacion(idEmpresa,idTrabajador){
     const pool=await await connectDB();
     try 

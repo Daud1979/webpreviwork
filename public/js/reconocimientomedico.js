@@ -37,8 +37,34 @@ function showLoading() {
 function hideLoading() {
     document.body.classList.remove("loading");
 }
+toggleButtonPersonalOnline.addEventListener('click', () => {
+    if (tablaContainerPersonalOnline.classList.contains('d-none')) {
+      // Mostrar la tabla
+      tablaContainerPersonalOnline.classList.remove('d-none');
+      toggleButtonPersonalOnline.textContent = '-';
+    } else {
+      // Ocultar la tabla
+      tablaContainerPersonalOnline.classList.add('d-none');
+      toggleButtonPersonalOnline.textContent = '+';
+    }
+});
 
-  
+document.getElementById("buscadorinformaciontrabajadorOnline").addEventListener("input", function() {
+  const searchValue = this.value.toLowerCase();
+ 
+  const rows = document.querySelectorAll("#tablaRMPreviwork tr");
+
+  rows.forEach(row => {
+      const cells = row.querySelectorAll("td");
+      const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");      
+      if (rowText.includes(searchValue)) {
+          row.style.display = "";
+      } else {
+          row.style.display = "none";
+      }
+  });
+});
+
 document.getElementById("buscadorinformaciontrabajador").addEventListener("input", function() {
     const searchValue = this.value.toLowerCase();  
     const rows = document.querySelectorAll("#tablainformaciontrabajador tr");
@@ -123,3 +149,66 @@ async function descargarpdfTrabajador(documentId, button) {
     document.body.removeChild(form);
 }
 
+async function descargarRMOnline(urlpdf, nombre, button) {
+  if (esURLValida(urlpdf)) {
+    try {
+      const response = await fetch(urlpdf, { method: 'GET' });
+      if (!response.ok) throw new Error("No se pudo descargar el PDF");
+      console.log(urlpdf);
+      const blob = await response.blob();
+      const enlace = document.createElement("a");
+      enlace.href = URL.createObjectURL(blob);
+      enlace.download = nombre+".pdf";
+      enlace.style.display = 'none'; // Oculta el enlace
+      document.body.appendChild(enlace);
+      enlace.click();
+      document.body.removeChild(enlace);
+      URL.revokeObjectURL(enlace.href); // Libera la URL temporal
+
+    } catch (error) {
+      console.error(error);
+      Notiflix.Notify.warning("Se produjo un error al descargar el PDF");
+    }
+  } else {
+    Notiflix.Notify.warning("El certificado aún no se encuentra finalizado");
+  }
+}
+
+async function verRMOnline(url,urlpdf,nombre, button) {
+    if (esURLValida(urlpdf))
+    {
+        
+    const datos={id:urlpdf, nombre:nombre};
+    console.log(datos);
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+    form.target = "_blank"; 
+    // Agregar los datos como campos ocultos
+    for (const key in datos) {
+        if (datos.hasOwnProperty(key)) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = datos[key];
+            form.appendChild(input);
+        }
+    }
+    // Añadir el formulario al documento, enviarlo y luego eliminarlo
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    }
+    else
+    {
+        Notiflix.Notify.warning("El certificado aun no se encuentra finalizado");
+    }
+}
+function esURLValida(url) {
+  try {
+    new URL(url); // Intenta construir la URL
+    return true;
+  } catch (err) {
+    return false; // Si lanza error, no es válida
+  }
+}

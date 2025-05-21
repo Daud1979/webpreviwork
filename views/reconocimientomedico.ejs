@@ -129,10 +129,60 @@
         
         <div class="tab-content " id="myTabContent">            
             <div class="tab-pane fade show active" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
-                <!--AQUI LA TABLA-->         
+                  <!--AQUI LA TABLA-->         
                 <div class="row  filacontenedor "><!--inicio plantillas-->
                     <div class="buttontogglePersonal">
-                        <h4 >DOCUMENTOS DE RECONOCIMIENTO MEDICOS DEL TRABAJADOR</h4>
+                        <h4 >DOCUMENTOS DE RECONOCIMIENTO MEDICOS DEL TRABAJADOR PREVIWORK</h4>
+                        <button id="toggleButtonPersonalOnline" class="btn btn-primary ">-</button>
+                    </div>
+                    <div class="datospersonalinformacion ">
+                        <div id="tablaContainerPersonalOnline" class="table-responsive">                           
+                            <div class="datosGral ms-0 me-0 p-0 pt-1 pb-1 col-12 col-xl-6">
+                                <div class="input-group m-0 p-0 input-group-sm">
+                                    <span class="input-group-text" id="basic-addon1">Buscar</span>
+                                    <input type="text" id="buscadorinformaciontrabajadorOnline" class="form-control " style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
+                                </div>
+                            </div>  
+                            <div class="table-wrapper overflow-auto" style="max-height: 400px; ">
+                                <table class="table table-bordered table-striped table-sm shadow ">
+                                    <thead  class="shadow ">
+                                        <tr id="trhead">
+                                            <th style="width: 5%;" >Nº</th>
+                                            <th style="width: 10%;">F. Solicitado</th>
+                                            <th style="width: 70%;">Estado</th>
+                                            <th style="width: 10%;">F. Entrega</th>                            
+                                            <th style="width: 15%;">Apto</th>                                           
+                                            <th id="tdbotonesdescarga">Opciones</th>                                                   
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaRMPreviwork">
+                                        <%  listDocumentoRM.forEach((item) => { %>
+                                        <tr>                             
+                                            <td class="text-end" data-id="<%= item.idSolRM %>"><%= item.n %></td>
+                                            <td class="text-end" data-id="<%= item.idSolRM %>"><%= item.registro %></td>
+                                            <td class="text-start" data-id="<%= item.idSolRM %>"><%= item.estado %></td>
+                                            <td class="text-end" data-id="<%= item.idSolRM %>"><%= item.entrega %></td>                                   
+                                            <td class="text-start" data-id="<%= item.idSolRM %>"><%= item.apto %></td>        
+                                                                            
+                                            <td>
+                                                <button id="btnverTrabajador" onclick="verRMOnline('/home/verpdfRMOnline','<%= item.url %>','<%= item.nombre %>', this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.idSolRM %>">
+
+                                                     <i id="ivisilidad" class="material-icons"><%= "visibility" %></i>
+                                                    <span class="tooltip-text">Ver</span>
+                                                </button>                                               
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--plantillas-->   
+                   
+                <div class="row  filacontenedor "><!--inicio plantillas-->
+                    <div class="buttontogglePersonal">
+                        <h4 >DOCUMENTOS DE OTROS RECONOCIMIENTO MEDICOS DEL TRABAJADOR</h4>
                         <button id="toggleButtonPersonal" class="btn btn-primary ">-</button>
                     </div>
                     <div class="datospersonalinformacion ">
@@ -184,7 +234,7 @@
                         </div>
                     </div>
                 </div><!--plantillas-->     
-                <!--HASTA AQUI LA TABLA--> 
+                 <!--HASTA AQUI LA TABLA-->     
                 
             </div>     
         </div><!--fin cabeza-->
