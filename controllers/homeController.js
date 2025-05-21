@@ -1,4 +1,6 @@
 require('dotenv').config();
+require("@aws-sdk/crc64-nvme-crt");
+
 const User = require('../models/User');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
@@ -271,7 +273,6 @@ exports.downloadpdftrabajador = async (req, res) => {
 };
        
 exports.downloadpdf = async (req, res) => {
-
     const id = req.body.id;
     const idEmpresa = req.session.userId;
     const trabajador ='Nombre: '+ req.body.nombre+' '+req.body.apellidos;
@@ -287,7 +288,7 @@ exports.downloadpdf = async (req, res) => {
                 console.error("Archivo no encontrado o clave de S3 no válida");
                 return res.status(404).send('Archivo no encontrado');
         }     
-       
+       console.log(datos[0].documentoAWS);
         const bucketName = process.env.S3_BUCKET_NAME;
         const s3Key = datos[0].documentoAWS;
         const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
@@ -1431,7 +1432,7 @@ exports.enviarmailpdf = async (req, res) => {
         from: datosemail[0].emailEmpresasend,
         to: email,
         subject: datosemail[0].Asunto,
-        text:tipo + ", enviar al email: "+emailempresa+" "+ datosemail[0].Body,
+        text:tipo + ", enviar al email: "+emailempresa+" \n"+ datosemail[0].Body,
         attachments: [
           {
             filename: sanitizedFileName,
