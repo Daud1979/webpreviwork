@@ -58,7 +58,12 @@ exports.index = async (req, res) => {
           // Formato YYYY-MM-DD
           entrega = fechaActual.toISOString().split('T')[0];
         }
-        await User.MODIFICAR_solicitudRM(codigo, entrega, url, TipoApto);
+       
+        if (TipoApto !== undefined && TipoApto !== null)         {
+        
+          await User.MODIFICAR_solicitudRM(codigo, entrega, url, TipoApto);
+          
+        }
       } catch (error) {
        // console.error(`Error con el código ${codigo}:`, error.message);
       }
@@ -1103,7 +1108,7 @@ exports.registerRM = async (req, res) => {
               }
             }
           ];
- console.log(payload);
+
           try {
             const response = await axios.post(
               'https://prevencionapi.psycotimia.com/prevenApi/datosEmpresa',
