@@ -20,10 +20,6 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 
 
-
-
-
-
 /*FUNCIONES EXTRAS*/
 function validarFecha(fecha) {
   // Verifica que el formato sea YYYY-MM-DD usando una expresión regular
@@ -38,10 +34,45 @@ function validarFecha(fecha) {
   return fechaObj instanceof Date && !isNaN(fechaObj);
 }
 
-exports.index =async (req, res) => {
-  userData = await User.findByUsername(req.session.userId);
-  gestionData = await User.findGestion();
-  res.render('home');
+exports.index = async (req, res) => {
+  try {
+    const userData = await User.findByUsername(req.session.userId);
+    const idEmpresa = req.session.userId;
+    const gestionData = await User.findGestion();
+
+    const listaTodosRM = await User.listaRMTodos(idEmpresa);
+
+    for (const element of listaTodosRM) {
+      const codigo = element.idSolRM;
+      const urlAPI = `https://prevencionapi.psycotimia.com/prevenApi/estadoSolicitud/${codigo}`;
+      
+      try {
+        const response = await axios.get(urlAPI);
+
+        // Guardamos en variables simples
+        const url = response.data.url;
+        const TipoApto = response.data.apto;       
+        let entrega = response.data.fecha_finalizado;
+        if (!entrega) {
+          const fechaActual = new Date();
+          // Formato YYYY-MM-DD
+          entrega = fechaActual.toISOString().split('T')[0];
+        }
+        await User.MODIFICAR_solicitudRM(codigo, entrega, url, TipoApto);
+      } catch (error) {
+       // console.error(`Error con el código ${codigo}:`, error.message);
+      }
+    }
+
+    res.render('home', {
+      userData,
+      gestionData
+    });
+
+  } catch (err) {
+    console.error('Error general en el controlador:', err.message);
+    res.status(500).send('Error en el servidor');
+  }
 };
 
 const streamToBuffer = async (stream) => {
@@ -115,7 +146,6 @@ exports.reconocimientomedico=async(req,res)=>{
   const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);  
   (req.session.userId>0)? res.render('reconocimientomedico',{listTrabajador,listDocumentoTrabajador}):res.redirect('/');
 }
-
           
 exports.centros=async (req,res)=>{//enviar a centros
   const idEmpresa = req.session.userId;
@@ -214,6 +244,7 @@ exports.personal=async (req,res)=>{//enviar a trabajadores
   listPuesto = await User.listPuestoEmpresa(idEmpresa);
   (req.session.userId>0)? res.render('personal',{listCentro,listPersonal,listPuesto}):res.redirect('/');
 }
+
 exports.enviarapdf=async(req,res)=>{
   const {tipo}=req.body;  
   const idEmpresa = req.session.userId;
@@ -976,29 +1007,137 @@ exports.downloadpdftrabajadorOnline = async (req, res) => {
   }
 };
 
-exports.registerRM=async(req,res)=>{
+// exports.registerRM=async(req,res)=>{
+//   const datos = req.body;
+//   const idEmpresa = req.session.userId;    
+//   if (req.session.userId>0)  {    
+//     updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);      
+//     objidContrato= await User.obtenerContrato(idEmpresa);         
+//     if (updateData[0].estado=='H')
+//     {
+//       updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa,objidContrato[0].idContrato);    
+//       const { retorno, idSolRMRetorno } = updateData;
+//       if(idSolRMRetorno>0)
+//       {
+//           try
+//           {
+//             const datos = [
+//             {
+//               nombre: updateData.empresa,
+//               cif: updateData.cifempresa,
+//               direccion: updateData.direccionEmpresa,
+//               trabajador: {
+//                 cod_solicitud: idSolRMRetorno,
+//                 nombre: updateData.nombres,
+//                 apellidos: updateData.apellidos,
+//                 dni: updateData.nif,
+//                 email: updateData.correo,
+//                 puesto: updateData.puesto,
+//                 centro: updateData.centro
+//               }
+//             }
+//             ];
+//             const response = await axios.post('https://prevencionapi.psycotimia.com/prevenApi/datosEmpresa', datos,
+//             {
+//               headers: {
+//               'Content-Type': 'application/json',
+//               'Authorization': 'sk_live_aQ8Y3K9zTpJxC1VuYgXb6e7LfWxZQ4Amr9DtU2oFNh'
+//               }
+//             }
+//             );
+//             console.log('Respuesta de la API:', response.data);
+//           } catch (error) {
+//             console.error('Error al enviar los datos:', error.message);
+//             if (error.response) {
+//               console.error('Detalles del error:', error.response.data);
+//             }
+//           }
+//       }  
+//       res.json({retorno,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
+//     }
+//     else
+//     {
+//       res.json({updateData,message:'EL TRABAJADOR ESTA DE BAJA'});
+//     }
+//   }
+//   else
+//   {
+//     res.redirect('/');
+//   }
+//   //
+// }
+
+
+exports.registerRM = async (req, res) => {
   const datos = req.body;
-  const idEmpresa = req.session.userId;    
-  if (req.session.userId>0)  {    
-    updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);  
-    objidContrato= await User.obtenerContrato(idEmpresa); 
-        
-    if (updateData[0].estado=='H')
-    {
-      updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa,objidContrato[0].idContrato);    
-      res.json({updateData,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
+  const idEmpresa = req.session.userId;
+
+  if (idEmpresa > 0) {
+    try {
+      const updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador, idEmpresa);
+      const objidContrato = await User.obtenerContrato(idEmpresa);
+
+      if (updateData[0].estado === 'H') {
+        const resultadoRegistro = await User.registrarSolicitudRM(
+          datos.idTrabajador,
+          idEmpresa,
+          objidContrato[0].idContrato
+        );
+
+        const { retorno, idSolRMRetorno } = resultadoRegistro;
+
+        if (idSolRMRetorno > 0) {
+          const payload = [
+            {
+              nombre: updateData[0].empresa,
+              cif: updateData[0].cifempresa,
+              direccion: updateData[0].direccionEmpresa,
+              trabajador: {
+                cod_solicitud: idSolRMRetorno,
+                nombre: updateData[0].nombres,
+                apellidos: updateData[0].apellidos,
+                dni: updateData[0].nif,
+                email: updateData[0].correo,
+                puesto: updateData[0].puesto,
+                centro: updateData[0].centro
+              }
+            }
+          ];
+ console.log(payload);
+          try {
+            const response = await axios.post(
+              'https://prevencionapi.psycotimia.com/prevenApi/datosEmpresa',
+              payload,
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': process.env.KEYRM
+                }
+              }
+            );          
+           
+          } catch (error) {
+            console.error('Error al enviar datos:', error.message);
+            if (error.response) {
+              console.error('Código:', error.response.status);
+              console.error('Detalles:', error.response.data);
+            }
+          }
+        }
+
+        return res.json({ retorno, message: 'YA SE REALIZO LA PETICION EN DIAS ANTERIORES' });
+      } else {
+        return res.json({ updateData, message: 'EL TRABAJADOR ESTÁ DE BAJA' });
+      }
+    } catch (err) {
+      console.error('Error general:', err.message);
+      return res.status(500).json({ error: 'Error interno del servidor' });
     }
-    else
-    {
-      res.json({updateData,message:'EL TRABAJADOR ESTA DE BAJA'});
-    }
+  } else {
+    return res.redirect('/');
   }
-  else
-  {
-    res.redirect('/');
-  }
-  //
-}
+};
+
 
 exports.registerCourseOnline=async (req,res)=>{
   const datos = req.body;

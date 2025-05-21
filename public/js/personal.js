@@ -634,14 +634,14 @@ function redirigirConPost(url, data) {
             body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => {    
-                         
-                    if (data.updateData != 'NO') {
+        .then(data => {                        
+                    if (data.retorno != 'NO') {
                         // Encuentra el label dentro de la misma fila y actualiza su contenido
                         const label = row.querySelector(".inscheckbox label");
                         if (label) {
-                            label.textContent =data.updateData; // Inserta el valor devuelto
+                            label.textContent =data.retorno; // Inserta el valor devuelto
                             document.querySelector(".rm-checkbox").checked = true; 
+                            Notiflix.Notify.success("RECONOCIMIENTO MEDICO SOLICITADO");
                         }
                     }
                     else

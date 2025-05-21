@@ -685,8 +685,10 @@ static async registrarSolicitudRM(idTrabajador,idEmpresa,idContrato){
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idContrato', sql.Int, idContrato)
         .output('retorno', sql.VarChar)  // Agregar el parámetro de salida
-        .execute('REGISTRAR_SOLICITUDRM');
-        return result.output.retorno
+        .output('idSolRMRetorno', sql.Int)
+        .execute('REGISTRAR_SOLICITUDRM_PRUEBA');
+        const { retorno, idSolRMRetorno } = result.output;
+        return { retorno, idSolRMRetorno };
     } 
     catch (error) 
     {
@@ -872,10 +874,11 @@ static async obtenerdatosCourseOnline(idTrabajador,idEmpresa){
     const pool= await connectDB();   
     const result =await pool.request()        
     .input('idTrabajador', sql.Int, idTrabajador)
-    .query(`select correo=te.email,puesto=pte.Nombre,nif=te.NIF,nombres,apellidos,telefono=te.telefono,idempresa=cc.idEmpresa,empresa=cc.empresa,fechaAlta=GETDATE(),Course,idCourse,estado=te.estado
-                                    from TrabajadorEmpresa te inner join
+    .query(`select centro= (select top 1 nombreCentro from CentroContratos where idEmpresa=cc.idEmpresa and idContrato=cc.idContrato ),cifempresa=ce.CIF,direccionEmpresa=ce.direccionEmpresa,correo=te.email,puesto=pte.Nombre,nif=te.NIF,nombres,apellidos,telefono=te.telefono,idempresa=cc.idEmpresa,empresa=cc.empresa,fechaAlta=GETDATE(),Course,idCourse,estado=te.estado
+                                    from TrabajadorEmpresa te inner join 										
+										clienteEmpresa ce on (te.idEmpresa=ce.idEmpresa) inner join
 	                                     Contratos cc on (te.idEmpresa=cc.idEmpresa) inner join	 
-	                                     PuestoTrabajoEmpresa pte on (pte.idPuesto=te.idPuesto)
+	                                     PuestoTrabajoEmpresa pte on (pte.idPuesto=te.idPuesto) 										 
                                          where idTrabajador=@idTrabajador`);          
     return result.recordset;
 }
@@ -927,6 +930,41 @@ static async registroOnline(idEmpresa, idContrato, idTrabajador, idCourse, idStu
         throw error;
     }
 }
+/*TODA LA LISTA PARA RM VERIFICAR RM*/
+static async listaRMTodos(idEmpresa){
+    const pool=await await connectDB();
+    try 
+    {  
+        const result = await pool.request()              
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .query(`select idSolRM from solicitudRM where estado='P' and idEmpresa=@idEmpresa`);          
+        return result.recordset;
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+static async MODIFICAR_solicitudRM(idSolRM, entrega, url, TipoApto){
+    const pool=await await connectDB();
+    try 
+    {   
+        const result = await pool.request()       
+        .input('idSolRM', sql.Int, idSolRM)
+        .input('entrega', sql.DateTime,entrega)
+        .input('url', sql.VarChar, url)
+        .input('TipoApto', sql.Int, TipoApto)
+        .execute('MODIFICAR_solicitudRM');
+        return (result.rowsAffected[0])
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
 
 }//fin de la clase
 

@@ -1,7 +1,7 @@
 const User = require('../models/User');
 
 exports.login = (req, res) => {
-  if (req.session.userId > 0) {
+  if (req.session.userId > 0) {    
     res.redirect('/home'); // Redirige a /home si el usuario está autenticado
   } else {
     res.render('login'); // Muestra la vista de inicio de sesión si no está autenticado
@@ -61,7 +61,7 @@ exports.logout = (req, res) => {
 
 exports.inicio = (req, res) => {
    if(req.session.userId>0)
-   {
+   {    
     res.redirect('/home');
    }
    else
