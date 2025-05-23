@@ -159,29 +159,37 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
             .input('idEmpresa', sql.Int, idEmpresa)
             .query(`
                 SELECT 
-                idTrabajador,
-                    idCentro,
-                    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
-                    NIF,
-                    nombres,
-                    apellidos,
-                    Puesto = pte.Nombre,
-                    email,
-                    telefono,                    
-                    Registro = CONVERT(varchar(10), fechaAlta, 103),
-                    FNac = CASE 
-                        WHEN FNac IS NULL THEN ''                                     
-                        ELSE CONVERT(VARCHAR(10), FNac, 103) 
-                    END,
-                    Baja = CASE 
-                        WHEN fechaBaja IS NULL THEN '' 
-                        WHEN CONVERT(datetime, fechaBaja) = '1900-01-01 00:00:00.000' THEN '' 
-                        ELSE CONVERT(varchar(10), fechaBaja, 103) 
-                    END,
-                    Estado = CASE 
-                        WHEN estado = 'H' THEN 'Alta' 
-                        ELSE 'Baja' 
-                    END
+    idTrabajador,
+    idCentro,
+    Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
+    NIF,
+    nombres,
+    apellidos,
+    Puesto = pte.Nombre,
+    email,
+    telefono,
+    FNac = CASE 
+              WHEN FNac IS NULL THEN ''                            
+              ELSE CONVERT(VARCHAR(10), FNac, 103) 
+           END,
+    Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
+    Baja = CASE 
+              WHEN fechaBaja IS NULL THEN '' 
+              WHEN fechaBaja < '2000-01-01' THEN '' 
+              ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
+           END,
+    fechaRM = CASE 
+            WHEN fechaRM IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
+    END,
+   fechaCursoOnline = CASE 
+            WHEN fechaCursoOnline IS NULL THEN ''           
+            ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
+    END,
+    Estado = CASE 
+                WHEN estado = 'H' THEN 'Alta' 
+                ELSE 'Baja' 
+             END
                 FROM TrabajadorEmpresa t
                 INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
                 WHERE t.idEmpresa = @idEmpresa    
@@ -191,6 +199,23 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
         console.error('Error en la modificación de datos:', error);
         throw error;
     }
+}
+/*aqui todas las plantillas*/
+static async listFormacion(idEmpresa,idTrabajador){
+    const pool=await await connectDB();
+    try 
+    {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)       
+        .input('idTrabajador', sql.Int, idTrabajador)   
+        .query(`select ROW_NUMBER() OVER(ORDER BY idcursoOnline ASC) AS n,puesto=pte.Nombre,registro=CONVERT(varchar(10),coc.registro,103),[CursoOnline]=CourseOnline,idStudentOnline from cursosonlineControl coc inner join TrabajadorEmpresa te on (coc.idTrabajador=te.idTrabajador) inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) where pte.idEmpresa=@idEmpresa and te.idTrabajador=@idTrabajador`);          
+        return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    } 
 }
 
 static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
@@ -299,25 +324,6 @@ static async listRMTrabajador(idEmpresa,idTrabajador){
     } 
 }
 
-
-static async listFormacion(idEmpresa,idTrabajador){
-    const pool=await await connectDB();
-    try 
-    {
-        const result =await pool.request()
-        .input('idEmpresa', sql.Int, idEmpresa)       
-        .input('idTrabajador', sql.Int, idTrabajador)   
-        .query(`select ROW_NUMBER() OVER(ORDER BY idcursoOnline ASC) AS n,puesto=pte.Nombre,registro=CONVERT(varchar(10),coc.registro,103),[CursoOnline]=CourseOnline,idStudentOnline from cursosonlineControl coc inner join TrabajadorEmpresa te on (coc.idTrabajador=te.idTrabajador) inner join PuestoTrabajoEmpresa pte on (te.idPuesto=pte.idPuesto) where pte.idEmpresa=@idEmpresa and te.idTrabajador=@idTrabajador`);          
-        return (result.recordset)
-    } 
-    catch (error) 
-    {
-        console.error('Error en la modificación de datos:', error);
-        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-    } 
-}
-
-/*para informacion y concentimiento*/
 static async listInformacion(idEmpresa,idDocumento,idTrabajador){
     const pool=await await connectDB();
     try 
@@ -336,7 +342,6 @@ static async listInformacion(idEmpresa,idDocumento,idTrabajador){
     }
 }
 
-/*para epis y autorizacion*/
 static async listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocumento){
     const pool=await await connectDB();
     try 
@@ -355,49 +360,168 @@ static async listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocu
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
-
-static async listTodosTrabajadorEmpresa(idEmpresa){
+/*aqui las plantillas*/
+static async listDocumentosTrabajador(idEmpresa){
     const pool=await await connectDB();
     try 
     {
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .query(`SELECT 
-        idTrabajador,
-        idCentro,
-        Centro = (SELECT nombreCentro FROM CentrosEmpresa WHERE idCentro = t.idCentro),
-        NIF,
-        nombres,
-        apellidos,
-        Puesto = pte.Nombre,
-        email,
-        telefono,
-        FNac = CASE 
-                WHEN FNac IS NULL THEN ''              
-                ELSE CONVERT(VARCHAR(10), FNac, 103) 
-        END,
-        Registro = CONVERT(VARCHAR(10), fechaAlta, 103),
-        Baja = CASE 
-                WHEN fechaBaja IS NULL THEN '' 
-                WHEN fechaBaja < '2000-01-01' THEN '' 
-                ELSE CONVERT(VARCHAR(10), fechaBaja, 103) 
-        END,
-        fechaRM = CASE 
-                WHEN fechaRM IS NULL THEN ''           
-                ELSE CONVERT(VARCHAR(10), fechaRM, 103) 
-        END,
-        fechaCursoOnline = CASE 
-                WHEN fechaCursoOnline IS NULL THEN ''           
-                ELSE CONVERT(VARCHAR(10), fechaCursoOnline, 103) 
-        END,
-    Estado = CASE 
-                WHEN estado = 'H' THEN 'Alta' 
-                ELSE 'Baja' 
-             END
-FROM TrabajadorEmpresa t
-INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
-WHERE t.idEmpresa = @idEmpresa and estado='H'
-    ;
+	centro = cc.nombreCentro,
+	nif = te.NIF,
+	nombre = te.nombres,
+	apellidos = te.apellidos,
+	puesto = pte.Nombre,
+	alta = CONVERT(VARCHAR(10), te.fechaAlta, 103),
+	estado = CASE WHEN te.estado = 'H' THEN 'Alta' ELSE 'Baja' END,
+
+	-- CURSOS
+	fechaCurso = curso.fechaCurso,
+	nCurso = curso.nCurso,
+
+	-- FORMACION
+	fechaFormacion = form.fechaFormacion,
+	nFormacion = form.nFormacion,
+
+	-- INFORMACION
+	fechaInformacion = info.fechaInformacion,
+	nInformacion = info.nInformacion,
+
+	-- RM
+	RM_inicio = rm.RM_inicio,
+	RM_fin = rm.RM_fin,
+
+	-- ACEPTACION RENUNCIA RM
+	fechaAceptacion = ace.fechaAceptacion,
+
+	-- AUTORIZACION
+	fechaAutorizacion = aut.fechaAutorizacion,
+	nAutorizacion = aut.nAutorizacion,
+
+	-- EPIS
+	fechaEpis = epis.fechaEpis,
+	nEpis = epis.nEpis
+
+FROM trabajadorEmpresa te
+
+-- JOIN con PUEDEN generar duplicados, se filtra con ROW_NUMBER si es necesario
+LEFT JOIN (
+	SELECT idEmpresa, nombreCentro,
+		ROW_NUMBER() OVER (PARTITION BY idEmpresa ORDER BY idCentro) AS rn
+	FROM CentroContratos
+) cc ON cc.idEmpresa = te.idEmpresa AND cc.rn = 1
+
+LEFT JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
+
+-- CURSO
+OUTER APPLY (
+	SELECT 
+		fechaCurso = (
+			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
+			FROM cursosonlineControl 
+			WHERE idTrabajador = te.idTrabajador 
+			ORDER BY registro DESC
+		),
+		nCurso = (
+			ISNULL((SELECT COUNT(*) FROM cursosonlineControl WHERE idTrabajador = te.idTrabajador), 0) 			
+		)
+) curso
+
+-- FORMACION
+OUTER APPLY (
+	SELECT 
+		fechaFormacion = (
+			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
+			FROM DocumentosProyectos 
+			WHERE idTrabajador = te.idTrabajador 
+			ORDER BY idDocumentoProyecto DESC
+		),
+		nFormacion = (
+			
+			ISNULL((SELECT COUNT(*) FROM DocumentosProyectos WHERE idTrabajador = te.idTrabajador AND idListaDocumento = 60), 0)
+		)
+) form
+
+-- INFORMACION
+OUTER APPLY (
+	SELECT 
+		fechaInformacion = (
+			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 15 AND idTrabajador = te.idTrabajador 
+			ORDER BY idDocumentoProyecto DESC
+		),
+		nInformacion = (
+			SELECT COUNT(*) 
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 15 AND idTrabajador = te.idTrabajador
+		)
+) info
+
+-- RM
+OUTER APPLY (
+	SELECT 
+		RM_inicio = ISNULL((
+			SELECT TOP 1 CONVERT(VARCHAR(10), fecha, 103)
+			FROM SolicitudRM 
+			WHERE idTrabajador = te.idTrabajador 
+			ORDER BY idSolRM DESC
+		), ''),
+		RM_fin = ISNULL((
+			SELECT TOP 1 CONVERT(VARCHAR(10), fechaEntrega, 103)
+			FROM SolicitudRM 
+			WHERE idTrabajador = te.idTrabajador 
+			ORDER BY idSolRM DESC
+		), '')
+) rm
+
+-- ACEPTACION RENUNCIA RM
+OUTER APPLY (
+	SELECT 
+		fechaAceptacion = (
+			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador 
+			ORDER BY idDocumentoProyecto DESC
+		)
+) ace
+
+-- AUTORIZACION
+OUTER APPLY (
+	SELECT 
+		fechaAutorizacion = (
+			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador 
+			ORDER BY idDocumentoProyecto DESC
+		),
+		nAutorizacion = (
+			SELECT COUNT(*) 
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador
+		)
+) aut
+
+-- EPIS
+OUTER APPLY (
+	SELECT 
+		fechaEpis = (
+			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador 
+			ORDER BY idDocumentoProyecto DESC
+		),
+		nEpis = (
+			SELECT COUNT(*) 
+			FROM DocumentosProyectos 
+			WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
+		)
+) epis
+
+WHERE 
+	te.estado = 'H'
+	AND te.idEmpresa = @idEmpresa
 `);          
         return (result.recordset)
     } 

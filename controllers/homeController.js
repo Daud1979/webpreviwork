@@ -158,6 +158,15 @@ exports.centros=async (req,res)=>{//enviar a centros
   (req.session.userId>0)? res.render('centros',{listCentro}):res.redirect('/');
 }
 
+exports.listatrabajadores =async(req,res)=>{
+const idEmpresa = req.session.userId;
+  listCentro = await User.listCentroEmpresa(idEmpresa);
+  listPersonal = await User.listDocumentosTrabajador(idEmpresa);
+  listPuesto = await User.listPuestoEmpresa(idEmpresa);
+  (req.session.userId>0)? res.render('listatrabajadores',{listCentro,listPersonal,listPuesto}):res.redirect('/');
+}
+
+
 exports.informationpersonal=async(req,res)=>{   
   idTrabajador=0;  
   if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {

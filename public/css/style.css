@@ -50,7 +50,25 @@ color: #0ca9c5;
 }
 #ilistatrabajador{
 font-size: 4rem;
-color: #03772a;
+color: #27272705;
+}
+
+.anchocabeza{
+  background: rgb(194, 194, 194) !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.segcabeza{
+background: rgb(235, 234, 234) !important;
+}
+#trhead{
+ margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+
 }
 #iaddtrabajador{
 font-size: 2rem;
@@ -263,9 +281,48 @@ font-size: 1.4rem;
 font-weight: 800;
 margin: 0;
 padding: 0;
-color: rgb(134, 8, 14);
+color: rgb(211, 16, 26);
 }
+#tdNIFT{
+  width: 100px;
+}
+.fechas{
+  width: 90px;  
 
+}
+.numero{
+  width: 65px; 
+}
+  td.fechasuno {
+    border-right: none !important;
+  }
+  td.fechasdos {
+    border-left: 1px dashed #6c757d !important; /* Línea segmentada vertical */
+  }
+ td.fechastres {
+    border-right: none !important;
+  }
+  td.fechascuatro {
+    border-left: 1px dashed #6c757d !important; /* Línea segmentada vertical */
+  }
+ td.fechascinco {
+    border-right: none !important;
+  }
+  td.fechasseis {
+    border-left: 1px dashed #6c757d !important; /* Línea segmentada vertical */
+  }
+ td.fechassiete {
+    border-right: none !important;
+  }
+  td.fechasocho {
+    border-left: 1px dashed #6c757d !important; /* Línea segmentada vertical */
+  }
+   td.fechasnueve {
+    border-right: none !important;
+  }
+  td.fechasdiez {
+    border-left: 1px dashed #6c757d !important; /* Línea segmentada vertical */
+  }
 /***********/
 /* Estilos para el botón */
 .btnidpersonalfila {
