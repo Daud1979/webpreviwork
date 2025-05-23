@@ -11,7 +11,8 @@ router.get('/centrosempresa',homeController.centros);
 router.get('/listatrabajadores',homeController.listatrabajadores);
 router.get('/personalempresa',homeController.personal);
 router.post('/modificarPersonal',homeController.modifyPersonal)
-router.post('/cargarPersonalCentro',homeController.cargarPersonalCentro)
+router.post('/cargarPersonalCentro',homeController.cargarPersonalCentro);
+router.post('/cargarDocumentoSeleccionPersonalCentro',homeController.cargarDocumentoSeleccionPersonalCentro);
 router.post('/obtenerdatosmodificar',homeController.obtenerdatosmodificar);
 router.post('/registrarpersonal',homeController.registerpersonal);
 router.post('/registrarcentro',homeController.registercenter);

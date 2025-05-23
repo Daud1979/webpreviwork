@@ -368,162 +368,349 @@ static async listDocumentosTrabajador(idEmpresa){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)
         .query(`SELECT 
-	centro = cc.nombreCentro,
-	nif = te.NIF,
-	nombre = te.nombres,
-	apellidos = te.apellidos,
-	puesto = pte.Nombre,
-	alta = CONVERT(VARCHAR(10), te.fechaAlta, 103),
-	estado = CASE WHEN te.estado = 'H' THEN 'Alta' ELSE 'Baja' END,
+    centro = cc.nombreCentro,
+    nif = te.NIF,
+    nombre = te.nombres,
+    apellidos = te.apellidos,
+    puesto = pte.Nombre,
+    alta = ISNULL(CONVERT(varchar(10), te.fechaAlta, 103), ''),
+    estado = CASE WHEN te.estado = 'H' THEN 'Alta' ELSE 'Baja' END,
 
-	-- CURSOS
-	fechaCurso = curso.fechaCurso,
-	nCurso = curso.nCurso,
+    -- CURSOS
+    fechaCurso = ISNULL(CONVERT(varchar(10), caCurso.registro, 103), ''),
+    nCurso = ISNULL(caCurso.nCurso, 0),
 
-	-- FORMACION
-	fechaFormacion = form.fechaFormacion,
-	nFormacion = form.nFormacion,
+    -- FORMACION
+    fechaFormacion = ISNULL(CONVERT(varchar(10), caFormacion.fechaFormacion, 103), ''),
+    nFormacion = ISNULL(caFormacion.nFormacion, 0),
 
-	-- INFORMACION
-	fechaInformacion = info.fechaInformacion,
-	nInformacion = info.nInformacion,
+    -- INFORMACION
+    fechaInformacion = ISNULL(CONVERT(varchar(10), caInformacion.fechaInformacion, 103), ''),
+    nInformacion = ISNULL(caInformacion.nInformacion, 0),
 
-	-- RM
-	RM_inicio = rm.RM_inicio,
-	RM_fin = rm.RM_fin,
+    -- RM
+    RM_inicio = ISNULL(CONVERT(varchar(10), caRM.fecha, 103), ''),
+    RM_fin = ISNULL(CONVERT(varchar(10), caRM.fechaEntrega, 103), ''),
 
-	-- ACEPTACION RENUNCIA RM
-	fechaAceptacion = ace.fechaAceptacion,
+    -- ACEPTACION RENUNCIA RM
+    fechaAceptacion = ISNULL(CONVERT(varchar(10), caAceptacion.fechaAceptacion, 103), ''),
 
-	-- AUTORIZACION
-	fechaAutorizacion = aut.fechaAutorizacion,
-	nAutorizacion = aut.nAutorizacion,
+    -- AUTORIZACION
+    fechaAutorizacion = ISNULL(CONVERT(varchar(10), caAutorizacion.fechaAutorizacion, 103), ''),
+    nAutorizacion = ISNULL(caAutorizacion.nAutorizacion, 0),
 
-	-- EPIS
-	fechaEpis = epis.fechaEpis,
-	nEpis = epis.nEpis
+    -- EPIS
+    fechaEpis = ISNULL(CONVERT(varchar(10), caEpis.fechaEpis, 103), ''),
+    nEpis = ISNULL(caEpis.nEpis, 0)
 
 FROM trabajadorEmpresa te
+INNER JOIN CentroContratos cc ON te.idCentro = cc.idCentro
+INNER JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
 
--- JOIN con PUEDEN generar duplicados, se filtra con ROW_NUMBER si es necesario
-LEFT JOIN (
-	SELECT idEmpresa, nombreCentro,
-		ROW_NUMBER() OVER (PARTITION BY idEmpresa ORDER BY idCentro) AS rn
-	FROM CentroContratos
-) cc ON cc.idEmpresa = te.idEmpresa AND cc.rn = 1
-
-LEFT JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
-
--- CURSO
+-- CURSOS
 OUTER APPLY (
-	SELECT 
-		fechaCurso = (
-			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
-			FROM cursosonlineControl 
-			WHERE idTrabajador = te.idTrabajador 
-			ORDER BY registro DESC
-		),
-		nCurso = (
-			ISNULL((SELECT COUNT(*) FROM cursosonlineControl WHERE idTrabajador = te.idTrabajador), 0) 			
-		)
-) curso
+    SELECT 
+        MAX(registro) AS registro,
+        COUNT(*) AS nCurso
+    FROM cursosonlineControl
+    WHERE idTrabajador = te.idTrabajador
+) caCurso
 
 -- FORMACION
 OUTER APPLY (
-	SELECT 
-		fechaFormacion = (
-			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
-			FROM DocumentosProyectos 
-			WHERE idTrabajador = te.idTrabajador 
-			ORDER BY idDocumentoProyecto DESC
-		),
-		nFormacion = (
-			
-			ISNULL((SELECT COUNT(*) FROM DocumentosProyectos WHERE idTrabajador = te.idTrabajador AND idListaDocumento = 60), 0)
-		)
-) form
+    SELECT 
+        MAX(CASE WHEN idDocumento = 15 THEN registro END) AS fechaFormacion,
+        COUNT(CASE WHEN idDocumento = 13 THEN 1 END) AS nFormacion
+    FROM DocumentosProyectos
+    WHERE idTrabajador = te.idTrabajador
+) caFormacion
 
 -- INFORMACION
 OUTER APPLY (
-	SELECT 
-		fechaInformacion = (
-			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 15 AND idTrabajador = te.idTrabajador 
-			ORDER BY idDocumentoProyecto DESC
-		),
-		nInformacion = (
-			SELECT COUNT(*) 
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 15 AND idTrabajador = te.idTrabajador
-		)
-) info
+    SELECT 
+        MAX(CASE WHEN idDocumento = 15 THEN registro END) AS fechaInformacion,
+        COUNT(CASE WHEN idDocumento = 15 THEN 1 END) AS nInformacion
+    FROM DocumentosProyectos
+    WHERE idTrabajador = te.idTrabajador
+) caInformacion
 
 -- RM
 OUTER APPLY (
-	SELECT 
-		RM_inicio = ISNULL((
-			SELECT TOP 1 CONVERT(VARCHAR(10), fecha, 103)
-			FROM SolicitudRM 
-			WHERE idTrabajador = te.idTrabajador 
-			ORDER BY idSolRM DESC
-		), ''),
-		RM_fin = ISNULL((
-			SELECT TOP 1 CONVERT(VARCHAR(10), fechaEntrega, 103)
-			FROM SolicitudRM 
-			WHERE idTrabajador = te.idTrabajador 
-			ORDER BY idSolRM DESC
-		), '')
-) rm
+    SELECT TOP 1 fecha, fechaEntrega
+    FROM SolicitudRM
+    WHERE idTrabajador = te.idTrabajador
+    ORDER BY idSolRM DESC
+) caRM
 
--- ACEPTACION RENUNCIA RM
+-- ACEPTACION
 OUTER APPLY (
-	SELECT 
-		fechaAceptacion = (
-			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador 
-			ORDER BY idDocumentoProyecto DESC
-		)
-) ace
+    SELECT TOP 1 registro AS fechaAceptacion
+    FROM DocumentosProyectos
+    WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador
+    ORDER BY idDocumentoProyecto DESC
+) caAceptacion
 
 -- AUTORIZACION
 OUTER APPLY (
-	SELECT 
-		fechaAutorizacion = (
-			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador 
-			ORDER BY idDocumentoProyecto DESC
-		),
-		nAutorizacion = (
-			SELECT COUNT(*) 
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador
-		)
-) aut
+    SELECT 
+        MAX(registro) AS fechaAutorizacion,
+        COUNT(*) AS nAutorizacion
+    FROM DocumentosProyectos
+    WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador
+) caAutorizacion
 
 -- EPIS
 OUTER APPLY (
-	SELECT 
-		fechaEpis = (
-			SELECT TOP 1 CONVERT(VARCHAR(10), registro, 103)
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador 
-			ORDER BY idDocumentoProyecto DESC
-		),
-		nEpis = (
-			SELECT COUNT(*) 
-			FROM DocumentosProyectos 
-			WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
-		)
-) epis
+    SELECT 
+        MAX(registro) AS fechaEpis,
+        COUNT(*) AS nEpis
+    FROM DocumentosProyectos
+    WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
+) caEpis
 
-WHERE 
-	te.estado = 'H'
-	AND te.idEmpresa = @idEmpresa
+WHERE cc.idEmpresa = @idEmpresa
+  AND te.estado = 'H';
+
 `);          
         return (result.recordset)
+    } 
+    catch (error) 
+    {
+        console.error('Error en la modificación de datos:', error);
+        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async cargarDocumentoSeleccionPersonalCentro(idCentro,idEmpresa,estado){
+    const pool=await await connectDB();
+    try 
+    {
+        if (idCentro>0)
+        {
+        const result =await pool.request()
+        .input('idEmpresa', sql.Int, idEmpresa)
+        .input('idCentro', sql.Int, idCentro)
+        .input('estado', sql.VarChar,estado )
+        .query(`
+            SELECT 
+    centro = cc.nombreCentro,
+    nif = te.NIF,
+    nombre = te.nombres,
+    apellidos = te.apellidos,
+    puesto = pte.Nombre,
+    alta = ISNULL(CONVERT(varchar(10), te.fechaAlta, 103), ''),
+    estado = CASE WHEN te.estado = 'H' THEN 'Alta' ELSE 'Baja' END,
+
+    -- CURSOS
+    fechaCurso = ISNULL(CONVERT(varchar(10), caCurso.registro, 103), ''),
+    nCurso = ISNULL(caCurso.nCurso, 0),
+
+    -- FORMACION
+    fechaFormacion = ISNULL(CONVERT(varchar(10), caFormacion.fechaFormacion, 103), ''),
+    nFormacion = ISNULL(caFormacion.nFormacion, 0),
+
+    -- INFORMACION
+    fechaInformacion = ISNULL(CONVERT(varchar(10), caInformacion.fechaInformacion, 103), ''),
+    nInformacion = ISNULL(caInformacion.nInformacion, 0),
+
+    -- RM
+    RM_inicio = ISNULL(CONVERT(varchar(10), caRM.fecha, 103), ''),
+    RM_fin = ISNULL(CONVERT(varchar(10), caRM.fechaEntrega, 103), ''),
+
+    -- ACEPTACION RENUNCIA RM
+    fechaAceptacion = ISNULL(CONVERT(varchar(10), caAceptacion.fechaAceptacion, 103), ''),
+
+    -- AUTORIZACION
+    fechaAutorizacion = ISNULL(CONVERT(varchar(10), caAutorizacion.fechaAutorizacion, 103), ''),
+    nAutorizacion = ISNULL(caAutorizacion.nAutorizacion, 0),
+
+    -- EPIS
+    fechaEpis = ISNULL(CONVERT(varchar(10), caEpis.fechaEpis, 103), ''),
+    nEpis = ISNULL(caEpis.nEpis, 0)
+
+FROM trabajadorEmpresa te
+INNER JOIN CentroContratos cc ON te.idCentro = cc.idCentro
+INNER JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
+
+-- CURSOS
+OUTER APPLY (
+    SELECT 
+        MAX(registro) AS registro,
+        COUNT(*) AS nCurso
+    FROM cursosonlineControl
+    WHERE idTrabajador = te.idTrabajador
+) caCurso
+
+-- FORMACION
+OUTER APPLY (
+    SELECT 
+        MAX(CASE WHEN idDocumento = 15 THEN registro END) AS fechaFormacion,
+        COUNT(CASE WHEN idDocumento = 13 THEN 1 END) AS nFormacion
+    FROM DocumentosProyectos
+    WHERE idTrabajador = te.idTrabajador
+) caFormacion
+
+-- INFORMACION
+OUTER APPLY (
+    SELECT 
+        MAX(CASE WHEN idDocumento = 15 THEN registro END) AS fechaInformacion,
+        COUNT(CASE WHEN idDocumento = 15 THEN 1 END) AS nInformacion
+    FROM DocumentosProyectos
+    WHERE idTrabajador = te.idTrabajador
+) caInformacion
+
+-- RM
+OUTER APPLY (
+    SELECT TOP 1 fecha, fechaEntrega
+    FROM SolicitudRM
+    WHERE idTrabajador = te.idTrabajador
+    ORDER BY idSolRM DESC
+) caRM
+
+-- ACEPTACION
+OUTER APPLY (
+    SELECT TOP 1 registro AS fechaAceptacion
+    FROM DocumentosProyectos
+    WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador
+    ORDER BY idDocumentoProyecto DESC
+) caAceptacion
+
+-- AUTORIZACION
+OUTER APPLY (
+    SELECT 
+        MAX(registro) AS fechaAutorizacion,
+        COUNT(*) AS nAutorizacion
+    FROM DocumentosProyectos
+    WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador
+) caAutorizacion
+
+-- EPIS
+OUTER APPLY (
+    SELECT 
+        MAX(registro) AS fechaEpis,
+        COUNT(*) AS nEpis
+    FROM DocumentosProyectos
+    WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
+) caEpis
+
+WHERE cc.idEmpresa = @idEmpresa 
+  and te.estado = @estado and cc.idCentro=@idCentro
+
+        `);          
+        return (result.recordset)
+        }
+        else
+        {
+            const result =await pool.request()
+            .input('idEmpresa', sql.Int, idEmpresa)
+            .input('estado', sql.VarChar,estado )
+            .query(`
+       SELECT 
+    centro = cc.nombreCentro,
+    nif = te.NIF,
+    nombre = te.nombres,
+    apellidos = te.apellidos,
+    puesto = pte.Nombre,
+    alta = ISNULL(CONVERT(varchar(10), te.fechaAlta, 103), ''),
+    estado = CASE WHEN te.estado = 'H' THEN 'Alta' ELSE 'Baja' END,
+
+    -- CURSOS
+    fechaCurso = ISNULL(CONVERT(varchar(10), caCurso.registro, 103), ''),
+    nCurso = ISNULL(caCurso.nCurso, 0),
+
+    -- FORMACION
+    fechaFormacion = ISNULL(CONVERT(varchar(10), caFormacion.fechaFormacion, 103), ''),
+    nFormacion = ISNULL(caFormacion.nFormacion, 0),
+
+    -- INFORMACION
+    fechaInformacion = ISNULL(CONVERT(varchar(10), caInformacion.fechaInformacion, 103), ''),
+    nInformacion = ISNULL(caInformacion.nInformacion, 0),
+
+    -- RM
+    RM_inicio = ISNULL(CONVERT(varchar(10), caRM.fecha, 103), ''),
+    RM_fin = ISNULL(CONVERT(varchar(10), caRM.fechaEntrega, 103), ''),
+
+    -- ACEPTACION RENUNCIA RM
+    fechaAceptacion = ISNULL(CONVERT(varchar(10), caAceptacion.fechaAceptacion, 103), ''),
+
+    -- AUTORIZACION
+    fechaAutorizacion = ISNULL(CONVERT(varchar(10), caAutorizacion.fechaAutorizacion, 103), ''),
+    nAutorizacion = ISNULL(caAutorizacion.nAutorizacion, 0),
+
+    -- EPIS
+    fechaEpis = ISNULL(CONVERT(varchar(10), caEpis.fechaEpis, 103), ''),
+    nEpis = ISNULL(caEpis.nEpis, 0)
+
+FROM trabajadorEmpresa te
+INNER JOIN CentroContratos cc ON te.idCentro = cc.idCentro
+INNER JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
+
+-- CURSOS
+OUTER APPLY (
+    SELECT 
+        MAX(registro) AS registro,
+        COUNT(*) AS nCurso
+    FROM cursosonlineControl
+    WHERE idTrabajador = te.idTrabajador
+) caCurso
+
+-- FORMACION
+OUTER APPLY (
+    SELECT 
+        MAX(CASE WHEN idDocumento = 15 THEN registro END) AS fechaFormacion,
+        COUNT(CASE WHEN idDocumento = 13 THEN 1 END) AS nFormacion
+    FROM DocumentosProyectos
+    WHERE idTrabajador = te.idTrabajador
+) caFormacion
+
+-- INFORMACION
+OUTER APPLY (
+    SELECT 
+        MAX(CASE WHEN idDocumento = 15 THEN registro END) AS fechaInformacion,
+        COUNT(CASE WHEN idDocumento = 15 THEN 1 END) AS nInformacion
+    FROM DocumentosProyectos
+    WHERE idTrabajador = te.idTrabajador
+) caInformacion
+
+-- RM
+OUTER APPLY (
+    SELECT TOP 1 fecha, fechaEntrega
+    FROM SolicitudRM
+    WHERE idTrabajador = te.idTrabajador
+    ORDER BY idSolRM DESC
+) caRM
+
+-- ACEPTACION
+OUTER APPLY (
+    SELECT TOP 1 registro AS fechaAceptacion
+    FROM DocumentosProyectos
+    WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador
+    ORDER BY idDocumentoProyecto DESC
+) caAceptacion
+
+-- AUTORIZACION
+OUTER APPLY (
+    SELECT 
+        MAX(registro) AS fechaAutorizacion,
+        COUNT(*) AS nAutorizacion
+    FROM DocumentosProyectos
+    WHERE idDocumento = 16 AND idListaDocumento = 73 AND idTrabajador = te.idTrabajador
+) caAutorizacion
+
+-- EPIS
+OUTER APPLY (
+    SELECT 
+        MAX(registro) AS fechaEpis,
+        COUNT(*) AS nEpis
+    FROM DocumentosProyectos
+    WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
+) caEpis
+
+WHERE cc.idEmpresa = @idEmpresa 
+  and te.estado =@estado;
+                `);          
+            return (result.recordset)
+        }
     } 
     catch (error) 
     {
@@ -628,6 +815,7 @@ WHERE t.idEmpresa = @idEmpresa and estado=@estado;`);
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
 
 static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
     const pool=await await connectDB();

@@ -842,6 +842,27 @@ exports.cargarPersonalCentro=async(req,res)=>{
   }
 }
 
+exports.cargarDocumentoSeleccionPersonalCentro=async(req,res)=>{
+  const datos = req.body;
+  const idEmpresa = req.session.userId;
+  const isOn = datos.isOn;
+  let estado='H';
+  let estadoli='F. Alta';
+  (isOn)? estado='H': estado='D';
+  (isOn)? estadoli='F. Alta': estadoli='F. Baja';
+  if (req.session.userId>0)
+  {
+    Data = await User.cargarDocumentoSeleccionPersonalCentro(datos.valor,idEmpresa,estado)
+    res.json({Data,estadoli});
+  }
+  else
+  {
+    res.redirect('/');
+  }
+}
+
+
+
 exports.obtenerdatosmodificar=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId; 
