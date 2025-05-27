@@ -95,6 +95,7 @@ function cargardatos() {
                         <td class="fechas"                          data-id="${item.estado }">${ item.estado }</td>
 
                         <td class="fechas"                          data-id="${item.fechaAceptacion}">${ item.fechaAceptacion }</td>
+                         <td class="align-left ARObs" data-id="${ item.ARObservacion}">${ item.ARObservacion }</td>
                                    
                         <td class="align-right fechas fechasuno"    data-id="${item.RM_inicio }">${ item.RM_inicio } </td>      
                         <td class="align-right fechas fechasdos"    data-id="${item.RM_inicio }">${ item.RM_fin }</td>      

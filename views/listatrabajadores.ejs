@@ -5,115 +5,114 @@
         <i id="ilistatrabajador" class="material-icons">blur_linear</i>
         <div class="row justify-content-center m-0 p-0">
             <div class="datosGral">
-                <!---->
+                <!--DATOS GRAL-->
                 <div class="personalhead ">
-  <div class="row w-100 m-0">
-    <div id="uno" class="col-12 col-xl-10">
-      <!-- CONTENIDO DE UNO -->
-      <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
-        <div class="input-group m-0 p-0 input-group-sm">
-          <span class="input-group-text" id="basic-addon1">Lista de Centros</span>
-          <select class="form-select" id="cmbcentrospersonal" aria-label="Selector de filtro">
-            <option value="" selected>Seleccione un Centro</option>
-            <% listCentro.forEach(opcion => { %>
-              <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
-            <% }); %>
-          </select>
-        </div>
-      </div>
-
-      <div class="datosGral1 ms-0 me-0 p-0 col-12 col-xl-5">
-        <div class="input-group m-0 p-0 input-group-sm">
-          <span class="input-group-text" id="basic-addon1">Buscar</span>
-          <input type="text" id="buscadorpersonal" class="form-control" style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
-        </div>
-        <div class="switch on" onclick="toggleSwitch()">
-          <div class="slider" id="slider">Alta</div>
-        </div>
-      </div>      
-    </div>
-
-    <div id="dos" class=" col-12 col-xl-2 d-flex justify-content-end">
-        <a href="/home/personalempresa" id="btnWorkAll" class="folderTrabajadores folders_ d-flex flex-column align-items-center">                
-            <i id="itrabajador_" class="material-icons">engineering</i>
-            <p id="plistatrabajador_"> Trabajadores</p>               
-        </a>     
-    </div>
-  </div>
-</div>
-
-                
-                
-                <!---->
+                    <div class="row w-100 m-0">
+                        <div id="uno" class="col-12 col-xl-10">
+                        <!-- CONTENIDO DE UNO -->
+                            <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
+                                <div class="input-group m-0 p-0 input-group-sm">
+                                    <span class="input-group-text" id="basic-addon1">Lista de Centros</span>
+                                    <select class="form-select" id="cmbcentrospersonal" aria-label="Selector de filtro">
+                                        <option value="" selected>Seleccione un Centro</option>
+                                        <% listCentro.forEach(opcion => { %>
+                                            <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="datosGral1 ms-0 me-0 p-0 col-12 col-xl-5">
+                                <div class="input-group m-0 p-0 input-group-sm">
+                                    <span class="input-group-text" id="basic-addon1">Buscar</span>
+                                    <input type="text" id="buscadorpersonal" class="form-control" style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="switch on" onclick="toggleSwitch()">
+                                    <div class="slider" id="slider">
+                                        Alta
+                                    </div>
+                                </div>
+                            </div>      
+                        </div>
+                        <!-- FIN CONTENIDO UNO -->
+                        <div id="dos" class=" col-12 col-xl-2 d-flex justify-content-end">
+                            <a href="/home/personalempresa" id="btnWorkAll" class="folderTrabajadores folders_ d-flex flex-column align-items-center">                
+                                <i id="itrabajador_" class="material-icons">engineering</i>
+                                <p id="plistatrabajador_"> Trabajadores</p>               
+                            </a>     
+                        </div>
+                    </div>
+                </div>
+                <!--FIN DATOS GRAL-->
                 <div class="tablecentro col-12  d-flex mt-1 flex-column">
                     <H4>LISTA DE TRABAJADORES</H4>
                 </div>
-                <div class="table-responsive ">
-                    <div class="table-wrapper overflow-auto" style="max-height: 800px;">
-                    <table id="tablapersonaT" class="table table-bordered table-striped table-sm shadow">
-                        <thead  class="shadow">
-                            <tr id="trhead">
-                                <th class="anchocabeza" rowspan="2">Centro</th>
-                                <th class="anchocabeza" rowspan="2">N.I.F.</th>
-                                <th class="anchocabeza" rowspan="2">Nombres</th>
-                                <th class="anchocabeza" rowspan="2">Apellidos</th>
-                                <th class="anchocabeza" rowspan="2">Puesto</th>
-                                <th id="fAltaBaja" class="anchocabeza" rowspan="2">F. Alta</th>
-                                <th class="anchocabeza" rowspan="2">Estado</th>
-                                <th class="anchocabeza" rowspan="2">A/R Medica</th>
+                <div class="table-responsive" style="overflow: auto; height: 800px;">
+  <div class="table-wrapper table table-bordered table-striped table-sm shadow" style="min-width: 1500px;">
+    <table id="tablapersonaT" class="table table-bordered" style="min-width: 1500px;">
+      <thead class="shadow">
+        <tr id="cabezaUno" >
+           <th rowspan="2" class="col-centro">Centro</th>
+          <th rowspan="2">N.I.F.</th>
+          <th rowspan="2" class="col-nombres">Nombres</th>
+          <th rowspan="2" class="col-apellidos">Apellidos</th>
+          <th rowspan="2" class="col-puesto">Puesto</th>
+          <th rowspan="2">F. Alta</th>
+          <th rowspan="2">Estado</th>
+          <th rowspan="2">A/R Médica</th>
+          <th rowspan="2" class="col-obs">A/R Observación</th>
+          <th colspan="2" class="col-rm">Rec. Médico</th>
+          <th colspan="2">Cursos</th>
+          <th colspan="2">Formación</th>
+          <th colspan="2">Información</th>
+          <th colspan="2">Entrega EPI</th>
+          <th colspan="2">Autorización</th>
+        </tr>
+        <tr id="cabezaDos">
+          <th class="col-rm1">Petición</th>
+          <th class="col-rm2">Entrega</th>
+          <th>Doc.</th>
+          <th>Último</th>
+          <th>Doc.</th>
+          <th>Alta</th>
+          <th>Doc.</th>
+          <th>Último</th>
+          <th>Doc.</th>
+          <th>Último</th>
+          <th>Doc.</th>
+          <th>Último</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-trabajadorT">
+        <% listPersonal.forEach((item) => { %>
+          <tr>
+            <td class="col-ancho"><%= item.centro %></td>
+            <td><%= item.nif %></td>
+            <td class="col-ancho"><%= item.nombre %></td>
+            <td class="col-ancho"><%= item.apellidos %></td>
+            <td class="col-ancho"><%= item.puesto %></td>
+            <td><%= item.alta %></td>
+            <td><%= item.estado %></td>
+            <td><%= item.fechaAceptacion %></td>
+            <td class="col-ancho"> <%= item.ARObservacion %></td>
+            <td class="izqui"><%= item.RM_inicio %></td>
+            <td class="derec"><%= item.RM_fin %></td>
+            <td class="izqui"><%= item.nCurso %></td>
+            <td class="derec"><%= item.fechaCurso %></td>
+            <td class="izqui"><%= item.nFormacion %></td>
+            <td class="derec"><%= item.fechaFormacion %></td>
+            <td class="izqui"><%= item.nInformacion %></td>
+            <td class="derec"><%= item.fechaInformacion %></td>
+            <td class="izqui"><%= item.nEpis %></td>
+            <td class="derec"><%= item.fechaEpis %></td>
+            <td class="izqui"><%= item.nAutorizacion %></td>
+            <td class="derec"><%= item.fechaAutorizacion %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-                                <th class="anchocabeza" colspan="2">Rec. Médico</th>
-                                <th class="anchocabeza" colspan="2">Cursos</th>
-                                <th class="anchocabeza" colspan="2">Formación</th>
-                                <th class="anchocabeza" colspan="2">Entrega EPI</th>
-                                <th class="anchocabeza" colspan="2">Autorización</th>
-                            </tr>
-                            <tr id="trhead2">                               
-                                <th class="segcabeza anchocabeza">Peticion</th>
-                                <th class="segcabeza anchocabeza">Entrega</th>
-                                <th class="segcabeza anchocabeza">N Doc.</th>
-                                <th class="segcabeza anchocabeza">Ultimo</th>
-                                <th class="segcabeza anchocabeza">N Doc.</th>
-                                <th class="segcabeza anchocabeza">Alta</th>
-                                <th class="segcabeza anchocabeza">N Doc.</th>
-                                <th class="segcabeza anchocabeza">Ultimo</th>
-                                <th class="segcabeza anchocabeza">N Doc.</th>
-                                <th class="segcabeza anchocabeza">Ultimo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-trabajadorT">
-                            <% listPersonal.forEach((item) => { %>
-                                <tr>                             
-                                    <td class="align-left" id="tdCentroT" data-id="<%= item.centro %>"><%= item.centro %></td>
-                                    <td class="align-rigth"  id="tdNIFT" data-id="<%= item.nif %>"><%= item.nif %></td>
-                                    <td class="align-left" id="tdnombresT" data-id="<%= item.nombre %>"><%= item.nombre %></td>
-                                    <td class="align-left" id="tdapellidosT" data-id="<%= item.apellidos %>"><%= item.apellidos %></td>
-                                    <td class="align-left" id="tdpuestoT" data-id="<%= item.puesto %>"><%= item.puesto %></td>                                                        
-                                    <td class="align-right fechas" data-id="<%= item.alta %>"><%= item.alta %></td>
-                                    <td class="fechas" data-id="<%= item.estado %>"><%= item.estado %></td>
-
-                                    <td class="fechas" data-id="<%= item.fechaAceptacion%>"><%= item.fechaAceptacion %></td>
-                                    
-                                    <td class="align-right fechas fechasuno" data-id="<%= item.RM_inicio %>"><%= item.RM_inicio %> </td>      
-                                    <td class="align-right fechas fechasdos" data-id="<%= item.RM_inicio %>"><%= item.RM_fin %></td>      
-
-                                    <td class="align-right numero fechastres" data-id="<%= item.nCurso %>"><%= item.nCurso %></td>      
-                                    <td class="align-right fechas fechascuatro" data-id="<%= item.fechaCurso %>"><%= item.fechaCurso %> </td> 
-
-                                    <td class="align-right numero fechascinco" data-id="<%= item.nFormacion %>"><%= item.nFormacion %></td>      
-                                    <td class="align-right fechas fechasseis" data-id="<%= item.fechaFormacion %>"><%= item.fechaFormacion %> </td>      
-                                    
-                                    <td class="align-right numero fechassiete" data-id="<%= item.nEpis %>"><%= item.nEpis %></td>      
-                                    <td class="align-right fechas fechasocho" data-id="<%= item.fechaEpis %>"><%= item.fechaEpis %> </td>   
-
-                                    <td class="align-right numero fechasnueve" data-id="<%= item.nAutorizacion %>"><%= item.nAutorizacion %></td>      
-                                    <td class="align-right fechas fechasdiez" data-id="<%= item.fechaAutorizacion %>"><%= item.fechaAutorizacion %> </td>   
-                                </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

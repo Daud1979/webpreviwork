@@ -861,8 +861,6 @@ exports.cargarDocumentoSeleccionPersonalCentro=async(req,res)=>{
   }
 }
 
-
-
 exports.obtenerdatosmodificar=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId; 
@@ -1446,6 +1444,7 @@ exports.viewPdfTrabajador = async (req, res) => {
     res.redirect('/');
   }
 };
+
 exports.verpdfRMOnline= async (req, res) => {
   if (!req.session.userId || req.session.userId <= 0) {
     return res.redirect("/");
@@ -1454,9 +1453,6 @@ exports.verpdfRMOnline= async (req, res) => {
     const nombre = req.body.nombre;
   res.render("visualiazpdfRM", { datos, filename: `Certificado de Reconocimiento Medicos ${nombre}` });
 }
-
-
-
 
 exports.viewPdfTrabajadorOnline = async (req, res) => {
   if (!req.session.userId || req.session.userId <= 0) {
@@ -1534,8 +1530,6 @@ exports.viewPdfTrabajadorOnline = async (req, res) => {
     res.status(500).json({ error: "Error al descargar el certificado. Inténtalo nuevamente más tarde." });
   }
 };
-
-
 
 /*fin preventor*/
 

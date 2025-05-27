@@ -11,7 +11,58 @@ a{
   color: black;
   text-decoration: none;
 }
+/*AQUI TALBA DOCU*/
+#tablapersonaT thead th {
+  padding: 2px 4px;           /* reduce el padding vertical */
+  line-height: 1.2;           /* opcional: reduce la altura del texto */
+  font-size: 12px;            /* asegúrate de que el tamaño de fuente no sea grande */
+  height: 20px;               /* puedes forzar una altura máxima si lo deseas */
+}
+#cabezaUno th {
+  background-color: rgb(124, 124, 124);
+  color: rgb(253, 253, 253); /* Para que el texto contraste */
+}
 
+#cabezaDos th {
+  background-color: rgb(191, 191, 192);
+  color: rgb(27, 27, 27);
+}
+.col-centro,
+  .col-nombres,
+  .col-apellidos,
+  .col-puesto {
+    width: 30rem;
+    min-width: 25rem;
+    max-width: 30rem;
+    white-space: nowrap;
+    
+  }
+  .col-obs {
+    width: 45rem;
+    min-width: 35rem;
+    max-width: 45rem;
+    white-space: nowrap;
+    
+  }
+ 
+
+.col-ancho{
+  text-align:left
+}
+
+#tabla-trabajadorT tr {
+    border-bottom: 1px dashed #999;
+  }
+  td.izqui {
+    border-right: 1px dashed #999 !important;
+  }
+
+  td.derec {
+    border-left: none !important;
+  }
+
+
+/**/
 
 .material-icons {
   color:#0368bb; /* Cambiar el color */
@@ -63,23 +114,15 @@ color: #27272705;
 #plistatrabajador_{
   font-size: 0.6rem;
 }
-.anchocabeza{
-  background: rgb(194, 194, 194) !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-.segcabeza{
-background: rgb(235, 234, 234) !important;
-}
+
+
 #trhead{
  margin-top: 0 !important;
   margin-bottom: 0 !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-
 }
+
 #iaddtrabajador{
 font-size: 2rem;
 color: #0ca9c5;
@@ -89,6 +132,7 @@ padding: 0;
 #iaddtrabajador:hover{
 color: #3a5fd6;
 }
+
 #addtrabajador{
  margin: 0; 
  padding: 0;
@@ -315,8 +359,9 @@ color: rgb(211, 16, 26);
   width: 90px;  
 
 }
+
 .numero{
-  width: 65px; 
+  width: 80px; 
 }
   td.fechasuno {
     border-right: none !important;

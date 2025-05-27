@@ -314,7 +314,30 @@ static async listRMTrabajador(idEmpresa,idTrabajador){
         const result =await pool.request()
         .input('idEmpresa', sql.Int, idEmpresa)        
         .input('idTrabajador', sql.Int, idTrabajador)   
-        .query(`select url,ROW_NUMBER() OVER(ORDER BY idSolRM) AS n,nombre=te.nombres+' '+te.apellidos,registro=convert(varchar(10),fecha,103),estado=case when rm.estado='P' then 'Solicitud Pendiente' else 'Certificado Entregado' end, entrega=case when TipoApto=1 then convert(varchar(10),fechaEntrega,103) else '' end, apto=case when TipoApto=1 then 'Apto' when TipoApto=0 then 'No Apto' else '' end, idSolRM from SolicitudRM rm inner join TrabajadorEmpresa te on (rm.idTrabajador=te.idTrabajador) where rm.idEmpresa=@idEmpresa and rm.idTrabajador=@idTrabajador;`);          
+        .query(`SELECT 
+    ISNULL(url, '') AS url,
+    ROW_NUMBER() OVER(ORDER BY idSolRM) AS n,
+    nombre = ISNULL(te.nombres, '') + ' ' + ISNULL(te.apellidos, ''),
+    registro = CONVERT(VARCHAR(10), fecha, 103),
+    estado = CASE 
+                WHEN rm.estado = 'P' THEN 'Solicitud Pendiente' 
+                ELSE 'Certificado Entregado' 
+             END,
+    entrega = CASE 
+                 WHEN TipoApto = 1 THEN CONVERT(VARCHAR(10), fechaEntrega, 103) 
+                 ELSE '' 
+              END,
+    apto = CASE 
+              WHEN TipoApto = 1 THEN 'Apto'
+              WHEN TipoApto IS NULL THEN ''
+              WHEN TipoApto = '' THEN ''
+              ELSE 'No Apto' 
+           END,
+    idSolRM
+FROM 
+    SolicitudRM rm
+INNER JOIN 
+    TrabajadorEmpresa te ON rm.idTrabajador = te.idTrabajador where rm.idEmpresa=@idEmpresa and rm.idTrabajador=@idTrabajador;`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -390,11 +413,11 @@ static async listDocumentosTrabajador(idEmpresa){
 
     -- RM
     RM_inicio = ISNULL(CONVERT(varchar(10), caRM.fecha, 103), ''),
-    RM_fin = ISNULL(CONVERT(varchar(10), caRM.fechaEntrega, 103), ''),
+    RM_fin = ISNULL(CASE WHEN caRM.fechaEntrega> caRM.fecha THEN CONVERT(varchar(10), caRM.fechaEntrega, 103) ELSE '' END, ''),
 
     -- ACEPTACION RENUNCIA RM
     fechaAceptacion = ISNULL(CONVERT(varchar(10), caAceptacion.fechaAceptacion, 103), ''),
-
+	ARObservacion = ISNULL(caAceptacion.observacion,''),
     -- AUTORIZACION
     fechaAutorizacion = ISNULL(CONVERT(varchar(10), caAutorizacion.fechaAutorizacion, 103), ''),
     nAutorizacion = ISNULL(caAutorizacion.nAutorizacion, 0),
@@ -444,11 +467,12 @@ OUTER APPLY (
 
 -- ACEPTACION
 OUTER APPLY (
-    SELECT TOP 1 registro AS fechaAceptacion
+    SELECT TOP 1 registro AS fechaAceptacion, observacion
     FROM DocumentosProyectos
     WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador
     ORDER BY idDocumentoProyecto DESC
 ) caAceptacion
+-- ACEPTACION
 
 -- AUTORIZACION
 OUTER APPLY (
@@ -491,8 +515,7 @@ static async cargarDocumentoSeleccionPersonalCentro(idCentro,idEmpresa,estado){
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
         .input('estado', sql.VarChar,estado )
-        .query(`
-            SELECT 
+        .query(`SELECT 
     centro = cc.nombreCentro,
     nif = te.NIF,
     nombre = te.nombres,
@@ -515,11 +538,11 @@ static async cargarDocumentoSeleccionPersonalCentro(idCentro,idEmpresa,estado){
 
     -- RM
     RM_inicio = ISNULL(CONVERT(varchar(10), caRM.fecha, 103), ''),
-    RM_fin = ISNULL(CONVERT(varchar(10), caRM.fechaEntrega, 103), ''),
+    RM_fin = ISNULL(CASE WHEN caRM.fechaEntrega> caRM.fecha THEN CONVERT(varchar(10), caRM.fechaEntrega, 103) ELSE '' END, ''),
 
     -- ACEPTACION RENUNCIA RM
     fechaAceptacion = ISNULL(CONVERT(varchar(10), caAceptacion.fechaAceptacion, 103), ''),
-
+	ARObservacion = ISNULL(caAceptacion.observacion,''),
     -- AUTORIZACION
     fechaAutorizacion = ISNULL(CONVERT(varchar(10), caAutorizacion.fechaAutorizacion, 103), ''),
     nAutorizacion = ISNULL(caAutorizacion.nAutorizacion, 0),
@@ -569,11 +592,12 @@ OUTER APPLY (
 
 -- ACEPTACION
 OUTER APPLY (
-    SELECT TOP 1 registro AS fechaAceptacion
+    SELECT TOP 1 registro AS fechaAceptacion, observacion
     FROM DocumentosProyectos
     WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador
     ORDER BY idDocumentoProyecto DESC
 ) caAceptacion
+-- ACEPTACION
 
 -- AUTORIZACION
 OUTER APPLY (
@@ -593,9 +617,9 @@ OUTER APPLY (
     WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
 ) caEpis
 
-WHERE cc.idEmpresa = @idEmpresa 
-  and te.estado = @estado and cc.idCentro=@idCentro
-
+WHERE cc.idEmpresa = @idEmpresa
+  AND te.estado = @estado and cc.idCentro=@idCentro;
+        
         `);          
         return (result.recordset)
         }
@@ -604,8 +628,7 @@ WHERE cc.idEmpresa = @idEmpresa
             const result =await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
             .input('estado', sql.VarChar,estado )
-            .query(`
-       SELECT 
+            .query(`SELECT 
     centro = cc.nombreCentro,
     nif = te.NIF,
     nombre = te.nombres,
@@ -628,11 +651,11 @@ WHERE cc.idEmpresa = @idEmpresa
 
     -- RM
     RM_inicio = ISNULL(CONVERT(varchar(10), caRM.fecha, 103), ''),
-    RM_fin = ISNULL(CONVERT(varchar(10), caRM.fechaEntrega, 103), ''),
+    RM_fin = ISNULL(CASE WHEN caRM.fechaEntrega> caRM.fecha THEN CONVERT(varchar(10), caRM.fechaEntrega, 103) ELSE '' END, ''),
 
     -- ACEPTACION RENUNCIA RM
     fechaAceptacion = ISNULL(CONVERT(varchar(10), caAceptacion.fechaAceptacion, 103), ''),
-
+	ARObservacion = ISNULL(caAceptacion.observacion,''),
     -- AUTORIZACION
     fechaAutorizacion = ISNULL(CONVERT(varchar(10), caAutorizacion.fechaAutorizacion, 103), ''),
     nAutorizacion = ISNULL(caAutorizacion.nAutorizacion, 0),
@@ -682,11 +705,12 @@ OUTER APPLY (
 
 -- ACEPTACION
 OUTER APPLY (
-    SELECT TOP 1 registro AS fechaAceptacion
+    SELECT TOP 1 registro AS fechaAceptacion, observacion
     FROM DocumentosProyectos
     WHERE idDocumento = 14 AND idTrabajador = te.idTrabajador
     ORDER BY idDocumentoProyecto DESC
 ) caAceptacion
+-- ACEPTACION
 
 -- AUTORIZACION
 OUTER APPLY (
@@ -706,8 +730,8 @@ OUTER APPLY (
     WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
 ) caEpis
 
-WHERE cc.idEmpresa = @idEmpresa 
-  and te.estado =@estado;
+WHERE cc.idEmpresa = @idEmpresa
+  AND te.estado = @estado;
                 `);          
             return (result.recordset)
         }
@@ -718,6 +742,10 @@ WHERE cc.idEmpresa = @idEmpresa
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+
+
+
+
 
 static async listTodosTrabajadorCentro(idCentro,idEmpresa,estado){
     const pool= await connectDB();
