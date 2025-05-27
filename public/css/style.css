@@ -48,11 +48,21 @@ color: rgb(5, 129, 47);
 font-size: 4rem;
 color: #0ca9c5;
 }
+#itrabajador_{
+font-size: 2rem;
+color: #0ca9c5;
+}
 #ilistatrabajador{
 font-size: 4rem;
 color: #27272705;
 }
-
+#ilistatrabajador_{
+font-size: 2rem;
+color: #27272705;
+}
+#plistatrabajador_{
+  font-size: 0.6rem;
+}
 .anchocabeza{
   background: rgb(194, 194, 194) !important;
   margin-top: 0 !important;
@@ -128,7 +138,22 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 }
+.folders_{
+margin: 0.5rem;
+width: 100px;
+height: 80px;
+border-radius: 5px;
+background: rgb(253, 253, 253);
+box-shadow: 1px 2px rgb(175, 175, 175);
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
 .folders:hover{
+background: #b9b9b9;
+cursor:pointer;
+}
+.folders_:hover{
 background: #b9b9b9;
 cursor:pointer;
 }

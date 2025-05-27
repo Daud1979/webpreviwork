@@ -6,29 +6,42 @@
         <div class="row justify-content-center m-0 p-0">
             <div class="datosGral">
                 <!---->
-                <div class="personalhead">                        
-                    <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
-                        <div class="input-group m-0 p-0 input-group-sm">
-                            <span class="input-group-text" id="basic-addon1">Lista de Centros</span>
-                            <select class="form-select " id="cmbcentrospersonal" aria-label="Selector de filtro">
-                                <option value="" selected>Seleccione un Centro</option>
-                                <% listCentro.forEach(opcion => { %>
-                                    <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
-                                <% }); %>
-                            </select>   
-                        </div>
-                    </div>      
-                    <div class="datosGral1 ms-0 me-0 p-0 col-12 col-xl-5">
-                        <div class="input-group m-0 p-0 input-group-sm">
-                            <span class="input-group-text" id="basic-addon1">Buscar</span>
-                            <input type="text" id="buscadorpersonal" class="form-control" style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="switch on" onclick="toggleSwitch()">
-                            <div class="slider" id="slider">Alta</div>
-                        </div>
-                    </div>                    
-                   
-                </div>
+                <div class="personalhead ">
+  <div class="row w-100 m-0">
+    <div id="uno" class="col-12 col-xl-10">
+      <!-- CONTENIDO DE UNO -->
+      <div class="datosGral ms-0 me-0 p-0 col-12 col-xl-5">
+        <div class="input-group m-0 p-0 input-group-sm">
+          <span class="input-group-text" id="basic-addon1">Lista de Centros</span>
+          <select class="form-select" id="cmbcentrospersonal" aria-label="Selector de filtro">
+            <option value="" selected>Seleccione un Centro</option>
+            <% listCentro.forEach(opcion => { %>
+              <option value="<%= opcion.idCentro %>"><%= opcion.nombreCentro %></option>
+            <% }); %>
+          </select>
+        </div>
+      </div>
+
+      <div class="datosGral1 ms-0 me-0 p-0 col-12 col-xl-5">
+        <div class="input-group m-0 p-0 input-group-sm">
+          <span class="input-group-text" id="basic-addon1">Buscar</span>
+          <input type="text" id="buscadorpersonal" class="form-control" style="background: white;" placeholder="Escriba" aria-label="Buscar" aria-describedby="basic-addon1">
+        </div>
+        <div class="switch on" onclick="toggleSwitch()">
+          <div class="slider" id="slider">Alta</div>
+        </div>
+      </div>      
+    </div>
+
+    <div id="dos" class=" col-12 col-xl-2 d-flex justify-content-end">
+        <a href="/home/personalempresa" id="btnWorkAll" class="folderTrabajadores folders_ d-flex flex-column align-items-center">                
+            <i id="itrabajador_" class="material-icons">engineering</i>
+            <p id="plistatrabajador_"> Trabajadores</p>               
+        </a>     
+    </div>
+  </div>
+</div>
+
                 
                 
                 <!---->

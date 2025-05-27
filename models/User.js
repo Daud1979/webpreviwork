@@ -83,7 +83,7 @@ static async validatePassword(username,pass,email) {
 }
 
 static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -103,7 +103,7 @@ static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEm
 }
 
 static async listCentroEmpresa(idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -119,7 +119,7 @@ static async listCentroEmpresa(idEmpresa){
 }
 
 static async listPuestoEmpresa(idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -135,7 +135,7 @@ static async listPuestoEmpresa(idEmpresa){
 }
 
 static async seleccTrabajador(idEmpresa,idTrabajador){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -202,7 +202,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
 }
 /*aqui todas las plantillas*/
 static async listFormacion(idEmpresa,idTrabajador){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -219,7 +219,7 @@ static async listFormacion(idEmpresa,idTrabajador){
 }
 
 static async listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -263,7 +263,7 @@ ORDER BY
 }
 
 static async listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -308,7 +308,7 @@ ORDER BY
 }
 
 static async listRMTrabajador(idEmpresa,idTrabajador){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -325,7 +325,7 @@ static async listRMTrabajador(idEmpresa,idTrabajador){
 }
 
 static async listInformacion(idEmpresa,idDocumento,idTrabajador){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -343,7 +343,7 @@ static async listInformacion(idEmpresa,idDocumento,idTrabajador){
 }
 
 static async listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocumento){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -362,7 +362,7 @@ static async listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocu
 }
 /*aqui las plantillas*/
 static async listDocumentosTrabajador(idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         const result =await pool.request()
@@ -482,7 +482,7 @@ WHERE cc.idEmpresa = @idEmpresa
 }
 
 static async cargarDocumentoSeleccionPersonalCentro(idCentro,idEmpresa,estado){
-    const pool=await await connectDB();
+    const pool=await connectDB();
     try 
     {
         if (idCentro>0)
@@ -720,7 +720,7 @@ WHERE cc.idEmpresa = @idEmpresa
 }
 
 static async listTodosTrabajadorCentro(idCentro,idEmpresa,estado){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {
         if (idCentro>0)
@@ -818,7 +818,7 @@ WHERE t.idEmpresa = @idEmpresa and estado=@estado;`);
 
 
 static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {        
         if (indexColumna==1)
@@ -903,7 +903,7 @@ static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
 }
 
 static async modifyPersonal(idCentro,NIF,nombres,apellidos,email,idpuesto,telefono,Fregistro,Fbaja,estado,idTrabajador,idEmpresa,FNac){
-    const pool=await await connectDB();
+    const pool= await connectDB();
    
     try 
     {       
@@ -956,7 +956,7 @@ static async obtenerdatosmodificar(idTrabajador, idEmpresa) {
 }
 
 static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idpuesto,fechaAlta,estado,idEmpresa,fNac){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {   
         const result =await pool.request()
@@ -983,7 +983,7 @@ static async registrarpersonal(idCentro,NIF,nombres,apellidos,email,telefono,idp
 }
 
 static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,telefono,email,personal,idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {   
         const result =await pool.request()        
@@ -1007,7 +1007,7 @@ static async registrarcentro(centro,encargado,ciudad,direccion,codigopostal,tele
 }
 
 static async registrarSolicitudRM(idTrabajador,idEmpresa,idContrato){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {   
         const result = await pool.request()       
@@ -1028,7 +1028,7 @@ static async registrarSolicitudRM(idTrabajador,idEmpresa,idContrato){
 }
 
 static async datosenvioemail(){    
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {           
         const result =await pool.request()        
@@ -1043,7 +1043,7 @@ static async datosenvioemail(){
 }
 
 static async descargarpdf(idDocumentoProyecto,idEmpresa){    
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {   
         
@@ -1144,7 +1144,7 @@ static async mostrarpdf(tipo,idEmpresa){
 
 static async cargarpdfTrabajador(idTrabajador,idDocumentoProyecto,idEmpresa,doc,docAWS,obs,reg){
   
-    const pool=await await connectDB();   
+    const pool= await connectDB();   
         const trabajador =await pool.request()        
         .input('idTrabajador', sql.Int, idTrabajador)
         .query(`select idCentro=cc.idCentro,nombreCentro from TrabajadorEmpresa te inner join CentroContratos cc on (te.idCentro=cc.idCentro) where idTrabajador=@idTrabajador `);          
@@ -1223,7 +1223,7 @@ static async obtenerContrato(idEmpresa){
 }
 
 static async verificarTrabajadorCurso(idTrabajador,idEmpresa,idContrato,idCourse){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {   
         const result = await pool.request()        
@@ -1262,7 +1262,7 @@ static async registroOnline(idEmpresa, idContrato, idTrabajador, idCourse, idStu
 }
 /*TODA LA LISTA PARA RM VERIFICAR RM*/
 static async listaRMTodos(idEmpresa){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {  
         const result = await pool.request()              
@@ -1277,7 +1277,7 @@ static async listaRMTodos(idEmpresa){
     }
 }
 static async MODIFICAR_solicitudRM(idSolRM, entrega, url, TipoApto){
-    const pool=await await connectDB();
+    const pool= await connectDB();
     try 
     {   
         const result = await pool.request()       
