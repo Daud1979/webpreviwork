@@ -55,9 +55,9 @@ $('#cmbcentrospersonal').on('change', function(){
 
 function cargardatos() {
     // Obtener el valor seleccionado
-    let valorSeleccionado = document.querySelector('#cmbcentrospersonal').value;
-    const data = { valor: valorSeleccionado,isOn:isOn };
-    
+    const valorSeleccionado = document.querySelector('#cmbcentrospersonal').value;
+    const data = { valor: valorSeleccionado, isOn: isOn };
+
     // Limpiar el tbody de la tabla
     $('#tabla-trabajadorT').empty();
 
@@ -70,61 +70,53 @@ function cargardatos() {
         body: JSON.stringify(data)
     })
     .then(response => {
-        // Verificar que la respuesta sea exitosa
         if (!response.ok) {
             throw new Error('Error en la respuesta de la red');
         }
-        return response.json();  // Convertir la respuesta a JSON
+        return response.json();
     })
-    .then(data => {
-        // Comprobar que los datos sean un array
-         document.querySelector('#fAltaBaja').textContent = data.estadoli;
-        if (Array.isArray(data.Data)) {
-            // Iterar sobre el nuevo conjunto de datos y agregar filas a la tabla
-            
-            data.Data.forEach(item => {
-              
+    .then(({ Data, estadoli }) => {
+        // Mostrar el tipo de listado (F. Alta o F. Baja)
+        document.querySelector('#fAltaBaja').textContent = estadoli;
+
+        if (Array.isArray(Data)) {
+            // Agregar filas a la tabla
+            Data.forEach(item => {
                 $('#tabla-trabajadorT').append(`
                     <tr>
-                        <td class="align-left" id="tdCentroT"       data-id="${item.centro }">${ item.centro }</td>
-                        <td class="align-rigth"  id="tdNIFT"        data-id="${item.nif }">${ item.nif }</td>
-                        <td class="align-left" id="tdnombresT"      data-id="${item.nombre }">${ item.nombre }</td>
-                        <td class="align-left" id="tdapellidosT"    data-id="${item.apellidos }">${ item.apellidos }</td>
-                        <td class="align-left" id="tdpuestoT"       data-id="${item.puesto }">${ item.puesto }</td>                                                        
-                        <td class="align-right fechas"              data-id="${item.alta}">${ item.alta }</td>
-                        <td class="fechas"                          data-id="${item.estado }">${ item.estado }</td>
-
-                        <td class="fechas"                          data-id="${item.fechaAceptacion}">${ item.fechaAceptacion }</td>
-                         <td class="align-left ARObs" data-id="${ item.ARObservacion}">${ item.ARObservacion }</td>
-                                   
-                        <td class="align-right fechas fechasuno"    data-id="${item.RM_inicio }">${ item.RM_inicio } </td>      
-                        <td class="align-right fechas fechasdos"    data-id="${item.RM_inicio }">${ item.RM_fin }</td>      
-
-                        <td class="align-right numero fechastres"   data-id="${item.nCurso }">${ item.nCurso }</td>      
-                        <td class="align-right fechas fechascuatro" data-id="${item.fechaCurso }">${ item.fechaCurso } </td> 
-
-                        <td class="align-right numero fechascinco"  data-id="${item.nFormacion }">${ item.nFormacion }</td>      
-                        <td class="align-right fechas fechasseis"   data-id="${item.fechaFormacion }">${ item.fechaFormacion } </td>      
-                                    
-                        <td class="align-right numero fechassiete"  data-id="${item.nEpis }">${ item.nEpis }</td>      
-                        <td class="align-right fechas fechasocho"   data-id="${item.fechaEpis }">${ item.fechaEpis } </td>   
-
-                        <td class="align-right numero fechasnueve"  data-id="${item.nAutorizacion }">${ item.nAutorizacion }</td>      
-                        <td class="align-right fechas fechasdiez"   data-id="${item.fechaAutorizacion }">${ item.fechaAutorizacion } </td> 
+                        <td class="col-ancho">${item.centro}</td>
+                        <td>${item.nif}</td>
+                        <td class="col-ancho">${item.nombre}</td>
+                        <td class="col-ancho">${item.apellidos}</td>
+                        <td class="col-ancho">${item.puesto}</td>
+                        <td>${item.alta}</td>
+                        <td>${item.estado}</td>
+                        <td>${item.fechaAceptacion}</td>
+                        <td class="col-ancho">${item.ARObservacion}</td>
+                        <td class="izqui">${item.RM_inicio}</td>
+                        <td class="derec">${item.RM_fin}</td>
+                        <td class="izqui">${item.nCurso}</td>
+                        <td class="derec">${item.fechaCurso}</td>
+                        <td class="izqui">${item.nFormacion}</td>
+                        <td class="derec">${item.fechaFormacion}</td>
+                        <td class="izqui">${item.nInformacion}</td>
+                        <td class="derec">${item.fechaInformacion}</td>
+                        <td class="izqui">${item.nEpis}</td>
+                        <td class="derec">${item.fechaEpis}</td>
+                        <td class="izqui">${item.nAutorizacion}</td>
+                        <td class="derec">${item.fechaAutorizacion}</td>
                     </tr>
                 `);
             });
-
-            // Agregar evento a los botones generados
-            //agregarEventosABotones();  // Llama a la función que añade eventos
         } else {
-            Notiflix.Notify.failure('La respuesta no es un array');
+            Notiflix.Notify.failure('La respuesta no es un array válido');
         }
     })
-    .catch((error) => {
-        Notiflix.Notify.warning( "quepaso");
+    .catch(error => {
+        console.error(error);
+        Notiflix.Notify.warning("Hubo un problema al cargar los datos");
     });
-};
+}
 
 
 

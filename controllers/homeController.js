@@ -852,7 +852,9 @@ exports.cargarDocumentoSeleccionPersonalCentro=async(req,res)=>{
   (isOn)? estadoli='F. Alta': estadoli='F. Baja';
   if (req.session.userId>0)
   {
-    Data = await User.cargarDocumentoSeleccionPersonalCentro(datos.valor,idEmpresa,estado)
+    
+    Data = await User.cargarDocumentoSeleccionPersonalCentro(datos.valor,idEmpresa,estado);    
+   
     res.json({Data,estadoli});
   }
   else
