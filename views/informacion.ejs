@@ -157,7 +157,8 @@
                                             <th>Documentos</th>                            
                                             <th>Observacion</th>
                                             <th>Registro</th>                           
-                                                    
+                                            <th>F. Envio</th>  
+                                            <th>F. Descarga</th>  
                                             <th id="tdbotonesdescarga">Opciones</th>                                                
                                         </tr>
                                     </thead>
@@ -169,7 +170,9 @@
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.Categoria %></td>
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.documento %></td>
                                             <td class="text-start" data-id="<%= item.idDocumentoProyecto %>"><%= item.observacion %></td>
-                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>                                           
+                                            <td class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.registro %></td>   
+                                            <td id="idenvio" class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.fechaenvio %></td>   
+                                            <td id="iddescarga" class="text-end" data-id="<%= item.idDocumentoProyecto %>"><%= item.fechadescarga %></td>                                           
                                             <td>
                                                 <button id="btnverTrabajador" onclick="enviaremailpdf(<%=item.idDocumentoProyecto%>, this)" class="btn btn-sm m-0 p-0 select-id-btn btnidpersonalfila" data-id="<%= item.documento %>"> 
                                                     <i id="imail" class="material-icons"><%= "mail" %></i>

@@ -347,7 +347,7 @@ INNER JOIN
     } 
 }
 
-static async listInformacion(idEmpresa,idDocumento,idTrabajador){
+static async listInformacion(idEmpresa,idDocumento,idTrabajador,idTrabajadorPersona){
     const pool= await connectDB();
     try 
     {
@@ -355,7 +355,23 @@ static async listInformacion(idEmpresa,idDocumento,idTrabajador){
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idDocumento', sql.Int, idDocumento)
         .input('idTrabajador', sql.Int, idTrabajador)   
-        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,codigoAlterno,Categoria=ld.documento,dp.documento,observacion,registro=CONVERT(varchar(10),registro,103),documentoAWS,idDocumentoProyecto from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  WHERE dp.idDocumento=@idDocumento and idTrabajador=@idTrabajador and idEmpresa=@idEmpresa`);          
+        .input('idTrabajadorPersona', sql.Int, idTrabajadorPersona)   
+        .query(`
+            select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,
+codigoAlterno,
+Categoria=ld.documento,
+dp.documento,observacion,
+registro=CONVERT(varchar(10),registro,103),
+documentoAWS,
+idDocumentoProyecto,
+fechadescarga=ISNULL((select top 1 convert(varchar(10), fechadescarga,103) from listaDescarga where idDocumentoProyecto = dp.idDocumentoProyecto and idTrabajador=@idTrabajadorPersona order by iddescarga desc),''),
+fechaenvio=ISNULL((select top 1 convert(varchar(10), fechaenvio,103) from listaEnvio where idDocumentoProyecto = dp.idDocumentoProyecto and idTrabajador=@idTrabajadorPersona order by idenvio desc),'')
+from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  
+WHERE dp.idDocumento=@idDocumento and idTrabajador=0 and idEmpresa=@idEmpresa
+            `)
+//         .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,codigoAlterno,Categoria=ld.documento,dp.documento,observacion,registro=CONVERT(varchar(10),registro,103),documentoAWS,idDocumentoProyecto, fechadescarga=ISNULL(CONVERT(varchar(10),fechadescarga,103),''),fechaenvio=ISNULL(CONVERT(varchar(10),fechaenvio,103),'') 
+// from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  
+// WHERE dp.idDocumento=@idDocumento and idTrabajador=0 and idEmpresa=@idEmpresa`);          
         return (result.recordset)
     } 
     catch (error) 
@@ -1052,6 +1068,40 @@ static async registrarSolicitudRM(idTrabajador,idEmpresa,idContrato){
     {
         console.error('Error en la modificación de datos:', error);
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    }
+}
+
+static async registrarEnvio(idTrabajador, idDocumentoProyecto) {
+    const pool = await connectDB();
+    try {
+        const result = await pool.request()
+            .input('idTrabajador', sql.Int, idTrabajador)
+            .input('idDocumentoProyecto', sql.Int, idDocumentoProyecto)        
+            .output('fecha', sql.VarChar(10))  // especificar tamaño del varchar
+            .execute('REGISTRAR_LISTAENVIO');
+
+        // Aquí accedes correctamente al parámetro de salida
+        return result.output.fecha;
+    } catch (error) {
+        console.error('Error en la modificación de datos:', error);
+        throw error;
+    }
+}
+
+static async registrarDescarga(idTrabajador, idDocumentoProyecto) {
+    const pool = await connectDB();
+    try {
+        const result = await pool.request()
+            .input('idTrabajador', sql.Int, idTrabajador)
+            .input('idDocumentoProyecto', sql.Int, idDocumentoProyecto)        
+            .output('fecha', sql.VarChar(10))  // especificar tamaño del varchar
+            .execute('REGISTRAR_LISTADESCARGA');
+
+        // Aquí accedes correctamente al parámetro de salida
+        return result.output.fecha;
+    } catch (error) {
+        console.error('Error en la modificación de datos:', error);
+        throw error;
     }
 }
 

@@ -96,14 +96,19 @@ async function descargarpdf(documentId, button) {
     const nif= document.querySelector('#NIF');
     const nombre = document.querySelector('#nombre');
     const apellidos= document.querySelector('#apellidos');
-    
+    const idTrabajador = document.querySelector('#idTrabajador');
     try {
         const response = await fetch('/home/downloadpdf_', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: documentId,nif:nif.value,nombre:nombre.value,apellidos:apellidos.value })
+            body: JSON.stringify({ id: documentId,
+              nif:nif.value,
+              nombre:nombre.value,
+              apellidos:apellidos.value, 
+               idTrabajador:idTrabajador.value
+              })
         });
 
         if (!response.ok) {
@@ -122,6 +127,9 @@ async function descargarpdf(documentId, button) {
         URL.revokeObjectURL(url);
 
         icon.style.color = 'Green'; // Cambiar color a verde si la descarga fue exitosa
+        setTimeout(() => {
+          location.reload();
+        }, 1000); // 1000 ms = 1 segundo
     } catch (error) {
       Notiflix.Notify.warning( error);
         icon.style.color = 'Red'; // Cambiar color a rojo en caso de error
@@ -300,6 +308,16 @@ function isValidEmail(email) {
   return regex.test(email);
 }
 
+function actualizarFechaEnvio(idDocumentoProyecto, fecha) {
+  const celda = document.querySelector(`td[data-id="${idDocumentoProyecto}"]`);
+  if (celda) {
+    celda.textContent = fecha;
+  } else {
+    console.warn(`No se encontró la celda con data-id="${idDocumentoProyecto}"`);
+  }
+}
+
+
 async function enviaremailpdf(documentId, button) {
   const icon = button.querySelector('.material-icons');
   icon.style.color = 'Grey';
@@ -311,6 +329,10 @@ async function enviaremailpdf(documentId, button) {
   const nombre = document.querySelector('#nombre');
   const apellidos= document.querySelector('#apellidos');
   const email =document.querySelector('#email');
+  const idTrabajador = document.querySelector('#idTrabajador');
+  const idenvio = document.querySelector('#idenvio');
+                                 
+                                 
  if (isValidEmail(email.value))
  {
   const data={
@@ -319,7 +341,8 @@ async function enviaremailpdf(documentId, button) {
     nif:nif.value,
     nombre:nombre.value,
     apellidos:apellidos.value,
-    email:email.value
+    email:email.value,
+    idTrabajador:idTrabajador.value
   };
   try {
     fetch('/home/enviarmailpdf', {
@@ -333,8 +356,11 @@ async function enviaremailpdf(documentId, button) {
     .then(data => {    
       if (data.valor>0)
       {  
+           
         Notiflix.Notify.success(data.message);
-     
+        setTimeout(() => {
+          location.reload();
+        }, 1000); // 1000 ms = 1 segundo
       }
       else
       {

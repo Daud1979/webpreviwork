@@ -179,9 +179,8 @@ exports.informationpersonal=async(req,res)=>{
   const idEmpresa = req.session.userId;  
   const idDocumento=15;//esto hay que verpa los otros doc    
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
-  const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,);
-  const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador);  
-  
+  const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,idTrabajador);
+  const listDocumentoTrabajador = await User.listInformacionTrabajador(idEmpresa,idDocumento,idTrabajador); 
   (req.session.userId>0)? res.render('informacion',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
 
@@ -325,6 +324,13 @@ exports.downloadpdf = async (req, res) => {
     const fechaActual = new Date(); // Fecha actual
     const fechaFormateada = formatFecha(fechaActual);
     const fechas='Fecha: '+ fechaFormateada;  
+    if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+      idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+    }
+    else
+    {
+      idTrabajador=req.body.idTrabajador;
+    }
     // Obtener los datos del archivo desde la base de datos
     if (req.session.userId>0)
     {
@@ -332,8 +338,8 @@ exports.downloadpdf = async (req, res) => {
         if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
                 console.error("Archivo no encontrado o clave de S3 no válida");
                 return res.status(404).send('Archivo no encontrado');
-        }     
-       console.log(datos[0].documentoAWS);
+        }    
+      
         const bucketName = process.env.S3_BUCKET_NAME;
         const s3Key = datos[0].documentoAWS;
         const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
@@ -418,6 +424,7 @@ exports.downloadpdf = async (req, res) => {
               res.setHeader('Content-Type', 'application/pdf');
               res.setHeader('Content-Disposition', `attachment; filename="${sanitizedFileName}"`);
               // Enviar el PDF modificado como respuesta
+               const fecharetorno =await User.registrarDescarga(idTrabajador,id);      
               res.send(modifiedPdfBuffer);
             } catch (error) {
                 console.error('Error al procesar el archivo PDF:', error.message);
@@ -1546,7 +1553,13 @@ exports.enviarmailpdf = async (req, res) => {
   const fechaActual = new Date();
   const fechaFormateada = fechaActual.toISOString().split('T')[0]; // Formato YYYY-MM-DD
   const fechas = `Fecha: ${fechaFormateada}`;
- 
+  if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+    idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+  }
+  else
+  {
+    idTrabajador=req.body.idTrabajador;
+  }
   if (req.session.userId > 0) {
     try {
       const datos = await User.descargarpdf(id, idEmpresa);
@@ -1625,9 +1638,9 @@ exports.enviarmailpdf = async (req, res) => {
 
       // Enviar el correo
       await transporter.sendMail(mailOptions);
-
+      const fecharetorno =await User.registrarEnvio(idTrabajador,id);      
       // Responder al frontend
-      res.json({ message: 'Correo enviado correctamente',valor:1 });
+      res.json({ message: 'Correo enviado correctamente',valor:1, fecha:fecharetorno });
 
     } catch (error) {
    
