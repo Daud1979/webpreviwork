@@ -33,19 +33,19 @@ static async findGestion() {
 }
     //fin gestion 
     //buscar construccion
-static async findGestion() {
-    const pool = await connectDB();
-    try{
-       const result = await pool.request()          
-            .query(`select * from ListaDocumento l inner join CategoriaDocumento c on l.idDocumento=c.idDocumento where c.idDocumento=1`);
-        return (result.recordset)
-    }
-    catch (error)
-    {
-        console.error('Error en la modificación de datos:', error);
-        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-    }
-}
+// static async findGestion() {
+//     const pool = await connectDB();
+//     try{
+//        const result = await pool.request()          
+//             .query(`select * from ListaDocumento l inner join CategoriaDocumento c on l.idDocumento=c.idDocumento where c.idDocumento=1`);
+//         return (result.recordset)
+//     }
+//     catch (error)
+//     {
+//         console.error('Error en la modificación de datos:', error);
+//         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+//     }
+// }
     //fin contruccion
 static async validatePassword(username,pass,email) {
     const pool = await connectDB();
@@ -390,7 +390,20 @@ static async listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocu
         .input('idDocumento', sql.Int, idDocumento)
         .input('idTrabajador', sql.Int, idTrabajador)   
         .input('idListaDocumento', sql.Int, idListaDocumento)   
-        .query(`select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,codigoAlterno,Categoria=ld.documento,dp.documento,observacion,registro=CONVERT(varchar(10),registro,103),documentoAWS,idDocumentoProyecto from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  WHERE dp.idDocumento=@idDocumento and idTrabajador=@idTrabajador and idEmpresa=@idEmpresa and ld.idListaDocumento=@idListaDocumento`);          
+        .query(`
+         select ROW_NUMBER() OVER(ORDER BY idDocumentoProyecto ASC) AS n,
+codigoAlterno,
+Categoria=ld.documento,
+dp.documento,
+observacion,
+registro=CONVERT(varchar(10),registro,103),
+fechadescarga=ISNULL((select top 1 convert(varchar(10), fechadescarga,103) from listaDescarga where idDocumentoProyecto = dp.idDocumentoProyecto and idTrabajador=@idTrabajador order by iddescarga desc),''),
+fechaenvio=ISNULL((select top 1 convert(varchar(10), fechaenvio,103) from listaEnvio where idDocumentoProyecto = dp.idDocumentoProyecto and idTrabajador=@idTrabajador order by idenvio desc),''),
+documentoAWS,
+idDocumentoProyecto 
+from CategoriaDocumento cd inner join DocumentosProyectos dp on (cd.idDocumento=dp.idDocumento) inner join ListaDocumento ld on (ld.idListaDocumento=dp.idListaDocumento) inner join ContratoConfirmados cc on (cc.idContrato=dp.idContrato) inner join Contratos c on (cc.idContrato=c.idContrato)  
+WHERE dp.idDocumento=@idDocumento and idTrabajador=0 and idEmpresa=@idEmpresa and ld.idListaDocumento=@idListaDocumento   
+            `);          
         return (result.recordset)
     } 
     catch (error) 

@@ -199,7 +199,7 @@ exports.concentimientorenunciapersonal=async(req,res)=>{
   const idDocumento=14;//esto hay que verpa los otros doc    
   const idListaDocumento=67
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
-  const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,);
+  const listDocumento= await User.listInformacion(idEmpresa,idDocumento,idTrabajador_,idTrabajador);
   const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);    
   (req.session.userId>0)? res.render('concentimientorenuncia',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
@@ -219,7 +219,7 @@ exports.autorizacion=async(req,res)=>{
   const idDocumento=16;//esto hay que verpa los otros doc    
   const idListaDocumento=73
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
-  const listDocumento= await User.listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador_,idListaDocumento);
+  const listDocumento= await User.listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocumento);
   const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);    
   (req.session.userId>0)? res.render('autorizacion',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
@@ -239,7 +239,7 @@ exports.epis=async(req,res)=>{
   const idDocumento=16;//esto hay que verpa los otros doc    
   const idListaDocumento=72
   const listTrabajador=await User.seleccTrabajador(idEmpresa,idTrabajador);   
-  const listDocumento= await User.listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador_,idListaDocumento);
+  const listDocumento= await User.listAutorizacionEpis(idEmpresa,idDocumento,idTrabajador,idListaDocumento);
   const listDocumentoTrabajador = await User.listConcentimientoTrabajador(idEmpresa,idDocumento,idTrabajador,idListaDocumento);    
   (req.session.userId>0)? res.render('epis',{listTrabajador,listDocumento,listDocumentoTrabajador}):res.redirect('/');
 }
