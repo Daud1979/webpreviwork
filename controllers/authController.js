@@ -9,18 +9,6 @@ exports.login = (req, res) => {
   }
 };
 
-// exports.authenticate = async (req, res) => {  
-//   const {  email,username, password } = req.body;  
-//   let datos = await User.validatePassword(username, password,email);
-//   if (datos[0].idEmpresa>0) {
-//     let datos = await User.findByUsername(datos[0].idEmpresa);
-//     req.session.userId = datos[0].idEmpresa;
-//    console.log(datos);
-//     return res.json({ success: true }); // Enviar respuesta JSON con éxito
-//   } else {
-//     return res.json({ success: false, message: 'Usuario o contraseña incorrectos' });
-//   }
-// };
 function isValidEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
@@ -37,7 +25,7 @@ exports.authenticate = async (req, res) => {
       req.session.userId = validationData[0].idEmpresa;
       req.session.email = validationData[0].email;
       req.session.usuario =`Iniciaste: ${validationData[0].usuario}`;
-      req.session.idPassEmpresa=validationData[0].idPassEmpresa;
+      req.session.idPassEmpresa=validationData[0].idPassEmpresa;      
       // Busca la información del usuario por ID de la empresa
       userData = await User.findByUsername(validationData[0].idEmpresa);
 

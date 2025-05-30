@@ -9,9 +9,6 @@ const homeRoutes = require('./routes/homeRoutes');
 
 const app = express();
 
-// Almacenamiento simple en memoria (para producción usa Redis o DB)
-const activeSessions = {}; // { usuario: sessionId }
-
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -22,22 +19,8 @@ app.use(session({
   cookie: { maxAge: 14400000 },
 }));
 
-// Middleware para validar sesión única por usuario en cada petición
-app.use((req, res, next) => {
-  const usuario = req.session.usuario;
-  if (usuario) {
-    if (activeSessions[usuario] && activeSessions[usuario] !== req.session.id) {
-      // Sesión inválida porque hay otra activa para este usuario
-      req.session.destroy(() => {
-        return res.send('Tu sesión fue cerrada porque iniciaste sesión en otro dispositivo.');
-      });
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-});
+
+
 
 // Hacer usuario disponible en vistas
 app.use((req, res, next) => {
