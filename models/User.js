@@ -54,7 +54,7 @@ static async validatePassword(username,pass,email) {
           .input('username', sql.VarChar, username)
           .input('pass', sql.VarChar, pass)
           .input('email', sql.VarChar, email)
-          .query(`SELECT * FROM EmpresaPass WHERE email=@email and usuario = @username and pass =HASHBYTES('SHA2_256', @pass)`);
+          .query(`SELECT * FROM EmpresaPass WHERE estado='H' and email=@email and usuario = @username and pass =HASHBYTES('SHA2_256', @pass)`);
         return (result.recordset)
     }
     catch (error)
@@ -64,23 +64,23 @@ static async validatePassword(username,pass,email) {
     }
 }
  
-static async validatePassword(username,pass,email) {
-    const pool = await connectDB();
-    try{
-        const result = await pool.request()
-            .input('username', sql.VarChar, username)
-            .input('pass', sql.VarChar, pass)
-            .input('email', sql.VarChar, email)
-            .query(`SELECT * FROM EmpresaPass WHERE email=@email and usuario = @username and pass =HASHBYTES('SHA2_256', @pass)`);
+// static async validatePassword(username,pass,email) {
+//     const pool = await connectDB();
+//     try{
+//         const result = await pool.request()
+//             .input('username', sql.VarChar, username)
+//             .input('pass', sql.VarChar, pass)
+//             .input('email', sql.VarChar, email)
+//             .query(`SELECT * FROM EmpresaPass WHERE email=@email and usuario = @username and pass =HASHBYTES('SHA2_256', @pass)`);
          
-        return (result.recordset)
-    }
-    catch (error) 
-    {
-        console.error('Error en la modificación de datos:', error);
-        throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-    }
-}
+//         return (result.recordset)
+//     }
+//     catch (error) 
+//     {
+//         console.error('Error en la modificación de datos:', error);
+//         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+//     }
+// }
 
 static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEmpresa){
     const pool= await connectDB();

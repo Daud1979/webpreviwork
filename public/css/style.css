@@ -2,7 +2,8 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 .navbar {
-  margin-top: 0;
+  margin: 0;
+  padding: 0;
   background: #3a5fd6;
   border-bottom: .15rem solid rgb(24, 24, 24); 
 }
@@ -11,6 +12,25 @@ a{
   color: black;
   text-decoration: none;
 }
+#idusuario{
+  all: unset;
+  display: block; /* Porque "all: unset" elimina incluso el display */
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background:transparent;
+  width: 200px;
+  height: 25px;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #0a0a0a;
+  box-shadow: 0 2px 6px rgba(136, 136, 136, 0.2);
+  z-index: 999;
+ text-align: center;
+}
+
 /*AQUI TALBA DOCU*/
 #tablapersonaT thead th {
   padding: 2px 4px;           /* reduce el padding vertical */
