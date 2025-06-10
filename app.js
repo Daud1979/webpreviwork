@@ -19,9 +19,6 @@ app.use(session({
   cookie: { maxAge: 14400000 },
 }));
 
-
-
-
 // Hacer usuario disponible en vistas
 app.use((req, res, next) => {
   res.locals.usuario = req.session.usuario;

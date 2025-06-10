@@ -44,7 +44,6 @@ exports.authenticate = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Error en el servidor' });
   }
 };
-
 exports.logout = (req, res) => {
   req.session.destroy(err => {
     
