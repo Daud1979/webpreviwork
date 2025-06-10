@@ -16,40 +16,58 @@ function isValidEmail(email) {
 exports.authenticate = async (req, res) => {  
   try {
     const { email, username, password } = req.body;  
-    if (isValidEmail(email)) {
-    // Valida el nombre de usuario y la contraseña
-    const validationData = await User.validatePassword(username, password, email);   
-    // Verifica si se encontraron datos y si la propiedad idEmpresa existe y es válida
-    
-    if (validationData && validationData[0] && validationData[0].idEmpresa > 0) {
-      req.session.userId = validationData[0].idEmpresa;
-      req.session.email = validationData[0].email;
-      req.session.usuario =`Iniciaste: ${validationData[0].usuario}`;
-      req.session.idPassEmpresa=validationData[0].idPassEmpresa;      
-      // Busca la información del usuario por ID de la empresa
-      userData = await User.findByUsername(validationData[0].idEmpresa);
 
-      return res.json({ success: true, "userData":userData });
-      } else {
-      // Responde con error si la validación falló
-        return res.json({ success: false, message: 'Usuario o contraseña incorrectos' });
-      }
-    }
-    else
-    {
+    if (!isValidEmail(email)) {
       return res.json({ success: false, message: 'Email no tiene el formato correcto' });
     }
+
+    const validationData = await User.validatePassword(username, password, email);
+
+    if (!validationData || !validationData[0] || !validationData[0].idEmpresa) {
+      return res.json({ success: false, message: 'Usuario o contraseña incorrectos' });
+    }
+
+    const user = validationData[0];
+
+    // VERIFICAR SI YA TIENE SESIÓN ACTIVA
+    if (user.sessionId && user.sessionId !== req.sessionID) {
+      return res.json({ success: false, message: 'Ya hay una sesión activa en otro dispositivo.' });
+    }
+
+    // GUARDAR LA SESIÓN ACTUAL
+    req.session.userId = user.idEmpresa;
+    req.session.email = user.email;
+    req.session.usuario = `Iniciaste: ${user.usuario}`;
+    req.session.idPassEmpresa = user.idPassEmpresa;
+    
+
+    // ACTUALIZAR sessionId EN BD
+    await User.updateSessionId(req.session.idPassEmpresa, req.sessionID);
+
+    // OBTENER DATOS DEL USUARIO
+    const userData = await User.findByUsername(user.idEmpresa);
+
+    return res.json({ success: true, userData });
+
   } catch (error) {
     console.error("Error en autenticación:", error);
     return res.status(500).json({ success: false, message: 'Error en el servidor' });
   }
 };
-exports.logout = (req, res) => {
-  req.session.destroy(err => {
-    
-    if (err) return res.redirect('/home');
-    res.redirect('/login');
-  });
+
+exports.logout = async (req, res) => {
+  try {
+    if (req.session.userId) {     
+      await User.updateSessionId(req.session.idPassEmpresa, null);
+    }
+
+    req.session.destroy(() => {
+      res.redirect('/login'); // O response JSON si es API
+    });
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+    res.status(500).send('Error al cerrar sesión');
+  }
 };
 
 exports.inicio = (req, res) => {

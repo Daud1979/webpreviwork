@@ -1049,65 +1049,6 @@ exports.downloadpdftrabajadorOnline = async (req, res) => {
   }
 };
 
-// exports.registerRM=async(req,res)=>{
-//   const datos = req.body;
-//   const idEmpresa = req.session.userId;    
-//   if (req.session.userId>0)  {    
-//     updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador,idEmpresa);      
-//     objidContrato= await User.obtenerContrato(idEmpresa);         
-//     if (updateData[0].estado=='H')
-//     {
-//       updateData = await User.registrarSolicitudRM(datos.idTrabajador,idEmpresa,objidContrato[0].idContrato);    
-//       const { retorno, idSolRMRetorno } = updateData;
-//       if(idSolRMRetorno>0)
-//       {
-//           try
-//           {
-//             const datos = [
-//             {
-//               nombre: updateData.empresa,
-//               cif: updateData.cifempresa,
-//               direccion: updateData.direccionEmpresa,
-//               trabajador: {
-//                 cod_solicitud: idSolRMRetorno,
-//                 nombre: updateData.nombres,
-//                 apellidos: updateData.apellidos,
-//                 dni: updateData.nif,
-//                 email: updateData.correo,
-//                 puesto: updateData.puesto,
-//                 centro: updateData.centro
-//               }
-//             }
-//             ];
-//             const response = await axios.post('https://prevencionapi.psycotimia.com/prevenApi/datosEmpresa', datos,
-//             {
-//               headers: {
-//               'Content-Type': 'application/json',
-//               'Authorization': 'sk_live_aQ8Y3K9zTpJxC1VuYgXb6e7LfWxZQ4Amr9DtU2oFNh'
-//               }
-//             }
-//             );
-//             console.log('Respuesta de la API:', response.data);
-//           } catch (error) {
-//             console.error('Error al enviar los datos:', error.message);
-//             if (error.response) {
-//               console.error('Detalles del error:', error.response.data);
-//             }
-//           }
-//       }  
-//       res.json({retorno,message:'YA SE REALIZO LA PETICION EN DIAS ANTERIORES'});
-//     }
-//     else
-//     {
-//       res.json({updateData,message:'EL TRABAJADOR ESTA DE BAJA'});
-//     }
-//   }
-//   else
-//   {
-//     res.redirect('/');
-//   }
-//   //
-// }
 
 
 exports.registerRM = async (req, res) => {
@@ -1216,70 +1157,6 @@ exports.registerCourseOnline=async (req,res)=>{
     res.redirect('/');
   }
 }
-
-// exports.registerCourseOnline = async (req, res) => {
-//   const datos = req.body;
-//   const idEmpresa = req.session.userId;
-
-//   if (req.session.userId > 0) {
-//     try {
-//       // Obtener los datos necesarios
-//       const updateData = await User.obtenerdatosCourseOnline(datos.idTrabajador, idEmpresa);
-//       const updateContrato = await User.obtenerContrato(idEmpresa);
-//       const verificarTrabajadorCurso = await User.verificarTrabajadorCurso(
-//         datos.idTrabajador,
-//         idEmpresa,
-//         updateContrato[0].idContrato,
-//         updateData[0].idCourse
-//       );
-
-//       if (Array.isArray(verificarTrabajadorCurso) && verificarTrabajadorCurso.length === 0) {
-//         // Si el trabajador no está registrado en el curso, proceder con el registro
-
-//         // Esperamos a obtener el idStudent antes de continuar
-//         const idStudent = await registrarAlumnosCurso(
-//           updateData[0].nif,
-//           updateData[0].nombres,
-//           updateData[0].apellidos,
-//           updateData[0].correo,
-//           updateData[0].telefono,
-//           updateData[0].idempresa,
-//           updateData[0].empresa,
-//           updateData[0].puesto,
-//           updateData[0].idCourse,
-//           updateContrato[0].idContrato
-//         );
-
-//         // Verificamos si idStudent es válido antes de continuar
-//         if (!idStudent || idStudent.trim() === '') {
-//           return res.json({ message: 'El idStudent no se obtuvo correctamente', error: 0 });
-//         }
-
-//         // Ahora que idStudent es válido, continuar con el registro
-//         const fechadevolver = await User.registroOnline(
-//           idEmpresa,
-//           updateContrato[0].idContrato,
-//           datos.idTrabajador,
-//           updateData[0].idCourse,
-//           idStudent,
-//           updateData[0].Course
-//         );
-
-//         res.json({ message: fechadevolver, error: 1 });
-//       } else {
-//         res.json({ message: 'EL TRABAJADOR YA SE ENCUENTRA REGISTRADO', error: 0 });
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       res.json({ message: 'PROBLEMA AL REGISTRAR EL CURSO', error: 0 });
-//     }
-//   } else {
-//     res.redirect('/');
-//   }
-// };
-
-/*ese mensaje de donde sale*/
-
 
 async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, idempresa, empresa, puesto, idCourse, idContrato) {
   try {
@@ -1409,10 +1286,6 @@ async function registrarAlumnosCurso(nif, nombres, apellidos, correo, telefono, 
       return null;
   }
 }
-
-
-/*ver*/
-
 
 
 exports.viewPdfTrabajador = async (req, res) => {

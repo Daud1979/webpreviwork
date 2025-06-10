@@ -31,22 +31,7 @@ static async findGestion() {
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
-    //fin gestion 
-    //buscar construccion
-// static async findGestion() {
-//     const pool = await connectDB();
-//     try{
-//        const result = await pool.request()          
-//             .query(`select * from ListaDocumento l inner join CategoriaDocumento c on l.idDocumento=c.idDocumento where c.idDocumento=1`);
-//         return (result.recordset)
-//     }
-//     catch (error)
-//     {
-//         console.error('Error en la modificación de datos:', error);
-//         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-//     }
-// }
-    //fin contruccion
+
 static async validatePassword(username,pass,email) {
     const pool = await connectDB();
     try{
@@ -63,24 +48,6 @@ static async validatePassword(username,pass,email) {
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
- 
-// static async validatePassword(username,pass,email) {
-//     const pool = await connectDB();
-//     try{
-//         const result = await pool.request()
-//             .input('username', sql.VarChar, username)
-//             .input('pass', sql.VarChar, pass)
-//             .input('email', sql.VarChar, email)
-//             .query(`SELECT * FROM EmpresaPass WHERE email=@email and usuario = @username and pass =HASHBYTES('SHA2_256', @pass)`);
-         
-//         return (result.recordset)
-//     }
-//     catch (error) 
-//     {
-//         console.error('Error en la modificación de datos:', error);
-//         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
-//     }
-// }
 
 static async modifyEmpresa(direccionEmpresa,encargadoEmpresa,email,telefono,idEmpresa){
     const pool= await connectDB();
@@ -772,10 +739,6 @@ WHERE cc.idEmpresa = @idEmpresa
     }
 }
 
-
-
-
-
 static async listTodosTrabajadorCentro(idCentro,idEmpresa,estado){
     const pool= await connectDB();
     try 
@@ -872,8 +835,6 @@ WHERE t.idEmpresa = @idEmpresa and estado=@estado;`);
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
-
-
 static async modifyCentros(id,nuevoValor,indexColumna,idEmpresa){
     const pool= await connectDB();
     try 
@@ -1385,8 +1346,31 @@ static async MODIFICAR_solicitudRM(idSolRM, entrega, url, TipoApto){
         throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
     }
 }
+static async updateSessionId(idPassEmpresa, sessionId) {
+    try {
+      const pool = await connectDB();
+      await pool.request()
+        .input('idPassEmpresa', sql.Int, idPassEmpresa)
+        .input('sessionId', sql.VarChar(255), sessionId)
+        .query('UPDATE EmpresaPass SET sessionId = @sessionId WHERE idPassEmpresa = @idPassEmpresa');
+    } catch (err) {
+      console.error('Error actualizando sessionId:', err);
+      throw err;
+    }
+  }
 
-
+  static async findById(idPassEmpresa) {
+    try {
+      const pool = await connectDB();
+      const result = await pool.request()
+        .input('idPassEmpresa', sql.Int, idPassEmpresa)
+        .query('SELECT * FROM EmpresaPass WHERE idPassEmpresa = @idPassEmpresa');
+      return result.recordset[0];
+    } catch (err) {
+      console.error('Error buscando por ID:', err);
+      throw err;
+    }
+  }
 }//fin de la clase
 
 
