@@ -160,6 +160,7 @@ exports.centros=async (req,res)=>{//enviar a centros
 
 exports.listatrabajadores =async(req,res)=>{
 const idEmpresa = req.session.userId;
+ 
   listCentro = await User.listCentroEmpresa(idEmpresa);
   listPersonal = await User.listDocumentosTrabajador(idEmpresa);
   listPuesto = await User.listPuestoEmpresa(idEmpresa);
@@ -835,6 +836,7 @@ exports.cargarPersonalCentro=async(req,res)=>{
   const datos = req.body;
   const idEmpresa = req.session.userId;
   const isOn = datos.isOn;
+
   let estado='H';
   (isOn)? estado='H': estado='D';
   

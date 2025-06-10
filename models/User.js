@@ -423,7 +423,7 @@ static async listDocumentosTrabajador(idEmpresa){
     nEpis = ISNULL(caEpis.nEpis, 0)
 
 FROM trabajadorEmpresa te
-INNER JOIN CentroContratos cc ON te.idCentro = cc.idCentro
+INNER JOIN CentrosEmpresa cc ON te.idCentro = cc.idCentro
 INNER JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
 
 -- CURSOS
@@ -511,7 +511,8 @@ static async cargarDocumentoSeleccionPersonalCentro(idCentro,idEmpresa,estado){
         .input('idEmpresa', sql.Int, idEmpresa)
         .input('idCentro', sql.Int, idCentro)
         .input('estado', sql.VarChar,estado )
-        .query(`SELECT 
+        .query(`
+SELECT 
     centro = cc.nombreCentro,
     nif = te.NIF,
     nombre = te.nombres,
@@ -548,7 +549,7 @@ static async cargarDocumentoSeleccionPersonalCentro(idCentro,idEmpresa,estado){
     nEpis = ISNULL(caEpis.nEpis, 0)
 
 FROM trabajadorEmpresa te
-INNER JOIN CentroContratos cc ON te.idCentro = cc.idCentro
+INNER JOIN CentrosEmpresa cc ON te.idCentro = cc.idCentro
 INNER JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
 
 -- CURSOS
@@ -613,9 +614,8 @@ OUTER APPLY (
     WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
 ) caEpis
 
-WHERE cc.idEmpresa = @idEmpresa
-  AND te.estado = @estado and cc.idCentro=@idCentro;
-        
+WHERE cc.idEmpresa = @idEmpresa and te.estado = @estado and cc.idCentro=@idCentro
+
         `);          
         return (result.recordset)
         }
@@ -624,7 +624,8 @@ WHERE cc.idEmpresa = @idEmpresa
             const result =await pool.request()
             .input('idEmpresa', sql.Int, idEmpresa)
             .input('estado', sql.VarChar,estado )
-            .query(`SELECT 
+            .query(`
+              SELECT 
     centro = cc.nombreCentro,
     nif = te.NIF,
     nombre = te.nombres,
@@ -661,7 +662,7 @@ WHERE cc.idEmpresa = @idEmpresa
     nEpis = ISNULL(caEpis.nEpis, 0)
 
 FROM trabajadorEmpresa te
-INNER JOIN CentroContratos cc ON te.idCentro = cc.idCentro
+INNER JOIN CentrosEmpresa cc ON te.idCentro = cc.idCentro
 INNER JOIN PuestoTrabajoEmpresa pte ON te.idPuesto = pte.idPuesto
 
 -- CURSOS
@@ -726,8 +727,7 @@ OUTER APPLY (
     WHERE idDocumento = 16 AND idListaDocumento = 72 AND idTrabajador = te.idTrabajador
 ) caEpis
 
-WHERE cc.idEmpresa = @idEmpresa
-  AND te.estado = @estado;
+WHERE cc.idEmpresa = @idEmpresa and te.estado = @estado
                 `);          
             return (result.recordset)
         }
