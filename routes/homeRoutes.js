@@ -20,7 +20,8 @@ router.post('/mostrarpdfempresa',homeController.mostrarpdfempresa);
 router.post('/listadocumentos',homeController.enviarapdf);
 router.post('/downloadpdf',homeController.downloadpdf);
 router.post('/downloadpdf_',homeController.downloadpdf);
-router.post('/downloadpdfTrabajador',homeController.downloadpdftrabajador);
+router.post('/downloadpdfTrabajador',homeController.downloadpdftrabajador); //aqui va la empresa
+router.post('/downloadpdfEmpresa',homeController.downloadpdfEmpresa);
 router.post('/downloadpdfTrabajadorOnline',homeController.downloadpdftrabajadorOnline);
 router.post('/uploadpdf', upload.single('pdfFile'), homeController.uploadpdf);
 router.post('/uploadpdfconcentimiento', upload.single('pdfFile'), homeController.uploadpdfconcentimiento);

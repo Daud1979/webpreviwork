@@ -373,46 +373,165 @@ exports.downloadpdf = async (req, res) => {
             const textWidth = font.widthOfTextAtSize('Italy', 10);
             lastPage.drawText('Recibido por el trabajador', {
               x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
-              y: 60,  // Ajusta la posición Y para que esté en la parte inferior
+              y: 130,  // Ajusta la posición Y para que esté en la parte inferior
               size: 10,
               font: font,
               color: rgb(0, 0, 0),  // Color negro
               });
               lastPage.drawText(trabajador, {
                 x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
-                y: 45,  // Ajusta la posición Y para que esté en la parte inferior
+                y: 115,  // Ajusta la posición Y para que esté en la parte inferior
                 size: 10,
                 font: font,
                 color: rgb(0, 0, 0),  // Color negro
               });
               lastPage.drawText(nie, {
                 x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
-                y: 30,  // Ajusta la posición Y para que esté en la parte inferior
+                y: 100,  // Ajusta la posición Y para que esté en la parte inferior
                 size: 10,
                 font: font,
                 color: rgb(0, 0, 0),  // Color negro
               });
               lastPage.drawText(fechas, {
                 x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
-                y: 15,  // Ajusta la posición Y para que esté en la parte inferior
+                y: 85,  // Ajusta la posición Y para que esté en la parte inferior
                 size: 10,
                 font: font,
                 color: rgb(0, 0, 0),  // Color negro
               });
               lastPage.drawText('_____________________', {
                 x: lastPage.getWidth() - textWidth - 140, // Ajusta la posición X para que esté a la derecha
-                y: 30,  // Ajusta la posición Y para que esté en la parte inferior
+                y: 100,  // Ajusta la posición Y para que esté en la parte inferior
                 size: 10,
                 font: font,
                 color: rgb(0, 0, 0),  // Color negro
               });
                 lastPage.drawText('Firma', {
                 x: lastPage.getWidth() - textWidth - 140, // Ajusta la posición X para que esté a la derecha
-                y: 15,  // Ajusta la posición Y para que esté en la parte inferior
+                y: 85,  // Ajusta la posición Y para que esté en la parte inferior
                 size: 10,
                 font: font,
                 color: rgb(0, 0, 0),  // Color negro
               });
+              // Guardar el PDF modificado
+              const modifiedPdfBytes = await pdfDoc.save();
+              // Crear un archivo temporal para guardar el PDF modificado
+              const tempDir = os.tmpdir();
+              const tempFilePath = path.join(tempDir, 'modified-pdf.pdf');
+              fs.writeFileSync(tempFilePath, modifiedPdfBytes);
+              // Leer el archivo PDF modificado
+              const modifiedPdfBuffer = fs.readFileSync(tempFilePath);
+              // Configurar los headers para la descarga del archivo modificado
+              res.setHeader('Content-Type', 'application/pdf');
+              res.setHeader('Content-Disposition', `attachment; filename="${sanitizedFileName}"`);
+              // Enviar el PDF modificado como respuesta
+               const fecharetorno =await User.registrarDescarga(idTrabajador,id);      
+              res.send(modifiedPdfBuffer);
+            } catch (error) {
+                console.error('Error al procesar el archivo PDF:', error.message);
+                res.status(500).json({ error: 'Error al procesar el archivo PDF' });
+            }
+  }
+  else{
+    res.redirect('/')
+  }
+};
+exports.downloadpdfEmpresa = async (req, res) => {
+    const id = req.body.id;
+    const idEmpresa = req.session.userId;
+    const trabajador ='Nombres: '+ req.body.nombre+' '+req.body.apellidos;
+    const nie='Dni: '+req.body.nif;
+    const fechaActual = new Date(); // Fecha actual
+    const fechaFormateada = formatFecha(fechaActual);
+    const fechas='Fecha: '+ fechaFormateada;  
+    if (typeof req.body.idTrabajador === "string" && req.body.idTrabajador.startsWith("PVW-")) {
+      idTrabajador = req.body.idTrabajador.split("-")[1]; // Obtiene la parte después del guion
+    }
+    else
+    {
+      idTrabajador=req.body.idTrabajador;
+    }
+    // Obtener los datos del archivo desde la base de datos
+    if (req.session.userId>0)
+    {
+        const datos = await User.descargarpdf(id, idEmpresa);
+        if (!datos || !Array.isArray(datos) || datos.length === 0 || !datos[0].documentoAWS) {
+                console.error("Archivo no encontrado o clave de S3 no válida");
+                return res.status(404).send('Archivo no encontrado');
+        }    
+      
+        const bucketName = process.env.S3_BUCKET_NAME;
+        const s3Key = datos[0].documentoAWS;
+        const sanitizedFileName = encodeURIComponent(datos[0].documento || 'nuevopdf.pdf');
+        const s3 = new S3Client({
+          region: process.env.AWS_REGION,
+          credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          },
+          });
+          try {
+                // Descargar el archivo desde S3
+            const command = new GetObjectCommand({ Bucket: bucketName, Key: s3Key });
+            const response = await s3.send(command);
+            // Leer el buffer del archivo
+            const pdfBuffer = await streamToBuffer(response.Body);
+            // Verificar si el archivo PDF fue descargado correctamente
+            if (!pdfBuffer || pdfBuffer.length === 0) {
+              throw new Error('El archivo PDF descargado está vacío o es inválido.');
+            }
+            // Cargar el PDF utilizando pdf-lib
+            const pdfDoc = await PDFDocument.load(pdfBuffer);
+            // Cargar la fuente en cursiva predeterminada (Helvetica-Oblique)
+            // const font = await pdfDoc.embedFont('Helvetica-Oblique');
+            // // Obtener todas las páginas del documento
+            // const pages = pdfDoc.getPages();   
+            // // Acceder a la última página
+            // const lastPage = pages[pages.length - 1];
+            // // Dibujar el texto al final de la última página
+            // const textWidth = font.widthOfTextAtSize('Italy', 10);
+            // lastPage.drawText('Recibido por el trabajador', {
+            //   x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
+            //   y: 130,  // Ajusta la posición Y para que esté en la parte inferior
+            //   size: 10,
+            //   font: font,
+            //   color: rgb(0, 0, 0),  // Color negro
+            //   });
+            //   lastPage.drawText(trabajador, {
+            //     x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
+            //     y: 115,  // Ajusta la posición Y para que esté en la parte inferior
+            //     size: 10,
+            //     font: font,
+            //     color: rgb(0, 0, 0),  // Color negro
+            //   });
+            //   lastPage.drawText(nie, {
+            //     x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
+            //     y: 100,  // Ajusta la posición Y para que esté en la parte inferior
+            //     size: 10,
+            //     font: font,
+            //     color: rgb(0, 0, 0),  // Color negro
+            //   });
+            //   lastPage.drawText(fechas, {
+            //     x: lastPage.getWidth() - textWidth - 350, // Ajusta la posición X para que esté a la derecha
+            //     y: 85,  // Ajusta la posición Y para que esté en la parte inferior
+            //     size: 10,
+            //     font: font,
+            //     color: rgb(0, 0, 0),  // Color negro
+            //   });
+            //   lastPage.drawText('_____________________', {
+            //     x: lastPage.getWidth() - textWidth - 140, // Ajusta la posición X para que esté a la derecha
+            //     y: 100,  // Ajusta la posición Y para que esté en la parte inferior
+            //     size: 10,
+            //     font: font,
+            //     color: rgb(0, 0, 0),  // Color negro
+            //   });
+            //     lastPage.drawText('Firma', {
+            //     x: lastPage.getWidth() - textWidth - 140, // Ajusta la posición X para que esté a la derecha
+            //     y: 85,  // Ajusta la posición Y para que esté en la parte inferior
+            //     size: 10,
+            //     font: font,
+            //     color: rgb(0, 0, 0),  // Color negro
+            //   });
               // Guardar el PDF modificado
               const modifiedPdfBytes = await pdfDoc.save();
               // Crear un archivo temporal para guardar el PDF modificado

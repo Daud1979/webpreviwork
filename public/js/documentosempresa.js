@@ -130,7 +130,7 @@ async function descargarpdf(documentId, button) {
     const documentName = documentCell.textContent.trim();
   
     try {
-        const response = await fetch('/home/downloadpdf', {
+        const response = await fetch('/home/downloadpdfEmpresa', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
