@@ -16,7 +16,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'iceidaud',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 14400000 },
+  cookie: { },
 }));
 
 // Hacer usuario disponible en vistas
