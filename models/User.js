@@ -1352,13 +1352,35 @@ static async updateSessionId(idPassEmpresa, sessionId) {
       await pool.request()
         .input('idPassEmpresa', sql.Int, idPassEmpresa)
         .input('sessionId', sql.VarChar(255), sessionId)
-        .query('UPDATE EmpresaPass SET sessionId = @sessionId WHERE idPassEmpresa = @idPassEmpresa');
+        .query('UPDATE EmpresaPass SET sessionId = @sessionId,ultimaConexion = GETDATE() WHERE idPassEmpresa = @idPassEmpresa');
     } catch (err) {
       console.error('Error actualizando sessionId:', err);
       throw err;
     }
   }
 
+  static async updateSessionIdSalir(idPassEmpresa, sessionId) {
+    try {
+      const pool = await connectDB();
+      await pool.request()
+        .input('idPassEmpresa', sql.Int, idPassEmpresa)
+        .input('sessionId', sql.VarChar(255), sessionId)
+        .query('UPDATE EmpresaPass SET sessionId =NULL,ultimaConexion = NULL WHERE idPassEmpresa = @idPassEmpresa');
+    } catch (err) {
+      console.error('Error actualizando sessionId:', err);
+      throw err;
+    }
+  }
+static async cerrarAutomatico() {
+    try {
+      const pool = await connectDB();
+      await pool.request()        
+     .query('UPDATE EmpresaPass SET sessionId = NULL, ultimaConexion = NULL WHERE sessionId IS NOT NULL AND ultimaConexion < DATEADD(HOUR, -2, GETDATE());');
+    } catch (err) {
+      console.error('Error actualizando sessionId:', err);
+      throw err;
+    }
+  }
   static async findById(idPassEmpresa) {
     try {
       const pool = await connectDB();

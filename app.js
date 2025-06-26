@@ -3,7 +3,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 require('dotenv').config();
-
+const User = require('./models/User'); // Importa tu modelo aquí
 const authRoutes = require('./routes/authRoutes');
 const homeRoutes = require('./routes/homeRoutes');
 
@@ -15,10 +15,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'iceidaud',
   resave: false,
-  saveUninitialized: true,
-  cookie: { },
+  saveUninitialized: false, // Evita crear sesiones vacías
+  cookie: {
+    httpOnly: true, // Solo accesible desde el servidor, no desde JS del cliente
+    secure: process.env.NODE_ENV === 'production', // Solo usa https en producción
+    maxAge: 1000 * 60 * 60 * 2 // 2 horas de duración en milisegundos
+  },
 }));
-
+setInterval(async () => {
+  try {
+     await User.cerrarAutomatico();    
+  } catch (err) {
+    console.error('Error limpiando sesiones expiradas:', err);
+  }
+}, 1000 * 60 * 5); // Cada 5min
 // Hacer usuario disponible en vistas
 app.use((req, res, next) => {
   res.locals.usuario = req.session.usuario;

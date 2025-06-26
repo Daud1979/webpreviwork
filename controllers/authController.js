@@ -58,7 +58,7 @@ exports.authenticate = async (req, res) => {
 exports.logout = async (req, res) => {
   try {
     if (req.session.userId) {     
-      await User.updateSessionId(req.session.idPassEmpresa, null);
+      await User.updateSessionIdSalir(req.session.idPassEmpresa, null);
     }
 
     req.session.destroy(() => {
