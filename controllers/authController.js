@@ -33,11 +33,12 @@ exports.authenticate = async (req, res) => {
     if (user.sessionId && user.sessionId !== req.sessionID) {
       return res.json({ success: false, message: 'Ya hay una sesión activa en otro dispositivo.' });
     }
-
+   
     // GUARDAR LA SESIÓN ACTUAL
     req.session.userId = user.idEmpresa;
     req.session.email = user.email;
-    req.session.usuario = `Iniciaste: ${user.usuario}`;
+    req.session.usuario = `Usuario: ${user.Usuario}`;
+    req.session.nombreEmpresas = `: ${user.razonSocial}`;
     req.session.idPassEmpresa = user.idPassEmpresa;
     
 

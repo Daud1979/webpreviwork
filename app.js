@@ -32,6 +32,7 @@ setInterval(async () => {
 // Hacer usuario disponible en vistas
 app.use((req, res, next) => {
   res.locals.usuario = req.session.usuario;
+  res.locals.nombreEmpresa = req.session.nombreEmpresas;
   next();
 });
 

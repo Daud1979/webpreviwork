@@ -39,7 +39,7 @@ static async validatePassword(username,pass,email) {
           .input('username', sql.VarChar, username)
           .input('pass', sql.VarChar, pass)
           .input('email', sql.VarChar, email)
-          .query(`SELECT * FROM EmpresaPass WHERE estado='H' and email=@email and usuario = @username and pass =HASHBYTES('SHA2_256', @pass)`);
+          .query(`select Usuario=usuario,idEmpresa=ep.idEmpresa,email=ep.email,razonSocial,idPassEmpresa from empresapass ep inner join ClienteEmpresa ce on (ep.idEmpresa=ce.idEmpresa) WHERE ep.estado='H' and ep.email=@email and ep.usuario = @username and ep.pass =HASHBYTES('SHA2_256', @pass)`);
         return (result.recordset)
     }
     catch (error)
@@ -159,7 +159,7 @@ static async listTodosTrabajadorEmpresa(idEmpresa) {
              END
                 FROM TrabajadorEmpresa t
                 INNER JOIN PuestoTrabajoEmpresa pte ON (t.idPuesto = pte.idPuesto)
-                WHERE t.idEmpresa = @idEmpresa    
+                WHERE t.idEmpresa = @idEmpresa  and estado='H'  
             `);
         return result.recordset;
     } catch (error) {
